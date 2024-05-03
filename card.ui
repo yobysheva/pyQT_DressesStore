@@ -77,7 +77,8 @@ font: 18pt &quot;Futurespore Cyrillic&quot;;
    </property>
    <property name="styleSheet">
     <string notr="true">font-weight: bold;
-font: 16pt &quot;HelveticaNeueCyr&quot;;</string>
+font: 16pt &quot;HelveticaNeueCyr&quot;;
+color: black;</string>
    </property>
    <property name="text">
     <string>Описание</string>
