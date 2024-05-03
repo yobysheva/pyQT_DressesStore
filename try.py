@@ -47,13 +47,18 @@ class MainWindow(QMainWindow):
             self.gridLayout.addWidget(widget, 0, i)
 
         self.page = 0
-        # кнопка для предлючения
-        self.update_button = QPushButton("Update")
-        self.update_button.clicked.connect(self.update_data)
-        self.gridLayout.addWidget(self.update_button, 1, 0, 1, 5)
+
+        self.next.clicked.connect(self.update_data)
+        self.prev.clicked.connect(self.update_data)
+
 
     def update_data(self):
-        self.page += 1
+        sender = self.sender()
+        if sender == self.next:
+            self.page += 1
+        elif sender == self.prev and self.page > 0:
+            self.page -= 1
+
         self.cur.execute(f"SELECT * FROM items LIMIT 5 OFFSET 5*{self.page}")
         data = self.cur.fetchall()
 
