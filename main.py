@@ -32,11 +32,11 @@ class MainWindow(QMainWindow):
         uic.loadUi('MainWindow.ui', self)
 
         # Создать экземпляры MyWidget с разными значениями
-        widget1 = MyWidget("dress5.jpg", "Маленькое черное платье", 1999)
-        widget2 = MyWidget("dress2.jpg", "Маленькое черное платье", 2990)
-        widget3 = MyWidget("dress3.jpg", "Маленькое черное платье", 1859)
-        widget4 = MyWidget("dress4.jpg", "Маленькое черное платье",999)
-        widget5 = MyWidget("dress7.jpg", "Маленькое черное платье",4999)
+        widget1 = MyWidget("images/dress5.jpg", "Маленькое черное платье", 1999)
+        widget2 = MyWidget("images/dress2.jpg", "Маленькое черное платье", 2990)
+        widget3 = MyWidget("images/dress3.jpg", "Маленькое черное платье", 1859)
+        widget4 = MyWidget("images/dress4.jpg", "Маленькое черное платье",999)
+        widget5 = MyWidget("images/dress7.jpg", "Маленькое черное платье",4999)
 
         # Разместить виджеты в QGridLayout главного окна
         self.gridLayout.addWidget(widget1, 0, 0)
