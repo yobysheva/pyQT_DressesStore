@@ -53,7 +53,8 @@ class MainWindow(QMainWindow):
         self.gridLayout.addWidget(self.update_button, 1, 0, 1, 5)
 
     def update_data(self):
-        self.cur.execute("SELECT * FROM items LIMIT 5 OFFSET 5")
+        self.page += 1
+        self.cur.execute(f"SELECT * FROM items LIMIT 5 OFFSET 5*{self.page}")
         data = self.cur.fetchall()
 
         for i, row in enumerate(data):
