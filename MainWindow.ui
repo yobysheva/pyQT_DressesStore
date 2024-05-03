@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1383</width>
+    <height>724</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background: rgb(254,254,254)</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QWidget" name="gridLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>230</y>
+      <width>1341</width>
+      <height>481</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout"/>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>420</x>
+      <y>0</y>
+      <width>681</width>
+      <height>131</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Futurespore Cyrillic</family>
+      <pointsize>110</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="cursor">
+     <cursorShape>ArrowCursor</cursorShape>
+    </property>
+    <property name="layoutDirection">
+     <enum>Qt::LeftToRight</enum>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font-weight: bold;
+font: 110pt &quot;Futurespore Cyrillic&quot;;
+color: black;</string>
+    </property>
+    <property name="text">
+     <string>Karmen</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>450</x>
+      <y>120</y>
+      <width>591</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Futurespore Cyrillic</family>
+      <pointsize>24</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font-weight: bold;
+color: black;
+font: 24pt &quot;Futurespore Cyrillic&quot;;</string>
+    </property>
+    <property name="text">
+     <string>Стиль, который говорит о тебе</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>180</y>
+      <width>241</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Futurespore Cyrillic</family>
+      <pointsize>24</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton:pressed {
+border: 0px solid #000;
+border-radius: 15px;
+border-style: outset;
+background: rgb(128,24,24);
+color: white;
+font-weight: bold;
+font: 24pt &quot;Futurespore Cyrillic&quot;;
+}
+QPushButton {
+border: 2px solid #000;
+border-radius: 15px;
+border-style: outset;
+color: black;
+font-weight: bold;
+font: 24pt &quot;Futurespore Cyrillic&quot;;
+}</string>
+    </property>
+    <property name="text">
+     <string>Хиты продаж</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_2">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>180</y>
+      <width>301</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Futurespore Cyrillic</family>
+      <pointsize>24</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton:pressed {
+border: 0px solid #000;
+border-radius: 15px;
+border-style: outset;
+background: rgb(128,24,24);
+color: white;
+font-weight: bold;
+font: 24pt &quot;Futurespore Cyrillic&quot;;
+}
+QPushButton {
+border: 2px solid #000;
+border-radius: 15px;
+border-style: outset;
+color: black;
+font-weight: bold;
+font: 24pt &quot;Futurespore Cyrillic&quot;;
+}</string>
+    </property>
+    <property name="text">
+     <string>Новая коллекция</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_3">
+    <property name="geometry">
+     <rect>
+      <x>580</x>
+      <y>180</y>
+      <width>161</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Futurespore Cyrillic</family>
+      <pointsize>24</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton:pressed {
+border: 0px solid #000;
+border-radius: 15px;
+border-style: outset;
+background: rgb(128,24,24);
+color: white;
+font-weight: bold;
+font: 24pt &quot;Futurespore Cyrillic&quot;;
+}
+QPushButton {
+border: 2px solid #000;
+border-radius: 15px;
+border-style: outset;
+color: black;
+font-weight: bold;
+font: 24pt &quot;Futurespore Cyrillic&quot;;
+}</string>
+    </property>
+    <property name="text">
+     <string>Офисное</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_4">
+    <property name="geometry">
+     <rect>
+      <x>750</x>
+      <y>180</y>
+      <width>141</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Futurespore Cyrillic</family>
+      <pointsize>24</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton:pressed {
+border: 0px solid #000;
+border-radius: 15px;
+border-style: outset;
+background: rgb(128,24,24);
+color: white;
+font-weight: bold;
+font: 24pt &quot;Futurespore Cyrillic&quot;;
+}
+QPushButton {
+border: 2px solid #000;
+border-radius: 15px;
+border-style: outset;
+color: black;
+font-weight: bold;
+font: 24pt &quot;Futurespore Cyrillic&quot;;
+}</string>
+    </property>
+    <property name="text">
+     <string>Летнее</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_5">
+    <property name="geometry">
+     <rect>
+      <x>900</x>
+      <y>180</y>
+      <width>321</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Futurespore Cyrillic</family>
+      <pointsize>24</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton:pressed {
+border: 0px solid #000;
+border-radius: 15px;
+border-style: outset;
+background: rgb(128,24,24);
+color: white;
+font-weight: bold;
+font: 24pt &quot;Futurespore Cyrillic&quot;;
+}
+QPushButton {
+border: 2px solid #000;
+border-radius: 15px;
+border-style: outset;
+color: black;
+font-weight: bold;
+font: 24pt &quot;Futurespore Cyrillic&quot;;
+}</string>
+    </property>
+    <property name="text">
+     <string>Большие размеры</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_6">
+    <property name="geometry">
+     <rect>
+      <x>1230</x>
+      <y>180</y>
+      <width>131</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Futurespore Cyrillic</family>
+      <pointsize>24</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton:pressed {
+border: 0px solid #000;
+border-radius: 15px;
+border-style: outset;
+background: rgb(128,24,24);
+color: white;
+font-weight: bold;
+font: 24pt &quot;Futurespore Cyrillic&quot;;
+}
+QPushButton {
+border: 2px solid #000;
+border-radius: 15px;
+border-style: outset;
+color: black;
+font-weight: bold;
+font: 24pt &quot;Futurespore Cyrillic&quot;;
+}</string>
+    </property>
+    <property name="text">
+     <string>фильтр</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1383</width>
+     <height>26</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
