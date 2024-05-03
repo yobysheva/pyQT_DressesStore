@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>272</width>
-    <height>465</height>
+    <width>260</width>
+    <height>452</height>
    </rect>
   </property>
   <property name="font">
@@ -24,8 +24,8 @@
   <widget class="QPushButton" name="details">
    <property name="geometry">
     <rect>
-     <x>110</x>
-     <y>410</y>
+     <x>100</x>
+     <y>400</y>
      <width>151</width>
      <height>41</height>
     </rect>
@@ -41,14 +41,14 @@
    </property>
    <property name="styleSheet">
     <string notr="true">QPushButton:pressed {
-    background-color: rgb(118,18,18);
+    background-color: rgb(108,8,8);
 }
 QPushButton {
 border: 0px solid #000;
 border-radius: 15px;
 border-style: outset;
 background: rgb(128,24,24);
-color: white;
+color:rgb(254,254,254);
 font-weight: bold;
 font: 18pt &quot;Futurespore Cyrillic&quot;;
 }</string>
@@ -61,8 +61,8 @@ font: 18pt &quot;Futurespore Cyrillic&quot;;
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>360</y>
-     <width>251</width>
+     <y>350</y>
+     <width>241</width>
      <height>51</height>
     </rect>
    </property>
@@ -76,7 +76,8 @@ font: 18pt &quot;Futurespore Cyrillic&quot;;
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">font-weight: bold;
+    <string notr="true">color: black;
+font-weight: bold;
 font: 16pt &quot;HelveticaNeueCyr&quot;;</string>
    </property>
    <property name="text">
@@ -88,8 +89,8 @@ font: 16pt &quot;HelveticaNeueCyr&quot;;</string>
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>251</width>
-     <height>351</height>
+     <width>241</width>
+     <height>341</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout"/>
@@ -98,8 +99,8 @@ font: 16pt &quot;HelveticaNeueCyr&quot;;</string>
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>410</y>
-     <width>91</width>
+     <y>400</y>
+     <width>81</width>
      <height>41</height>
     </rect>
    </property>
@@ -117,8 +118,8 @@ font: 16pt &quot;HelveticaNeueCyr&quot;;</string>
 border: 0px solid #000;
 border-radius: 15px;
 border-style: outset;
-background: rgb(128,24,24);
-color: white;
+background: black;
+color: rgb(254,254,254);
 font-weight: bold;
 font: 18pt &quot;Futurespore Cyrillic&quot;;
 }

@@ -43,7 +43,7 @@ class MainWindow(QMainWindow):
         data = self.cur.fetchall()
 
         for i, row in enumerate(data):
-            widget = MyWidget('futbolka.png', row[1], row[2])
+            widget = MyWidget('images/futbolka.png', row[1], row[2])
             self.gridLayout.addWidget(widget, 0, i)
 
         self.page = 0
@@ -57,7 +57,7 @@ class MainWindow(QMainWindow):
         data = self.cur.fetchall()
 
         for i, row in enumerate(data):
-            widget = MyWidget('dress1.jpg', row[1],row[2])
+            widget = MyWidget('images/dress1.jpg', row[1],row[2])
             self.gridLayout.addWidget(widget, 0, i)
 
 if __name__ == '__main__':

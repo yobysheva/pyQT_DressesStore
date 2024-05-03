@@ -1,5 +1,5 @@
 from PyQt6 import uic
-from PyQt6.QtWidgets import QApplication, QWidget, QCheckBox, QSpinBox, QLabel, QVBoxLayout, QFrame, QPushButton, QMainWindow
+from PyQt6.QtWidgets import QApplication, QWidget, QCheckBox, QSpinBox, QLabel, QVBoxLayout, QFrame, QPushButton, QMainWindow, QScrollArea
 from PyQt6.QtGui import QFont, QPixmap, QPainterPath, QPainter
 from PyQt6.QtCore import QRectF
 
