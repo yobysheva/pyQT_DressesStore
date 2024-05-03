@@ -38,22 +38,30 @@ class MainWindow(QMainWindow):
         self.conn = sqlite3.connect('cards.db')
         self.cur = self.conn.cursor()
 
+        self.query = 'SELECT COUNT(*) FROM items'
+        print(self.query)
+
         # Берем первые 5 товаров из бд
         self.cur.execute("SELECT * FROM items LIMIT 5")
         data = self.cur.fetchall()
 
         for i, row in enumerate(data):
-            widget = MyWidget('images/futbolka.png', row[1], row[2])
+            widget = MyWidget('images/dress1.jpg', row[1], row[2])
             self.gridLayout.addWidget(widget, 0, i)
 
         self.page = 0
-        # кнопка для предлючения
-        self.update_button = QPushButton("Update")
-        self.update_button.clicked.connect(self.update_data)
-        self.gridLayout.addWidget(self.update_button, 1, 0, 1, 5)
+
+        self.next.clicked.connect(self.update_data)
+        self.prev.clicked.connect(self.update_data)
+
 
     def update_data(self):
-        self.page += 1
+        sender = self.sender()
+        if sender == self.next :
+            self.page += 1
+        elif sender == self.prev and self.page > 0:
+            self.page -= 1
+
         self.cur.execute(f"SELECT * FROM items LIMIT 5 OFFSET 5*{self.page}")
         data = self.cur.fetchall()
 
