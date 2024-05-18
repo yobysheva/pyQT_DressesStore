@@ -8,7 +8,7 @@ from PyQt6.QtCore import QRectF, QSize
 from functools import partial
 
 class big_card(QWidget):
-    def __init__(self, text, num, photo1 ):
+    def __init__(self, text, num, photo1, photo2):
         super().__init__()
 
         # Загрузить пользовательский интерфейс из файла .ui
@@ -47,7 +47,7 @@ class Card(QWidget):
         # Берем первые 5 товаров из бд
         self.cur.execute(f"SELECT * FROM items WHERE id = {id}")
         data = self.cur.fetchall()
-        text, num, photo1  = data[0][1:]
+        text, num, photo1, photo2 = data[0][1:]
 
 
         # Загрузить пользовательский интерфейс из файла .ui
@@ -67,11 +67,11 @@ class Card(QWidget):
 
         self.verticalLayout.addWidget(photo_label)
 
-        self.show_description_partial = partial(self.show_description, text, num, photo1 )
+        self.show_description_partial = partial(self.show_description, text, num, photo1, photo2)
         self.details.clicked.connect(self.show_description_partial)
 
-    def show_description(self, text, num, photo1 ):
-        self.w2 = big_card(text, num, photo1 )
+    def show_description(self, text, num, photo1, photo2):
+        self.w2 = big_card(text, num, photo1, photo2)
         self.w2.show()
 
 class MainWindow(QMainWindow):
@@ -110,7 +110,7 @@ class MainWindow(QMainWindow):
         data = self.cur.fetchall()
 
         for i, row in enumerate(data):
-            widget = Card(f'{row[3]}', row[1],row[2])
+            widget = Card(row[0])
             self.gridLayout.addWidget(widget, 0, 4-i)
 
 if __name__ == '__main__':
