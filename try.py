@@ -44,7 +44,7 @@ class MainWindow(QMainWindow):
 
         for i, row in enumerate(data):
             widget = MyWidget(f'{row[3]}', row[1], row[2])
-            self.gridLayout.addWidget(widget, 0, i)
+            self.gridLayout.addWidget(widget, 0, 4-i)
 
         self.page = 0
 
