@@ -116,9 +116,9 @@ font: 20pt &quot;Futurespore Cyrillic&quot;;
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>370</y>
+     <y>360</y>
      <width>251</width>
-     <height>31</height>
+     <height>41</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -128,6 +128,9 @@ font: 16pt &quot;HelveticaNeueCyr&quot;;</string>
    </property>
    <property name="text">
     <string>Описание</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
    </property>
    <property name="margin">
     <number>3</number>

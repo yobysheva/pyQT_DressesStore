@@ -24,23 +24,24 @@ class little_card(QWidget):
 
         self.price.setText(str(num))
 
-        photo_label = QLabel(self)
-        image = QPixmap(photo1)
-        # уменьшение изображения
-        photo_label.setScaledContents(True)
-
-        photo_label.setPixmap(image)
-
-        self.verticalLayout.addWidget(photo_label)
-
-        # width = self.photo.size().width()
-        # height = self.photo.size().height()
+        # photo_label = QLabel(self)
+        # image = QPixmap(photo1)
+        # # уменьшение изображения
+        # photo_label.setScaledContents(True)
         #
-        # self.photo.setIcon(QIcon(photo1))
-        # self.photo.setIconSize(QSize(width, height))
+        # photo_label.setPixmap(image)
+        #
+        # self.verticalLayout.addWidget(photo_label)
+
+        width = self.photo.size().width()
+        height = self.photo.size().height()
+
+        self.photo.setIcon(QIcon(photo1))
+        self.photo.setIconSize(QSize(width, height))
 
         self.show_description_partial = partial(self.show_description, text, num, photo1, photo2)
         self.price.clicked.connect(self.show_description_partial)
+        self.photo.clicked.connect(self.show_description_partial)
 
     def show_description(self, text, num, photo1, photo2):
         self.w2 = big_card(text, num, photo1, photo2)
@@ -115,6 +116,7 @@ class card(QWidget):
 
         self.show_description_partial = partial(self.show_description, text, num, photo1, photo2)
         self.details.clicked.connect(self.show_description_partial)
+        self.price.clicked.connect(self.show_description_partial)
 
     def show_description(self, text, num, photo1, photo2):
         self.w2 = big_card(text, num, photo1, photo2)
@@ -137,7 +139,7 @@ class MainWindow(QMainWindow):
 
         for i, row in enumerate(data):
             widget = card(row[0])
-            self.gridLayout.addWidget(widget, 0, i)
+            self.gridLayout.addWidget(widget, 0, 4-i)
 
         self.page = 0
 
