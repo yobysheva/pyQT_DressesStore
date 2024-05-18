@@ -6,6 +6,45 @@ from PyQt6.QtWidgets import QApplication, QWidget, QCheckBox, QSpinBox, QLabel, 
 from PyQt6.QtGui import QFont, QPixmap, QPainterPath, QPainter, QIcon
 from PyQt6.QtCore import QRectF, QSize
 from functools import partial
+from random import randint
+
+class little_card(QWidget):
+    def __init__(self, id):
+        super().__init__()
+        self.conn = sqlite3.connect('cards.db')
+        self.cur = self.conn.cursor()
+
+
+        self.cur.execute(f"SELECT * FROM items WHERE id = {id}")
+        data = self.cur.fetchall()
+        text, num, photo1, photo2 = data[0][1:]
+
+        # Загрузить пользовательский интерфейс из файла .ui
+        uic.loadUi('little_card.ui', self)
+
+        self.price.setText(str(num))
+
+        photo_label = QLabel(self)
+        image = QPixmap(photo1)
+        # уменьшение изображения
+        photo_label.setScaledContents(True)
+
+        photo_label.setPixmap(image)
+
+        self.verticalLayout.addWidget(photo_label)
+
+        # width = self.photo.size().width()
+        # height = self.photo.size().height()
+        #
+        # self.photo.setIcon(QIcon(photo1))
+        # self.photo.setIconSize(QSize(width, height))
+
+        self.show_description_partial = partial(self.show_description, text, num, photo1, photo2)
+        self.price.clicked.connect(self.show_description_partial)
+
+    def show_description(self, text, num, photo1, photo2):
+        self.w2 = big_card(text, num, photo1, photo2)
+        self.w2.show()
 
 class big_card(QWidget):
     def __init__(self, text, num, photo1, photo2):
@@ -37,8 +76,16 @@ class big_card(QWidget):
 
         self.verticalLayout.addWidget(photo_label)
 
+        self.conn = sqlite3.connect('cards.db')
+        self.cur = self.conn.cursor()
 
-class Card(QWidget):
+        ids = [randint(1,47) for i in range(5)]
+
+        for i in ids:
+            widget = little_card(i)
+            self.horizontalLayout.addWidget(widget)
+
+class card(QWidget):
     def __init__(self, id):
         super().__init__()
         self.conn = sqlite3.connect('cards.db')
@@ -48,7 +95,6 @@ class Card(QWidget):
         self.cur.execute(f"SELECT * FROM items WHERE id = {id}")
         data = self.cur.fetchall()
         text, num, photo1, photo2 = data[0][1:]
-
 
         # Загрузить пользовательский интерфейс из файла .ui
         uic.loadUi('card.ui', self)
@@ -90,7 +136,7 @@ class MainWindow(QMainWindow):
         data = self.cur.fetchall()
 
         for i, row in enumerate(data):
-            widget = Card(row[0])
+            widget = card(row[0])
             self.gridLayout.addWidget(widget, 0, i)
 
         self.page = 0
@@ -110,7 +156,7 @@ class MainWindow(QMainWindow):
         data = self.cur.fetchall()
 
         for i, row in enumerate(data):
-            widget = Card(row[0])
+            widget = card(row[0])
             self.gridLayout.addWidget(widget, 0, 4-i)
 
 if __name__ == '__main__':
