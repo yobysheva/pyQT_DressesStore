@@ -53,7 +53,8 @@ class MainWindow(QMainWindow):
 
     def update_data(self):
         sender = self.sender()
-        if sender == self.next:
+        max_pages = self.cur.execute("SELECT COUNT(*) FROM items").fetchone()[0] // 5
+        if sender == self.next and self.page < max_pages:
             self.page += 1
         elif sender == self.prev and self.page > 0:
             self.page -= 1
