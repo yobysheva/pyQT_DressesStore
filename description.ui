@@ -419,7 +419,7 @@ border-style: outset;
 background: rgb(128,24,24);
 color:rgb(254,254,254);
 font-weight: bold;
-font: 20pt &quot;Futurespore Cyrillic&quot;;
+font: 26pt &quot;Futurespore Cyrillic&quot;;
 }</string>
    </property>
    <property name="text">
