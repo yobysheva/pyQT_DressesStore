@@ -116,7 +116,7 @@ font: 24pt &quot;Futurespore Cyrillic&quot;;
       <x>10</x>
       <y>0</y>
       <width>1391</width>
-      <height>181</height>
+      <height>191</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout" stretch="0,1,2">
@@ -182,6 +182,9 @@ font: 25pt &quot;Futurespore Cyrillic&quot;;</string>
      </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout" stretch="2,2,1,1,1,1">
+       <property name="spacing">
+        <number>7</number>
+       </property>
        <property name="topMargin">
         <number>7</number>
        </property>

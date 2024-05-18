@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>271</width>
-    <height>471</height>
+    <height>455</height>
    </rect>
   </property>
   <property name="font">
@@ -21,23 +21,105 @@
   <property name="styleSheet">
    <string notr="true">background: rgb(254,254,254)</string>
   </property>
-  <widget class="QLabel" name="name">
+  <widget class="QWidget" name="verticalLayoutWidget">
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>380</y>
+     <y>10</y>
      <width>251</width>
-     <height>41</height>
+     <height>351</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout"/>
+  </widget>
+  <widget class="QPushButton" name="price">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>410</y>
+     <width>89</width>
+     <height>34</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <family>HelveticaNeueCyr</family>
-     <pointsize>16</pointsize>
+     <family>Futurespore Cyrillic</family>
+     <pointsize>20</pointsize>
      <weight>50</weight>
      <italic>false</italic>
      <bold>false</bold>
     </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton:pressed {
+border: 0px solid #000;
+border-radius: 13px;
+border-style: outset;
+background: black;
+color: rgb(254,254,254);
+font-weight: bold;
+font: 20pt &quot;Futurespore Cyrillic&quot;;
+}
+QPushButton {
+border: 2px solid #000;
+border-radius: 13px;
+border-style: outset;
+color: black;
+font-weight: bold;
+font: 20pt &quot;Futurespore Cyrillic&quot;;
+}</string>
+   </property>
+   <property name="text">
+    <string>Цена</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="details">
+   <property name="geometry">
+    <rect>
+     <x>110</x>
+     <y>410</y>
+     <width>151</width>
+     <height>34</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Futurespore Cyrillic</family>
+     <pointsize>20</pointsize>
+     <weight>50</weight>
+     <italic>false</italic>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton:pressed {
+    background-color: rgb(108,8,8);
+}
+QPushButton {
+border: 2px solid #521;
+border-radius: 13px;
+border-style: outset;
+background: rgb(128,24,24);
+color:rgb(254,254,254);
+font-weight: bold;
+font: 20pt &quot;Futurespore Cyrillic&quot;;
+}</string>
+   </property>
+   <property name="text">
+    <string>Подробнее</string>
+   </property>
+   <property name="autoDefault">
+    <bool>false</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="name">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>370</y>
+     <width>251</width>
+     <height>31</height>
+    </rect>
    </property>
    <property name="styleSheet">
     <string notr="true">color: black;
@@ -47,94 +129,6 @@ font: 16pt &quot;HelveticaNeueCyr&quot;;</string>
    <property name="text">
     <string>Описание</string>
    </property>
-  </widget>
-  <widget class="QWidget" name="verticalLayoutWidget">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>10</y>
-     <width>251</width>
-     <height>361</height>
-    </rect>
-   </property>
-   <layout class="QVBoxLayout" name="verticalLayout"/>
-  </widget>
-  <widget class="QWidget" name="horizontalLayoutWidget">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>420</y>
-     <width>251</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,2">
-    <item>
-     <widget class="QPushButton" name="price">
-      <property name="font">
-       <font>
-        <family>Futurespore Cyrillic</family>
-        <pointsize>22</pointsize>
-        <weight>50</weight>
-        <italic>false</italic>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton:pressed {
-border: 0px solid #000;
-border-radius: 10px;
-border-style: outset;
-background: black;
-color: rgb(254,254,254);
-font-weight: bold;
-font: 22pt &quot;Futurespore Cyrillic&quot;;
-}
-QPushButton {
-border: 2px solid #000;
-border-radius: 10px;
-border-style: outset;
-color: black;
-font-weight: bold;
-font: 22pt &quot;Futurespore Cyrillic&quot;;
-}</string>
-      </property>
-      <property name="text">
-       <string>Цен</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QPushButton" name="details">
-      <property name="font">
-       <font>
-        <family>Futurespore Cyrillic</family>
-        <pointsize>22</pointsize>
-        <weight>50</weight>
-        <italic>false</italic>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton:pressed {
-    background-color: rgb(108,8,8);
-}
-QPushButton {
-border: 2px solid #511;
-border-radius: 10px;
-border-style: outset;
-background: rgb(128,24,24);
-color:rgb(254,254,254);
-font-weight: bold;
-font: 22pt &quot;Futurespore Cyrillic&quot;;
-}</string>
-      </property>
-      <property name="text">
-       <string>Подробнее</string>
-      </property>
-     </widget>
-    </item>
-   </layout>
   </widget>
  </widget>
  <resources/>
