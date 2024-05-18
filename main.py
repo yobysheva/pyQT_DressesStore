@@ -3,8 +3,9 @@ import sqlite3
 from PyQt6 import uic
 from PyQt6.QtWidgets import QApplication, QWidget, QCheckBox, QSpinBox, QLabel, QVBoxLayout, QFrame, QPushButton, \
     QMainWindow, QListWidget, QListWidgetItem
-from PyQt6.QtGui import QFont, QPixmap, QPainterPath, QPainter
-from PyQt6.QtCore import QRectF
+from PyQt6.QtGui import QFont, QPixmap, QPainterPath, QPainter, QIcon
+from PyQt6.QtCore import QRectF, QSize
+from functools import partial
 
 class big_card(QWidget):
     def __init__(self, photo, text, num):
@@ -13,10 +14,19 @@ class big_card(QWidget):
         # Загрузить пользовательский интерфейс из файла .ui
         uic.loadUi('description.ui', self)
 
+        self.name.setText(text)
+        self.name.setWordWrap(True)
+
         # Установить переданные значения
         self.long_description.setText(text)
 
         self.price.setText(str(num))
+
+        self.like.setIcon(QIcon('images/like.png'))
+        self.like.setIconSize(QSize(25, 25))
+
+        self.buy.setIcon(QIcon('images/bag.png'))
+        self.buy.setIconSize(QSize(25, 25))
 
         photo_label = QLabel(self)
         image = QPixmap(photo)
@@ -49,11 +59,12 @@ class Card(QWidget):
 
         self.verticalLayout.addWidget(photo_label)
 
-        self.details.clicked.connect(self.show_description)
+        self.show_description_partial = partial(self.show_description, photo, text, num)
+        self.details.clicked.connect(self.show_description_partial)
 
-        def show_description(self):
-            self.w2 = big_card(photo, text, num)
-            self.w2.show()
+    def show_description(self, photo, text, num):
+        self.w2 = big_card(photo, text, num)
+        self.w2.show()
 
 class MainWindow(QMainWindow):
     def __init__(self):
