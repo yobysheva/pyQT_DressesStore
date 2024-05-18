@@ -116,7 +116,7 @@ font: 22pt &quot;Futurespore Cyrillic&quot;;
       <x>20</x>
       <y>0</y>
       <width>1381</width>
-      <height>181</height>
+      <height>201</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout" stretch="0,1,0">
@@ -196,7 +196,7 @@ font: 25pt &quot;Futurespore Cyrillic&quot;;</string>
          <property name="font">
           <font>
            <family>Futurespore Cyrillic</family>
-           <pointsize>25</pointsize>
+           <pointsize>26</pointsize>
            <weight>50</weight>
            <italic>false</italic>
            <bold>false</bold>
@@ -210,7 +210,7 @@ border-style: outset;
 background: black;
 color: rgb(254,254,254);
 font-weight: bold;
-font: 25pt &quot;Futurespore Cyrillic&quot;;
+font: 26pt &quot;Futurespore Cyrillic&quot;;
 }
 QPushButton {
 border: 2px solid #000;
@@ -218,7 +218,7 @@ border-radius: 13px;
 border-style: outset;
 color: black;
 font-weight: bold;
-font: 25pt &quot;Futurespore Cyrillic&quot;;
+font: 26pt &quot;Futurespore Cyrillic&quot;;
 }</string>
          </property>
          <property name="text">
@@ -234,7 +234,7 @@ font: 25pt &quot;Futurespore Cyrillic&quot;;
          <property name="font">
           <font>
            <family>Futurespore Cyrillic</family>
-           <pointsize>25</pointsize>
+           <pointsize>26</pointsize>
            <weight>50</weight>
            <italic>false</italic>
            <bold>false</bold>
@@ -248,7 +248,7 @@ border-style: outset;
 background: black;
 color: rgb(254,254,254);
 font-weight: bold;
-font: 25pt &quot;Futurespore Cyrillic&quot;;
+font: 26pt &quot;Futurespore Cyrillic&quot;;
 }
 QPushButton {
 border: 2px solid #000;
@@ -256,7 +256,7 @@ border-radius: 13px;
 border-style: outset;
 color: black;
 font-weight: bold;
-font: 25pt &quot;Futurespore Cyrillic&quot;;
+font: 26pt &quot;Futurespore Cyrillic&quot;;
 }</string>
          </property>
          <property name="text">
@@ -272,7 +272,7 @@ font: 25pt &quot;Futurespore Cyrillic&quot;;
          <property name="font">
           <font>
            <family>Futurespore Cyrillic</family>
-           <pointsize>25</pointsize>
+           <pointsize>26</pointsize>
            <weight>50</weight>
            <italic>false</italic>
            <bold>false</bold>
@@ -286,7 +286,7 @@ border-style: outset;
 background: black;
 color: rgb(254,254,254);
 font-weight: bold;
-font: 25pt &quot;Futurespore Cyrillic&quot;;
+font: 26pt &quot;Futurespore Cyrillic&quot;;
 }
 QPushButton {
 border: 2px solid #000;
@@ -294,7 +294,7 @@ border-radius: 13px;
 border-style: outset;
 color: black;
 font-weight: bold;
-font: 25pt &quot;Futurespore Cyrillic&quot;;
+font: 26pt &quot;Futurespore Cyrillic&quot;;
 }</string>
          </property>
          <property name="text">
@@ -310,7 +310,7 @@ font: 25pt &quot;Futurespore Cyrillic&quot;;
          <property name="font">
           <font>
            <family>Futurespore Cyrillic</family>
-           <pointsize>25</pointsize>
+           <pointsize>26</pointsize>
            <weight>50</weight>
            <italic>false</italic>
            <bold>false</bold>
@@ -324,7 +324,7 @@ border-style: outset;
 background: black;
 color: rgb(254,254,254);
 font-weight: bold;
-font: 25pt &quot;Futurespore Cyrillic&quot;;
+font: 26pt &quot;Futurespore Cyrillic&quot;;
 }
 QPushButton {
 border: 2px solid #000;
@@ -332,7 +332,7 @@ border-radius: 13px;
 border-style: outset;
 color: black;
 font-weight: bold;
-font: 25pt &quot;Futurespore Cyrillic&quot;;
+font: 26pt &quot;Futurespore Cyrillic&quot;;
 }</string>
          </property>
          <property name="text">
@@ -348,7 +348,7 @@ font: 25pt &quot;Futurespore Cyrillic&quot;;
          <property name="font">
           <font>
            <family>Futurespore Cyrillic</family>
-           <pointsize>25</pointsize>
+           <pointsize>26</pointsize>
            <weight>50</weight>
            <italic>false</italic>
            <bold>false</bold>
@@ -362,7 +362,7 @@ border-style: outset;
 background: black;
 color: rgb(254,254,254);
 font-weight: bold;
-font: 25pt &quot;Futurespore Cyrillic&quot;;
+font: 26pt &quot;Futurespore Cyrillic&quot;;
 }
 QPushButton {
 border: 2px solid #000;
@@ -370,7 +370,7 @@ border-radius: 13px;
 border-style: outset;
 color: black;
 font-weight: bold;
-font: 25pt &quot;Futurespore Cyrillic&quot;;
+font: 26pt &quot;Futurespore Cyrillic&quot;;
 }</string>
          </property>
          <property name="text">
@@ -386,7 +386,7 @@ font: 25pt &quot;Futurespore Cyrillic&quot;;
          <property name="font">
           <font>
            <family>Futurespore Cyrillic</family>
-           <pointsize>25</pointsize>
+           <pointsize>26</pointsize>
            <weight>50</weight>
            <italic>false</italic>
            <bold>false</bold>
@@ -400,7 +400,7 @@ border-style: outset;
 background: black;
 color: rgb(254,254,254);
 font-weight: bold;
-font: 25pt &quot;Futurespore Cyrillic&quot;;
+font: 26pt &quot;Futurespore Cyrillic&quot;;
 }
 QPushButton {
 border: 2px solid #000;
@@ -408,7 +408,7 @@ border-radius: 13px;
 border-style: outset;
 color: black;
 font-weight: bold;
-font: 25pt &quot;Futurespore Cyrillic&quot;;
+font: 26pt &quot;Futurespore Cyrillic&quot;;
 }</string>
          </property>
          <property name="text">
