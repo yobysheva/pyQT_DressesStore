@@ -130,7 +130,7 @@ font: 20pt &quot;Futurespore Cyrillic&quot;;
    <property name="font">
     <font>
      <family>HelveticaNeueCyr</family>
-     <pointsize>16</pointsize>
+     <pointsize>18</pointsize>
      <weight>50</weight>
      <italic>false</italic>
      <bold>false</bold>
@@ -144,7 +144,7 @@ border-style: outset;
 background: black;
 color: rgb(254,254,254);
 font-weight: bold;
-font: 16pt &quot;HelveticaNeueCyr&quot;;
+font: 18pt &quot;HelveticaNeueCyr&quot;;
 }
 QPushButton {
 border: 1px solid #000;
@@ -152,7 +152,7 @@ border-radius: 13px;
 border-style: outset;
 color: black;
 font-weight: bold;
-font: 16pt &quot;HelveticaNeueCyr&quot;;
+font: 18pt &quot;HelveticaNeueCyr&quot;;
 }</string>
    </property>
    <property name="text">
@@ -171,7 +171,7 @@ font: 16pt &quot;HelveticaNeueCyr&quot;;
    <property name="font">
     <font>
      <family>HelveticaNeueCyr</family>
-     <pointsize>16</pointsize>
+     <pointsize>18</pointsize>
      <weight>50</weight>
      <italic>false</italic>
      <bold>false</bold>
@@ -185,7 +185,7 @@ border-style: outset;
 background: black;
 color: rgb(254,254,254);
 font-weight: bold;
-font: 16pt &quot;HelveticaNeueCyr&quot;;
+font: 18pt &quot;HelveticaNeueCyr&quot;;
 }
 QPushButton {
 border: 1px solid #000;
@@ -193,7 +193,7 @@ border-radius: 13px;
 border-style: outset;
 color: black;
 font-weight: bold;
-font: 16pt &quot;HelveticaNeueCyr&quot;;
+font: 18pt &quot;HelveticaNeueCyr&quot;;
 }</string>
    </property>
    <property name="text">
@@ -212,7 +212,7 @@ font: 16pt &quot;HelveticaNeueCyr&quot;;
    <property name="font">
     <font>
      <family>HelveticaNeueCyr</family>
-     <pointsize>16</pointsize>
+     <pointsize>18</pointsize>
      <weight>50</weight>
      <italic>false</italic>
      <bold>false</bold>
@@ -226,7 +226,7 @@ border-style: outset;
 background: black;
 color: rgb(254,254,254);
 font-weight: bold;
-font: 16pt &quot;HelveticaNeueCyr&quot;;
+font: 18pt &quot;HelveticaNeueCyr&quot;;
 }
 QPushButton {
 border: 1px solid #000;
@@ -234,7 +234,7 @@ border-radius: 13px;
 border-style: outset;
 color: black;
 font-weight: bold;
-font: 16pt &quot;HelveticaNeueCyr&quot;;
+font: 18pt &quot;HelveticaNeueCyr&quot;;
 }</string>
    </property>
    <property name="text">
@@ -253,7 +253,7 @@ font: 16pt &quot;HelveticaNeueCyr&quot;;
    <property name="font">
     <font>
      <family>HelveticaNeueCyr</family>
-     <pointsize>16</pointsize>
+     <pointsize>18</pointsize>
      <weight>50</weight>
      <italic>false</italic>
      <bold>false</bold>
@@ -267,7 +267,7 @@ border-style: outset;
 background: black;
 color: rgb(254,254,254);
 font-weight: bold;
-font: 16pt &quot;HelveticaNeueCyr&quot;;
+font: 18pt &quot;HelveticaNeueCyr&quot;;
 }
 QPushButton {
 border: 1px solid #000;
@@ -275,7 +275,7 @@ border-radius: 13px;
 border-style: outset;
 color: black;
 font-weight: bold;
-font: 16pt &quot;HelveticaNeueCyr&quot;;
+font: 18pt &quot;HelveticaNeueCyr&quot;;
 }</string>
    </property>
    <property name="text">
@@ -294,7 +294,7 @@ font: 16pt &quot;HelveticaNeueCyr&quot;;
    <property name="font">
     <font>
      <family>HelveticaNeueCyr</family>
-     <pointsize>16</pointsize>
+     <pointsize>18</pointsize>
      <weight>50</weight>
      <italic>false</italic>
      <bold>false</bold>
@@ -308,7 +308,7 @@ border-style: outset;
 background: black;
 color: rgb(254,254,254);
 font-weight: bold;
-font: 16pt &quot;HelveticaNeueCyr&quot;;
+font: 18pt &quot;HelveticaNeueCyr&quot;;
 }
 QPushButton {
 border: 1px solid #000;
@@ -316,7 +316,7 @@ border-radius: 13px;
 border-style: outset;
 color: black;
 font-weight: bold;
-font: 16pt &quot;HelveticaNeueCyr&quot;;
+font: 18pt &quot;HelveticaNeueCyr&quot;;
 }</string>
    </property>
    <property name="text">
@@ -335,7 +335,7 @@ font: 16pt &quot;HelveticaNeueCyr&quot;;
    <property name="font">
     <font>
      <family>HelveticaNeueCyr</family>
-     <pointsize>16</pointsize>
+     <pointsize>18</pointsize>
      <weight>50</weight>
      <italic>false</italic>
      <bold>false</bold>
@@ -349,7 +349,7 @@ border-style: outset;
 background: black;
 color: rgb(254,254,254);
 font-weight: bold;
-font: 16pt &quot;HelveticaNeueCyr&quot;;
+font: 18pt &quot;HelveticaNeueCyr&quot;;
 }
 QPushButton {
 border: 1px solid #000;
@@ -357,7 +357,7 @@ border-radius: 13px;
 border-style: outset;
 color: black;
 font-weight: bold;
-font: 16pt &quot;HelveticaNeueCyr&quot;;
+font: 18pt &quot;HelveticaNeueCyr&quot;;
 }</string>
    </property>
    <property name="text">
@@ -370,13 +370,13 @@ font: 16pt &quot;HelveticaNeueCyr&quot;;
      <x>410</x>
      <y>550</y>
      <width>211</width>
-     <height>31</height>
+     <height>41</height>
     </rect>
    </property>
    <property name="styleSheet">
     <string notr="true">color: black;
 font-weight: bold;
-font: 16pt &quot;HelveticaNeueCyr&quot;;</string>
+font: 18pt &quot;HelveticaNeueCyr&quot;;</string>
    </property>
    <property name="text">
     <string>Размер</string>
@@ -419,7 +419,7 @@ border-style: outset;
 background: rgb(128,24,24);
 color:rgb(254,254,254);
 font-weight: bold;
-font: 26pt &quot;Futurespore Cyrillic&quot;;
+font: 28pt &quot;Futurespore Cyrillic&quot;;
 }</string>
    </property>
    <property name="text">
@@ -435,6 +435,15 @@ font: 26pt &quot;Futurespore Cyrillic&quot;;
      <height>51</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>HelveticaNeueCyr</family>
+     <pointsize>18</pointsize>
+     <weight>50</weight>
+     <italic>false</italic>
+     <bold>false</bold>
+    </font>
+   </property>
    <property name="autoFillBackground">
     <bool>true</bool>
    </property>
@@ -445,8 +454,11 @@ border-radius: 13px;
 border-style: outset;
 color: black;
 font-weight: bold;
-font: 16pt &quot;HelveticaNeueCyr&quot;;
+font: 18pt &quot;HelveticaNeueCyr&quot;;
 }</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
    <property name="value">
     <number>1</number>
@@ -464,7 +476,7 @@ font: 16pt &quot;HelveticaNeueCyr&quot;;
    <property name="styleSheet">
     <string notr="true">font-weight: bold;
 color: black;
-font: 26pt &quot;Futurespore Cyrillic&quot;;</string>
+font: 28pt &quot;Futurespore Cyrillic&quot;;</string>
    </property>
    <property name="text">
     <string>TextLabel</string>
@@ -474,6 +486,70 @@ font: 26pt &quot;Futurespore Cyrillic&quot;;</string>
    </property>
    <property name="indent">
     <number>1</number>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="buy_2">
+   <property name="geometry">
+    <rect>
+     <x>-10</x>
+     <y>270</y>
+     <width>41</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton:pressed {
+border: 0px solid #000;
+border-radius: 20px;
+border-style: outset;
+background: black;
+color: rgb(254,254,254);
+font-weight: bold;
+font: 20pt &quot;Futurespore Cyrillic&quot;;
+}
+QPushButton {
+border: 2px solid #000;
+border-radius: 20px;
+border-style: outset;
+color: black;
+font-weight: bold;
+font: 20pt &quot;Futurespore Cyrillic&quot;;
+}</string>
+   </property>
+   <property name="text">
+    <string>&lt;</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="buy_3">
+   <property name="geometry">
+    <rect>
+     <x>380</x>
+     <y>270</y>
+     <width>41</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton:pressed {
+border: 0px solid #000;
+border-radius: 20px;
+border-style: outset;
+background: black;
+color: rgb(254,254,254);
+font-weight: bold;
+font: 20pt &quot;Futurespore Cyrillic&quot;;
+}
+QPushButton {
+border: 2px solid #000;
+border-radius: 20px;
+border-style: outset;
+color: black;
+font-weight: bold;
+font: 20pt &quot;Futurespore Cyrillic&quot;;
+}</string>
+   </property>
+   <property name="text">
+    <string>&gt;</string>
    </property>
   </widget>
  </widget>

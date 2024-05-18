@@ -8,7 +8,7 @@ from PyQt6.QtCore import QRectF, QSize
 from functools import partial
 
 class big_card(QWidget):
-    def __init__(self, photo, text, num):
+    def __init__(self, text, num, photo1 ):
         super().__init__()
 
         # Загрузить пользовательский интерфейс из файла .ui
@@ -29,7 +29,7 @@ class big_card(QWidget):
         self.buy.setIconSize(QSize(25, 25))
 
         photo_label = QLabel(self)
-        image = QPixmap(photo)
+        image = QPixmap(photo1)
         # уменьшение изображения
         photo_label.setScaledContents(True)
 
@@ -39,8 +39,16 @@ class big_card(QWidget):
 
 
 class Card(QWidget):
-    def __init__(self, photo, text, num):
+    def __init__(self, id):
         super().__init__()
+        self.conn = sqlite3.connect('cards.db')
+        self.cur = self.conn.cursor()
+
+        # Берем первые 5 товаров из бд
+        self.cur.execute(f"SELECT * FROM items WHERE id = {id}")
+        data = self.cur.fetchall()
+        text, num, photo1  = data[0][1:]
+
 
         # Загрузить пользовательский интерфейс из файла .ui
         uic.loadUi('card.ui', self)
@@ -51,7 +59,7 @@ class Card(QWidget):
         self.price.setText(str(num))
 
         photo_label = QLabel(self)
-        image = QPixmap(photo)
+        image = QPixmap(photo1)
         # уменьшение изображения
         photo_label.setScaledContents(True)
 
@@ -59,11 +67,11 @@ class Card(QWidget):
 
         self.verticalLayout.addWidget(photo_label)
 
-        self.show_description_partial = partial(self.show_description, photo, text, num)
+        self.show_description_partial = partial(self.show_description, text, num, photo1 )
         self.details.clicked.connect(self.show_description_partial)
 
-    def show_description(self, photo, text, num):
-        self.w2 = big_card(photo, text, num)
+    def show_description(self, text, num, photo1 ):
+        self.w2 = big_card(text, num, photo1 )
         self.w2.show()
 
 class MainWindow(QMainWindow):
@@ -82,7 +90,7 @@ class MainWindow(QMainWindow):
         data = self.cur.fetchall()
 
         for i, row in enumerate(data):
-            widget = Card(f'{row[3]}', row[1], row[2])
+            widget = Card(row[0])
             self.gridLayout.addWidget(widget, 0, i)
 
         self.page = 0
