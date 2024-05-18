@@ -28,7 +28,7 @@
    <property name="font">
     <font>
      <family>Futurespore Cyrillic</family>
-     <pointsize>10</pointsize>
+     <pointsize>14</pointsize>
      <weight>50</weight>
      <italic>false</italic>
      <bold>false</bold>
@@ -42,7 +42,7 @@ border-style: outset;
 background: black;
 color: rgb(254,254,254);
 font-weight: bold;
-font: 10pt &quot;Futurespore Cyrillic&quot;;
+font: 14pt &quot;Futurespore Cyrillic&quot;;
 }
 QPushButton {
 border: 1px solid #000;
@@ -50,11 +50,11 @@ border-radius: 10px;
 border-style: outset;
 color: black;
 font-weight: bold;
-font: 10pt &quot;Futurespore Cyrillic&quot;;
+font: 14pt &quot;Futurespore Cyrillic&quot;;
 }</string>
    </property>
    <property name="text">
-    <string>PushButton</string>
+    <string>1000</string>
    </property>
   </widget>
   <widget class="QWidget" name="verticalLayoutWidget">
