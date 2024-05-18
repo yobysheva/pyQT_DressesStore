@@ -1,9 +1,12 @@
+import sqlite3
+
 from PyQt6 import uic
-from PyQt6.QtWidgets import QApplication, QWidget, QCheckBox, QSpinBox, QLabel, QVBoxLayout, QFrame, QPushButton, QMainWindow, QScrollArea
+from PyQt6.QtWidgets import QApplication, QWidget, QCheckBox, QSpinBox, QLabel, QVBoxLayout, QFrame, QPushButton, \
+    QMainWindow, QListWidget, QListWidgetItem
 from PyQt6.QtGui import QFont, QPixmap, QPainterPath, QPainter
 from PyQt6.QtCore import QRectF
 
-class MyWidget(QWidget):
+class Card(QWidget):
     def __init__(self, photo, text, num):
         super().__init__()
 
@@ -31,19 +34,37 @@ class MainWindow(QMainWindow):
         # Загрузить пользовательский интерфейс главного окна из файла .ui
         uic.loadUi('MainWindow.ui', self)
 
-        # Создать экземпляры MyWidget с разными значениями
-        widget1 = MyWidget("images/dress5.jpg", "Маленькое черное платье", 1999)
-        widget2 = MyWidget("images/dress2.jpg", "Маленькое черное платье", 2990)
-        widget3 = MyWidget("images/dress3.jpg", "Маленькое черное платье", 1859)
-        widget4 = MyWidget("images/dress4.jpg", "Маленькое черное платье",999)
-        widget5 = MyWidget("images/dress7.jpg", "Маленькое черное платье",4999)
+        # Connect to the database
+        self.conn = sqlite3.connect('cards.db')
+        self.cur = self.conn.cursor()
 
-        # Разместить виджеты в QGridLayout главного окна
-        self.gridLayout.addWidget(widget1, 0, 0)
-        self.gridLayout.addWidget(widget2, 0, 1)
-        self.gridLayout.addWidget(widget3, 0, 2)
-        self.gridLayout.addWidget(widget4, 0, 3)
-        self.gridLayout.addWidget(widget5, 0, 4)
+        # Берем первые 5 товаров из бд
+        self.cur.execute("SELECT * FROM items LIMIT 5")
+        data = self.cur.fetchall()
+
+        for i, row in enumerate(data):
+            widget = Card(f'{row[3]}', row[1], row[2])
+            self.gridLayout.addWidget(widget, 0, i)
+
+        self.page = 0
+
+        self.next.clicked.connect(self.update_data)
+        self.prev.clicked.connect(self.update_data)
+
+    def update_data(self):
+        sender = self.sender()
+        max_pages = self.cur.execute("SELECT COUNT(*) FROM items").fetchone()[0] // 5
+        if sender == self.next and self.page < max_pages:
+            self.page += 1
+        elif sender == self.prev and self.page > 0:
+            self.page -= 1
+
+        self.cur.execute(f"SELECT * FROM items LIMIT 5 OFFSET 5*{self.page}")
+        data = self.cur.fetchall()
+
+        for i, row in enumerate(data):
+            widget = Card(f'{row[3]}', row[1],row[2])
+            self.gridLayout.addWidget(widget, 0, 4-i)
 
 if __name__ == '__main__':
     import sys
@@ -51,5 +72,3 @@ if __name__ == '__main__':
     window = MainWindow()
     window.show()
     sys.exit(app.exec())
-
-
