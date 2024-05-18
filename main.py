@@ -6,6 +6,28 @@ from PyQt6.QtWidgets import QApplication, QWidget, QCheckBox, QSpinBox, QLabel, 
 from PyQt6.QtGui import QFont, QPixmap, QPainterPath, QPainter
 from PyQt6.QtCore import QRectF
 
+class big_card(QWidget):
+    def __init__(self, photo, text, num):
+        super().__init__()
+
+        # Загрузить пользовательский интерфейс из файла .ui
+        uic.loadUi('description.ui', self)
+
+        # Установить переданные значения
+        self.long_description.setText(text)
+
+        self.price.setText(str(num))
+
+        photo_label = QLabel(self)
+        image = QPixmap(photo)
+        # уменьшение изображения
+        photo_label.setScaledContents(True)
+
+        photo_label.setPixmap(image)
+
+        self.verticalLayout.addWidget(photo_label)
+
+
 class Card(QWidget):
     def __init__(self, photo, text, num):
         super().__init__()
@@ -26,6 +48,12 @@ class Card(QWidget):
         photo_label.setPixmap(image)
 
         self.verticalLayout.addWidget(photo_label)
+
+        self.details.clicked.connect(self.show_description)
+
+        def show_description(self):
+            self.w2 = big_card(photo, text, num)
+            self.w2.show()
 
 class MainWindow(QMainWindow):
     def __init__(self):

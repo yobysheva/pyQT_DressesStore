@@ -277,7 +277,7 @@ font: 16pt &quot;HelveticaNeueCyr&quot;;
     <string>48</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="buy_6">
+  <widget class="QPushButton" name="size50">
    <property name="geometry">
     <rect>
      <x>570</x>
