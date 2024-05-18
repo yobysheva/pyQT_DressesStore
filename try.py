@@ -51,7 +51,6 @@ class MainWindow(QMainWindow):
         self.next.clicked.connect(self.update_data)
         self.prev.clicked.connect(self.update_data)
 
-
     def update_data(self):
         sender = self.sender()
         if sender == self.next:
