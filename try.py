@@ -38,15 +38,12 @@ class MainWindow(QMainWindow):
         self.conn = sqlite3.connect('cards.db')
         self.cur = self.conn.cursor()
 
-        self.query = 'SELECT COUNT(*) FROM items'
-        print(self.query)
-
         # Берем первые 5 товаров из бд
         self.cur.execute("SELECT * FROM items LIMIT 5")
         data = self.cur.fetchall()
 
         for i, row in enumerate(data):
-            widget = MyWidget('images/dress1.jpg', row[1], row[2])
+            widget = MyWidget('images/futbolka.png', row[1], row[2])
             self.gridLayout.addWidget(widget, 0, i)
 
         self.page = 0
@@ -57,7 +54,7 @@ class MainWindow(QMainWindow):
 
     def update_data(self):
         sender = self.sender()
-        if sender == self.next :
+        if sender == self.next:
             self.page += 1
         elif sender == self.prev and self.page > 0:
             self.page -= 1
