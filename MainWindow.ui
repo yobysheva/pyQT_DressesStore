@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1414</width>
-    <height>727</height>
+    <width>1422</width>
+    <height>728</height>
    </rect>
   </property>
   <property name="font">
@@ -192,7 +192,7 @@ font: 26pt &quot;Futurespore Cyrillic&quot;;</string>
         <number>7</number>
        </property>
        <item>
-        <widget class="QPushButton" name="pushButton">
+        <widget class="QPushButton" name="hits">
          <property name="font">
           <font>
            <family>Futurespore Cyrillic</family>
@@ -230,7 +230,7 @@ font: 26pt &quot;Futurespore Cyrillic&quot;;
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_2">
+        <widget class="QPushButton" name="new_collection">
          <property name="font">
           <font>
            <family>Futurespore Cyrillic</family>
@@ -268,7 +268,7 @@ font: 26pt &quot;Futurespore Cyrillic&quot;;
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_4">
+        <widget class="QPushButton" name="summer">
          <property name="font">
           <font>
            <family>Futurespore Cyrillic</family>
@@ -306,7 +306,7 @@ font: 26pt &quot;Futurespore Cyrillic&quot;;
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_3">
+        <widget class="QPushButton" name="ofice">
          <property name="font">
           <font>
            <family>Futurespore Cyrillic</family>
@@ -382,7 +382,7 @@ font: 26pt &quot;Futurespore Cyrillic&quot;;
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_6">
+        <widget class="QPushButton" name="filter">
          <property name="font">
           <font>
            <family>Futurespore Cyrillic</family>
@@ -429,7 +429,7 @@ font: 26pt &quot;Futurespore Cyrillic&quot;;
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1414</width>
+     <width>1422</width>
      <height>26</height>
     </rect>
    </property>
