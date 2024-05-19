@@ -99,10 +99,10 @@ class big_card(QWidget):
 
     def update_photo(self):
         sender = self.sender()
-        if sender == self.buy_3 and self.photo_counter == 0:
+        if sender == self.buy_3 and self.photo_counter == 0 or sender == self.buy_2 and self.photo_counter == 0:
             self.photo_counter += 1
             self.photo_label.setPixmap(self.hover_image)
-        elif sender == self.buy_2 and self.photo_counter == 1:
+        elif sender == self.buy_2 and self.photo_counter == 1 or sender == self.buy_3 and self.photo_counter == 1:
             self.photo_counter -= 1
             self.photo_label.setPixmap(self.original_image)
     # def eventFilter(self, obj, event):
