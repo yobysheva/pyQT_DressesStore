@@ -11,6 +11,8 @@ from random import randint
 class little_card(QWidget):
     def __init__(self, id):
         super().__init__()
+
+        # выгрузка данных для карточки товара из базы данных
         self.conn = sqlite3.connect('cards.db')
         self.cur = self.conn.cursor()
 
@@ -21,8 +23,10 @@ class little_card(QWidget):
         # Загрузить пользовательский интерфейс из файла .ui
         uic.loadUi('little_card.ui', self)
 
+        # поставили значения из бд в соответствующие поля
         self.price.setText(str(num))
 
+        # предыдущий метод вставки изображния в мини-карточку
         # photo_label = QLabel(self)
         # image = QPixmap(photo1)
         # # уменьшение изображения
@@ -35,13 +39,16 @@ class little_card(QWidget):
         width = self.photo.size().width()
         height = self.photo.size().height()
 
+        #ставим кликбельное изображение в мини-карточку
         self.photo.setIcon(QIcon(photo1))
         self.photo.setIconSize(QSize(width, height))
 
+        # открываем большую карточку товара при нажатии на фото или на цену
         self.show_description_partial = partial(self.show_description, id)
         self.price.clicked.connect(self.show_description_partial)
         self.photo.clicked.connect(self.show_description_partial)
 
+    # открываем новое окно
     def show_description(self, id):
         self.w2 = big_card(id)
         self.w2.show()
@@ -49,7 +56,7 @@ class little_card(QWidget):
 class big_card(QWidget):
     def __init__(self, id):
         super().__init__()
-
+        # выгрузка данных для карточки товара из базы данных
         self.conn = sqlite3.connect('cards.db')
         self.cur = self.conn.cursor()
 
@@ -59,6 +66,7 @@ class big_card(QWidget):
 
         description = text
 
+        #составление описания при помощи таблицы description
         try:
             self.cur.execute(f"""SELECT materials.name, models.name, colors.name, length.name, categories.name FROM description 
                     INNER JOIN items ON items.id = description.id
@@ -80,6 +88,7 @@ class big_card(QWidget):
         # Загрузить пользовательский интерфейс из файла .ui
         uic.loadUi('description.ui', self)
 
+        # поставили значения из бд в соответствующие поля
         self.name.setText(text)
         self.name.setWordWrap(True)
 
@@ -89,6 +98,7 @@ class big_card(QWidget):
 
         self.price.setText(str(num))
 
+        # иконки для кнопок корзина и избранное
         self.like.setIcon(QIcon('images/like.png'))
         self.like.setIconSize(QSize(25, 25))
 
@@ -111,17 +121,21 @@ class big_card(QWidget):
         # self.conn = sqlite3.connect('cards.db')
         # self.cur = self.conn.cursor()
 
+        # пролистывание фоторафий
         self.photo_counter = 0
 
         self.next1.clicked.connect(self.update_photo)
         self.prev1.clicked.connect(self.update_photo)
 
-        ids = [randint(1,47) for i in range(5)]
+        max_item = self.cur.execute("SELECT COUNT(*) FROM items").fetchone()[0]
+        ids = [randint(1, max_item) for i in range(5)]
 
+        # добавление рекомендаций
         for i in ids:
             widget = little_card(i)
             self.horizontalLayout.addWidget(widget)
 
+    # листание фото (пока по нажатию, но должно быть по наведению)
     def update_photo(self):
         sender = self.sender()
         if sender == self.next1 and self.photo_counter == 0 or sender == self.prev1 and self.photo_counter == 0:
@@ -139,7 +153,6 @@ class big_card(QWidget):
     #
     #     return super(big_card, self).eventFilter(obj, event)
 
-
 class card(QWidget):
     def __init__(self, id):
         super().__init__()
@@ -156,22 +169,21 @@ class card(QWidget):
 
         # Установить переданные значения
         self.name.setText(text)
-
         self.price.setText(str(num))
 
         photo_label = QLabel(self)
         image = QPixmap(photo1)
         # уменьшение изображения
         photo_label.setScaledContents(True)
-
         photo_label.setPixmap(image)
-
         self.verticalLayout.addWidget(photo_label)
 
+        # открываем большую карточку товара при нажатии на подробнее или на цену
         self.show_description_partial = partial(self.show_description, id)
         self.details.clicked.connect(self.show_description_partial)
         self.price.clicked.connect(self.show_description_partial)
 
+    # открываем новое окно
     def show_description(self, id):
         self.w2 = big_card(id)
         self.w2.show()
