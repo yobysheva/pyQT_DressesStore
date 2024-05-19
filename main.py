@@ -39,17 +39,24 @@ class little_card(QWidget):
         self.photo.setIcon(QIcon(photo1))
         self.photo.setIconSize(QSize(width, height))
 
-        self.show_description_partial = partial(self.show_description, text, num, photo1, photo2)
+        self.show_description_partial = partial(self.show_description, id)
         self.price.clicked.connect(self.show_description_partial)
         self.photo.clicked.connect(self.show_description_partial)
 
-    def show_description(self, text, num, photo1, photo2):
-        self.w2 = big_card(text, num, photo1, photo2)
+    def show_description(self, id):
+        self.w2 = big_card(id)
         self.w2.show()
 
 class big_card(QWidget):
-    def __init__(self, text, num, photo1, photo2):
+    def __init__(self, id):
         super().__init__()
+
+        self.conn = sqlite3.connect('cards.db')
+        self.cur = self.conn.cursor()
+
+        self.cur.execute(f"SELECT * FROM items WHERE id = {id}")
+        data = self.cur.fetchall()
+        text, num, photo1, photo2 = data[0][1:]
 
         # Загрузить пользовательский интерфейс из файла .ui
         uic.loadUi('description.ui', self)
@@ -57,8 +64,10 @@ class big_card(QWidget):
         self.name.setText(text)
         self.name.setWordWrap(True)
 
+
         # Установить переданные значения
         self.long_description.setText(text)
+        self.long_description.setWordWrap(True)
 
         self.price.setText(str(num))
 
@@ -77,8 +86,8 @@ class big_card(QWidget):
 
         self.verticalLayout.addWidget(photo_label)
 
-        self.conn = sqlite3.connect('cards.db')
-        self.cur = self.conn.cursor()
+        # self.conn = sqlite3.connect('cards.db')
+        # self.cur = self.conn.cursor()
 
         ids = [randint(1,47) for i in range(5)]
 
@@ -114,12 +123,12 @@ class card(QWidget):
 
         self.verticalLayout.addWidget(photo_label)
 
-        self.show_description_partial = partial(self.show_description, text, num, photo1, photo2)
+        self.show_description_partial = partial(self.show_description, id)
         self.details.clicked.connect(self.show_description_partial)
         self.price.clicked.connect(self.show_description_partial)
 
-    def show_description(self, text, num, photo1, photo2):
-        self.w2 = big_card(text, num, photo1, photo2)
+    def show_description(self, id):
+        self.w2 = big_card(id)
         self.w2.show()
 
 class MainWindow(QMainWindow):
