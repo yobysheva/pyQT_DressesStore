@@ -18,7 +18,7 @@ class little_card(QWidget):
 
         self.cur.execute(f"SELECT * FROM items WHERE id = {id}")
         data = self.cur.fetchall()
-        text, num, photo1, photo2 = data[0][1:]
+        text, num, photo1, photo2, order_quantity = data[0][1:]
 
         # Загрузить пользовательский интерфейс из файла .ui
         uic.loadUi('little_card.ui', self)
@@ -123,7 +123,7 @@ class Card(QWidget):
         # Берем первые 5 товаров из бд
         self.cur.execute(f"SELECT * FROM items WHERE id = {id}")
         data = self.cur.fetchall()
-        text, num, photo1, photo2 = data[0][1:]
+        text, num, photo1, photo2, order_quantity = data[0][1:]
 
 
         # Загрузить пользовательский интерфейс из файла .ui
