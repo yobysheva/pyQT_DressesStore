@@ -108,6 +108,7 @@ class big_card(QWidget):
         self.photo_label = QLabel(self)
         # self.photo_label.setScaledContents(True)
 
+        # подключение к фотографиям айтемов из db
         self.original_image = QPixmap(photo1)
         self.hover_image = QPixmap(photo2)
         self.photo_label.setPixmap(self.original_image)
@@ -208,12 +209,13 @@ class MainWindow(QMainWindow):
             self.gridLayout.addWidget(widget, 0, 4-i)
 
         self.page = 0
-
+        # листание страниц по нажатию на кнопки
         self.next.clicked.connect(self.update_data)
         self.prev.clicked.connect(self.update_data)
-
+    # функция для вывода 5 товаров по страницам
     def update_data(self):
         sender = self.sender()
+        # количество товаров в таблице
         max_pages = self.cur.execute("SELECT COUNT(*) FROM items").fetchone()[0] // 5
         if sender == self.next and self.page < max_pages:
             self.page += 1
@@ -222,7 +224,7 @@ class MainWindow(QMainWindow):
 
         self.cur.execute(f"SELECT * FROM items LIMIT 5 OFFSET 5*{self.page}")
         data = self.cur.fetchall()
-
+        # добавление товаров в сетку
         for i, row in enumerate(data):
             widget = card(row[0])
             self.gridLayout.addWidget(widget, 0, 4-i)
