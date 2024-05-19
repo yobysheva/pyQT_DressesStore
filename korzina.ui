@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1422</width>
-    <height>729</height>
+    <height>738</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,14 +20,14 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>210</y>
+     <y>190</y>
      <width>1371</width>
-     <height>91</height>
+     <height>71</height>
     </rect>
    </property>
    <property name="styleSheet">
     <string notr="true">font-weight: bold;
-font: 48pt &quot;HelveticaNeueCyr&quot;;
+font: 44pt &quot;HelveticaNeueCyr&quot;;
 color: black;</string>
    </property>
    <property name="text">
@@ -41,7 +41,7 @@ color: black;</string>
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>300</y>
+     <y>260</y>
      <width>1371</width>
      <height>41</height>
     </rect>
@@ -62,7 +62,7 @@ color: black;</string>
    <property name="geometry">
     <rect>
      <x>630</x>
-     <y>680</y>
+     <y>700</y>
      <width>161</width>
      <height>31</height>
     </rect>
@@ -89,9 +89,9 @@ font: 26pt &quot;Futurespore Cyrillic&quot;;
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>440</y>
+     <y>350</y>
      <width>1381</width>
-     <height>201</height>
+     <height>171</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_2"/>
@@ -100,7 +100,7 @@ font: 26pt &quot;Futurespore Cyrillic&quot;;
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>680</y>
+     <y>700</y>
      <width>141</width>
      <height>31</height>
     </rect>
@@ -132,7 +132,7 @@ font: 22pt &quot;Futurespore Cyrillic&quot;;
    <property name="geometry">
     <rect>
      <x>1240</x>
-     <y>680</y>
+     <y>700</y>
      <width>141</width>
      <height>31</height>
     </rect>
@@ -164,7 +164,7 @@ font: 22pt &quot;Futurespore Cyrillic&quot;;
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>10</y>
+     <y>0</y>
      <width>1379</width>
      <height>111</height>
     </rect>
@@ -197,7 +197,7 @@ color: black;</string>
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>150</y>
+     <y>140</y>
      <width>1379</width>
      <height>47</height>
     </rect>
@@ -475,7 +475,7 @@ font: 20pt &quot;Futurespore Cyrillic&quot;;
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>120</y>
+     <y>110</y>
      <width>1379</width>
      <height>31</height>
     </rect>
@@ -575,9 +575,9 @@ font: 20pt &quot;Futurespore Cyrillic&quot;;
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>390</y>
+     <y>300</y>
      <width>1381</width>
-     <height>31</height>
+     <height>41</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -588,6 +588,17 @@ color: black;</string>
    <property name="text">
     <string>Вам может понравиться:</string>
    </property>
+  </widget>
+  <widget class="QWidget" name="horizontalLayoutWidget_2">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>520</y>
+     <width>1381</width>
+     <height>171</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_4"/>
   </widget>
  </widget>
  <resources/>

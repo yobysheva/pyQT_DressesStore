@@ -189,7 +189,7 @@ class card(QWidget):
         self.w2 = big_card(id)
         self.w2.show()
 
-class korzina_window(QWidget):
+class korzina_widget(QWidget):
     def __init__(self):
         super().__init__()
         self.conn = sqlite3.connect('cards.db')
@@ -222,6 +222,16 @@ class korzina_window(QWidget):
         for i in ids:
             widget = little_card(i)
             self.horizontalLayout_2.addWidget(widget)
+            
+        ids = [randint(1, max_item) for i in range(10)]
+
+        # добавление рекомендаций
+        for i in ids:
+            widget = little_card(i)
+            self.horizontalLayout_4.addWidget(widget)
+
+        self.back.clicked.connect(self.close)
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -278,8 +288,8 @@ class MainWindow(QMainWindow):
     # открывается корзина, нужно сделать так, чтобы закрывалось изначальное окно
     def open_korzina(self):
         try:
-            self.w2 = korzina_window()
-            self.w2.show()
+            self.korzina_window = korzina_widget()
+            self.korzina_window.show()
         except Exception as e:
             print(e)
 
