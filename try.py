@@ -1,14 +1,130 @@
 import sqlite3
 
 from PyQt6 import uic
-from PyQt6.QtWidgets import QApplication, QWidget, QCheckBox, QSpinBox, QLabel, QVBoxLayout, QFrame, QPushButton, \
+from PyQt6.QtWidgets import QApplication, QWidget, QCheckBox, QSpinBox, QLabel,  QVBoxLayout, QFrame, QPushButton, \
     QMainWindow, QListWidget, QListWidgetItem
-from PyQt6.QtGui import QFont, QPixmap, QPainterPath, QPainter
-from PyQt6.QtCore import QRectF
+from PyQt6.QtGui import QFont, QPixmap, QPainterPath, QPainter, QIcon
+from PyQt6.QtCore import QRectF, QSize
+from functools import partial
+from PyQt6.QtCore import QEvent
+from random import randint
 
-class MyWidget(QWidget):
-    def __init__(self, photo, text, num):
+class little_card(QWidget):
+    def __init__(self, id):
         super().__init__()
+        self.conn = sqlite3.connect('cards.db')
+        self.cur = self.conn.cursor()
+
+
+        self.cur.execute(f"SELECT * FROM items WHERE id = {id}")
+        data = self.cur.fetchall()
+        text, num, photo1, photo2 = data[0][1:]
+
+        # Загрузить пользовательский интерфейс из файла .ui
+        uic.loadUi('little_card.ui', self)
+
+        self.price.setText(str(num))
+
+        # photo_label = QLabel(self)
+        # image = QPixmap(photo1)
+        # # уменьшение изображения
+        # photo_label.setScaledContents(True)
+        #
+        # photo_label.setPixmap(image)
+        #
+        # self.verticalLayout.addWidget(photo_label)
+
+        width = self.photo.size().width()
+        height = self.photo.size().height()
+
+        self.photo.setIcon(QIcon(photo1))
+        self.photo.setIconSize(QSize(width, height))
+
+        self.show_description_partial = partial(self.show_description, text, num, photo1, photo2)
+        self.price.clicked.connect(self.show_description_partial)
+        self.photo.clicked.connect(self.show_description_partial)
+
+    def show_description(self, text, num, photo1, photo2):
+        self.w2 = big_card(text, num, photo1, photo2)
+        self.w2.show()
+class big_card(QWidget):
+    def __init__(self, text, num, photo1, photo2):
+        super().__init__()
+
+        # Загрузить пользовательский интерфейс из файла .ui
+        uic.loadUi('description.ui', self)
+
+        self.name.setText(text)
+        self.name.setWordWrap(True)
+
+        # Установить переданные значения
+        self.long_description.setText(text)
+
+        self.price.setText(str(num))
+
+        self.like.setIcon(QIcon('images/like.png'))
+        self.like.setIconSize(QSize(25, 25))
+
+        self.buy.setIcon(QIcon('images/bag.png'))
+        self.buy.setIconSize(QSize(25, 25))
+
+        self.photo_label = QLabel(self)
+        # self.photo_label.setScaledContents(True)
+
+        self.original_image = QPixmap(photo1)
+        self.hover_image = QPixmap(photo2)
+        self.photo_label.setPixmap(self.original_image)
+
+        # self.photo_label.installEventFilter(self)
+
+
+        #уменьшение изображения
+        self.photo_label.setScaledContents(True)
+        self.verticalLayout.addWidget(self.photo_label)
+
+        self.photo_counter = 0
+
+        self.buy_3.clicked.connect(self.update_photo)
+        self.buy_2.clicked.connect(self.update_photo)
+
+
+        self.conn = sqlite3.connect('cards.db')
+        self.cur = self.conn.cursor()
+
+        ids = [randint(1, 47) for i in range(5)]
+
+        for i in ids:
+            widget = little_card(i)
+            self.horizontalLayout.addWidget(widget)
+
+    def update_photo(self):
+        sender = self.sender()
+        if sender == self.buy_3 and self.photo_counter == 0:
+            self.photo_counter += 1
+            self.photo_label.setPixmap(self.hover_image)
+        elif sender == self.buy_2 and self.photo_counter == 1:
+            self.photo_counter -= 1
+            self.photo_label.setPixmap(self.original_image)
+    # def eventFilter(self, obj, event):
+    #     if obj == self.photo_label:
+    #         if event.type() == QEvent.Enter:
+    #             self.photo_label.setPixmap(self.hover_image)
+    #         elif event.type() == QEvent.Leave:
+    #             self.photo_label.setPixmap(self.original_image)
+    #
+    #     return super(big_card, self).eventFilter(obj, event)
+
+class Card(QWidget):
+    def __init__(self, id):
+        super().__init__()
+        self.conn = sqlite3.connect('cards.db')
+        self.cur = self.conn.cursor()
+
+        # Берем первые 5 товаров из бд
+        self.cur.execute(f"SELECT * FROM items WHERE id = {id}")
+        data = self.cur.fetchall()
+        text, num, photo1, photo2 = data[0][1:]
+
 
         # Загрузить пользовательский интерфейс из файла .ui
         uic.loadUi('card.ui', self)
@@ -19,13 +135,20 @@ class MyWidget(QWidget):
         self.price.setText(str(num))
 
         photo_label = QLabel(self)
-        image = QPixmap(photo)
+        image = QPixmap(photo1)
         # уменьшение изображения
         photo_label.setScaledContents(True)
 
         photo_label.setPixmap(image)
 
         self.verticalLayout.addWidget(photo_label)
+
+        self.show_description_partial = partial(self.show_description, text, num, photo1, photo2)
+        self.details.clicked.connect(self.show_description_partial)
+
+    def show_description(self, text, num, photo1, photo2):
+        self.w2 = big_card(text, num, photo1, photo2)
+        self.w2.show()
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -43,8 +166,8 @@ class MainWindow(QMainWindow):
         data = self.cur.fetchall()
 
         for i, row in enumerate(data):
-            widget = MyWidget(f'{row[3]}', row[1], row[2])
-            self.gridLayout.addWidget(widget, 0, 4-i)
+            widget = Card(row[0])
+            self.gridLayout.addWidget(widget, 0, i)
 
         self.page = 0
 
@@ -63,7 +186,7 @@ class MainWindow(QMainWindow):
         data = self.cur.fetchall()
 
         for i, row in enumerate(data):
-            widget = MyWidget(f'{row[3]}', row[1],row[2])
+            widget = Card(row[0])
             self.gridLayout.addWidget(widget, 0, 4-i)
 
 if __name__ == '__main__':
@@ -71,4 +194,5 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = MainWindow()
     window.show()
+
     sys.exit(app.exec())
