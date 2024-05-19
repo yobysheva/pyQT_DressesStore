@@ -189,12 +189,58 @@ class card(QWidget):
         self.w2 = big_card(id)
         self.w2.show()
 
+class korzina_window(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.conn = sqlite3.connect('cards.db')
+        self.cur = self.conn.cursor()
+        id = 1
+
+        # Берем первые 5 товаров из бд
+        self.cur.execute(f"SELECT * FROM items WHERE id = {id}")
+        data = self.cur.fetchall()
+        text, num, photo1, photo2, order_quantity = data[0][1:]
+
+        # Загрузить пользовательский интерфейс из файла .ui
+        uic.loadUi('korzina.ui', self)
+
+        # иконки для кнопок корзина, вход и избранное
+        self.like.setIcon(QIcon('images/like.png'))
+        self.like.setIconSize(QSize(20, 20))
+
+        self.korzina.setIcon(QIcon('images/bag.png'))
+        self.korzina.setIconSize(QSize(20, 20))
+
+        self.log_in.setIcon(QIcon('images/log_in.png'))
+        self.log_in.setIconSize(QSize(20, 20))
+
+
+        max_item = self.cur.execute("SELECT COUNT(*) FROM items").fetchone()[0]
+        ids = [randint(1, max_item) for i in range(10)]
+
+        # добавление рекомендаций
+        for i in ids:
+            widget = little_card(i)
+            self.horizontalLayout_2.addWidget(widget)
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
         # Загрузить пользовательский интерфейс главного окна из файла .ui
         uic.loadUi('MainWindow.ui', self)
+
+        # иконки для кнопок корзина, вход и избранное
+        self.like.setIcon(QIcon('images/like.png'))
+        self.like.setIconSize(QSize(20, 20))
+
+        self.korzina.setIcon(QIcon('images/bag.png'))
+        self.korzina.setIconSize(QSize(20, 20))
+
+        self.log_in.setIcon(QIcon('images/log_in.png'))
+        self.log_in.setIconSize(QSize(20, 20))
+
+        self.korzina.clicked.connect(self.open_korzina)
 
         # Connect to the database
         self.conn = sqlite3.connect('cards.db')
@@ -228,6 +274,14 @@ class MainWindow(QMainWindow):
         for i, row in enumerate(data):
             widget = card(row[0])
             self.gridLayout.addWidget(widget, 0, 4-i)
+
+    # открывается корзина, нужно сделать так, чтобы закрывалось изначальное окно
+    def open_korzina(self):
+        try:
+            self.w2 = korzina_window()
+            self.w2.show()
+        except Exception as e:
+            print(e)
 
 if __name__ == '__main__':
     import sys
