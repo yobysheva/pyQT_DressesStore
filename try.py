@@ -6,7 +6,6 @@ from PyQt6.QtWidgets import QApplication, QWidget, QCheckBox, QSpinBox, QLabel, 
 from PyQt6.QtGui import QFont, QPixmap, QPainterPath, QPainter, QIcon
 from PyQt6.QtCore import QRectF, QSize
 from functools import partial
-from PyQt6.QtCore import QEvent
 from random import randint
 
 class little_card(QWidget):
@@ -14,7 +13,6 @@ class little_card(QWidget):
         super().__init__()
         self.conn = sqlite3.connect('cards.db')
         self.cur = self.conn.cursor()
-
 
         self.cur.execute(f"SELECT * FROM items WHERE id = {id}")
         data = self.cur.fetchall()
@@ -40,16 +38,44 @@ class little_card(QWidget):
         self.photo.setIcon(QIcon(photo1))
         self.photo.setIconSize(QSize(width, height))
 
-        self.show_description_partial = partial(self.show_description, text, num, photo1, photo2)
+        self.show_description_partial = partial(self.show_description, id)
         self.price.clicked.connect(self.show_description_partial)
         self.photo.clicked.connect(self.show_description_partial)
 
-    def show_description(self, text, num, photo1, photo2):
-        self.w2 = big_card(text, num, photo1, photo2)
+    def show_description(self, id):
+        self.w2 = big_card(id)
         self.w2.show()
+
 class big_card(QWidget):
-    def __init__(self, text, num, photo1, photo2):
+    def __init__(self, id):
         super().__init__()
+
+        self.conn = sqlite3.connect('cards.db')
+        self.cur = self.conn.cursor()
+
+        self.cur.execute(f"SELECT * FROM items WHERE id = {id}")
+        data = self.cur.fetchall()
+        text, num, photo1, photo2, order_quantity = data[0][1:]
+
+        description = text
+
+        try:
+            self.cur.execute(f"""SELECT materials.name, models.name, colors.name, length.name, categories.name FROM description 
+                    INNER JOIN items ON items.id = description.id
+                    INNER JOIN materials ON materials."material id" = description.material
+                    INNER JOIN models ON models."models id" = description.model
+                    INNER JOIN colors ON colors."colors id" = description.color
+                    INNER JOIN length ON length."length id" = description.length
+                    INNER JOIN categories ON categories."categoy id" = description.category
+                    WHERE items.id = {id}""")
+
+            data = self.cur.fetchall()
+
+            material, model, color, length, category = data[0]
+
+            description = f"Тип товара: платье\nМодель: {model}\nМатериал: {material}\nЦвет: {color}\nДлина: {length}\nКатегория: {category}"
+        except Exception as e:
+            print(e)
 
         # Загрузить пользовательский интерфейс из файла .ui
         uic.loadUi('description.ui', self)
@@ -58,7 +84,8 @@ class big_card(QWidget):
         self.name.setWordWrap(True)
 
         # Установить переданные значения
-        self.long_description.setText(text)
+        self.long_description.setText(description)
+        self.long_description.setWordWrap(True)
 
         self.price.setText(str(num))
 
@@ -77,21 +104,19 @@ class big_card(QWidget):
 
         # self.photo_label.installEventFilter(self)
 
-
-        #уменьшение изображения
+        # уменьшение изображения
         self.photo_label.setScaledContents(True)
         self.verticalLayout.addWidget(self.photo_label)
 
+        # self.conn = sqlite3.connect('cards.db')
+        # self.cur = self.conn.cursor()
+
         self.photo_counter = 0
 
-        self.buy_3.clicked.connect(self.update_photo)
-        self.buy_2.clicked.connect(self.update_photo)
+        self.next1.clicked.connect(self.update_photo)
+        self.prev1.clicked.connect(self.update_photo)
 
-
-        self.conn = sqlite3.connect('cards.db')
-        self.cur = self.conn.cursor()
-
-        ids = [randint(1, 47) for i in range(5)]
+        ids = [randint(1,47) for i in range(5)]
 
         for i in ids:
             widget = little_card(i)
@@ -99,10 +124,10 @@ class big_card(QWidget):
 
     def update_photo(self):
         sender = self.sender()
-        if sender == self.buy_3 and self.photo_counter == 0 or sender == self.buy_2 and self.photo_counter == 0:
+        if sender == self.next1 and self.photo_counter == 0 or sender == self.prev1 and self.photo_counter == 0:
             self.photo_counter += 1
             self.photo_label.setPixmap(self.hover_image)
-        elif sender == self.buy_2 and self.photo_counter == 1 or sender == self.buy_3 and self.photo_counter == 1:
+        elif sender == self.prev1 and self.photo_counter == 1 or sender == self.next1 and self.photo_counter == 1:
             self.photo_counter -= 1
             self.photo_label.setPixmap(self.original_image)
     # def eventFilter(self, obj, event):
@@ -114,7 +139,8 @@ class big_card(QWidget):
     #
     #     return super(big_card, self).eventFilter(obj, event)
 
-class Card(QWidget):
+
+class card(QWidget):
     def __init__(self, id):
         super().__init__()
         self.conn = sqlite3.connect('cards.db')
@@ -124,7 +150,6 @@ class Card(QWidget):
         self.cur.execute(f"SELECT * FROM items WHERE id = {id}")
         data = self.cur.fetchall()
         text, num, photo1, photo2, order_quantity = data[0][1:]
-
 
         # Загрузить пользовательский интерфейс из файла .ui
         uic.loadUi('card.ui', self)
@@ -143,11 +168,12 @@ class Card(QWidget):
 
         self.verticalLayout.addWidget(photo_label)
 
-        self.show_description_partial = partial(self.show_description, text, num, photo1, photo2)
+        self.show_description_partial = partial(self.show_description, id)
         self.details.clicked.connect(self.show_description_partial)
+        self.price.clicked.connect(self.show_description_partial)
 
-    def show_description(self, text, num, photo1, photo2):
-        self.w2 = big_card(text, num, photo1, photo2)
+    def show_description(self, id):
+        self.w2 = big_card(id)
         self.w2.show()
 
 class MainWindow(QMainWindow):
@@ -166,8 +192,8 @@ class MainWindow(QMainWindow):
         data = self.cur.fetchall()
 
         for i, row in enumerate(data):
-            widget = Card(row[0])
-            self.gridLayout.addWidget(widget, 0, i)
+            widget = card(row[0])
+            self.gridLayout.addWidget(widget, 0, 4-i)
 
         self.page = 0
 
@@ -186,7 +212,7 @@ class MainWindow(QMainWindow):
         data = self.cur.fetchall()
 
         for i, row in enumerate(data):
-            widget = Card(row[0])
+            widget = card(row[0])
             self.gridLayout.addWidget(widget, 0, 4-i)
 
 if __name__ == '__main__':
@@ -194,5 +220,4 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = MainWindow()
     window.show()
-
     sys.exit(app.exec())
