@@ -43,7 +43,6 @@ class little_card(QWidget):
         self.photo.setIcon(QIcon(photo1))
         self.photo.setIconSize(QSize(width, height))
 
-
         # открываем большую карточку товара при нажатии на фото или на цену
         self.show_description_partial = partial(self.show_description, id)
         self.price.clicked.connect(self.show_description_partial)
@@ -53,6 +52,7 @@ class little_card(QWidget):
     def show_description(self, id):
         self.w2 = big_card(id)
         self.w2.show()
+
 
 class big_card(QWidget):
     def __init__(self, id):
@@ -82,7 +82,8 @@ class big_card(QWidget):
 
             material, model, color, length, category = data[0]
 
-            description = f"Тип товара: платье\nМодель: {model}\nМатериал: {material}\nЦвет: {color}\nДлина: {length}\nКатегория: {category}"
+            description = f"Тип товара: платье\nМодель: {model}\nМатериал: {material}\nЦвет: {color}\n" \
+                          f"Длина: {length}\nКатегория: {category}"
         except Exception as e:
             print(e)
 
@@ -181,6 +182,7 @@ class card(QWidget):
         self.w2 = big_card(id)
         self.w2.show()
 
+
 class korzina_widget(QWidget):
     def __init__(self):
         super().__init__()
@@ -206,7 +208,6 @@ class korzina_widget(QWidget):
         self.log_in.setIcon(QIcon('images/log_in.png'))
         self.log_in.setIconSize(QSize(20, 20))
 
-
         max_item = self.cur.execute("SELECT COUNT(*) FROM items").fetchone()[0]
         ids = [randint(1, max_item) for i in range(10)]
 
@@ -222,6 +223,7 @@ class korzina_widget(QWidget):
             widget = little_card(i)
             self.horizontalLayout_4.addWidget(widget)
 
+        # кнопка назад закрывает окно
         self.back.clicked.connect(self.close)
 
 
@@ -254,28 +256,45 @@ class MainWindow(QMainWindow):
 
         for i, row in enumerate(data):
             widget = card(row[0])
-            self.gridLayout.addWidget(widget, 0, 4-i)
+            self.gridLayout.addWidget(widget, 0, 4 - i)
 
         self.page = 0
+        self.message = ' '
+
         # листание страниц по нажатию на кнопки
-        self.next.clicked.connect(self.update_data)
-        self.prev.clicked.connect(self.update_data)
+        self.update_data_partial = partial(self.update_data, self.message)
+        self.next.clicked.connect(self.update_data_partial)
+        self.prev.clicked.connect(self.update_data_partial)
+
+        self.summer.clicked.connect(self.categoriesFilter)
+        self.ofice.clicked.connect(self.categoriesFilter)
+        self.evening.clicked.connect(self.categoriesFilter)
+
     # функция для вывода 5 товаров по страницам
-    def update_data(self):
+    def update_data(self, message):
         sender = self.sender()
         # количество товаров в таблице
-        max_pages = self.cur.execute("SELECT COUNT(*) FROM items").fetchone()[0] // 5
+        max_pages = self.cur.execute(f"SELECT COUNT(*) FROM items {self.message}").fetchone()[0] // 5
         if sender == self.next and self.page < max_pages:
             self.page += 1
         elif sender == self.prev and self.page > 0:
             self.page -= 1
 
-        self.cur.execute(f"SELECT * FROM items LIMIT 5 OFFSET 5*{self.page}")
+        self.cur.execute(f"SELECT * FROM items {self.message} LIMIT 5 OFFSET 5*{self.page}")
         data = self.cur.fetchall()
         # добавление товаров в сетку
         for i, row in enumerate(data):
             widget = card(row[0])
-            self.gridLayout.addWidget(widget, 0, 4-i)
+            self.gridLayout.addWidget(widget, 0, 4 - i)
+
+    def categoriesFilter(self):
+        self.page = 0
+        category = self.sender().text()
+        self.message = f""" 
+    INNER JOIN description ON description.id = items.id
+    INNER JOIN categories ON categories."categoy id" = description.category
+    WHERE categories.name = '{category}'"""
+        self.update_data(self.message)
 
     # открывается корзина, нужно сделать так, чтобы закрывалось изначальное окно
     def open_korzina(self):

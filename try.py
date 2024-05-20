@@ -8,7 +8,6 @@ from PyQt6.QtCore import QRectF, QSize
 from functools import partial
 from random import randint
 
-
 class little_card(QWidget):
     def __init__(self, id):
         super().__init__()
@@ -83,7 +82,8 @@ class big_card(QWidget):
 
             material, model, color, length, category = data[0]
 
-            description = f"Тип товара: платье\nМодель: {model}\nМатериал: {material}\nЦвет: {color}\nДлина: {length}\nКатегория: {category}"
+            description = f"Тип товара: платье\nМодель: {model}\nМатериал: {material}\nЦвет: {color}\n" \
+                          f"Длина: {length}\nКатегория: {category}"
         except Exception as e:
             print(e)
 
@@ -121,9 +121,6 @@ class big_card(QWidget):
         self.photo_label.setScaledContents(True)
         self.verticalLayout.addWidget(self.photo_label)
 
-        # self.conn = sqlite3.connect('cards.db')
-        # self.cur = self.conn.cursor()
-
         # пролистывание фоторафий
         self.photo_counter = 0
 
@@ -147,6 +144,7 @@ class big_card(QWidget):
         elif sender == self.prev1 and self.photo_counter == 1 or sender == self.next1 and self.photo_counter == 1:
             self.photo_counter -= 1
             self.photo_label.setPixmap(self.original_image)
+
 
 class card(QWidget):
     def __init__(self, id):
@@ -184,6 +182,50 @@ class card(QWidget):
         self.w2.show()
 
 
+class korzina_widget(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.conn = sqlite3.connect('cards.db')
+        self.cur = self.conn.cursor()
+        id = 1
+
+        # Берем первые 5 товаров из бд
+        self.cur.execute(f"SELECT * FROM items WHERE id = {id}")
+        data = self.cur.fetchall()
+        text, num, photo1, photo2, order_quantity = data[0][1:]
+
+        # Загрузить пользовательский интерфейс из файла .ui
+        uic.loadUi('korzina.ui', self)
+
+        # иконки для кнопок корзина, вход и избранное
+        self.like.setIcon(QIcon('images/like.png'))
+        self.like.setIconSize(QSize(20, 20))
+
+        self.korzina.setIcon(QIcon('images/bag.png'))
+        self.korzina.setIconSize(QSize(20, 20))
+
+        self.log_in.setIcon(QIcon('images/log_in.png'))
+        self.log_in.setIconSize(QSize(20, 20))
+
+        max_item = self.cur.execute("SELECT COUNT(*) FROM items").fetchone()[0]
+        ids = [randint(1, max_item) for i in range(10)]
+
+        # добавление рекомендаций
+        for i in ids:
+            widget = little_card(i)
+            self.horizontalLayout_2.addWidget(widget)
+
+        ids = [randint(1, max_item) for i in range(10)]
+
+        # добавление рекомендаций
+        for i in ids:
+            widget = little_card(i)
+            self.horizontalLayout_4.addWidget(widget)
+
+        # кнопка назад закрывает окно
+        self.back.clicked.connect(self.close)
+
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -191,14 +233,24 @@ class MainWindow(QMainWindow):
         # Загрузить пользовательский интерфейс главного окна из файла .ui
         uic.loadUi('MainWindow.ui', self)
 
+        # иконки для кнопок корзина, вход и избранное
+        self.like.setIcon(QIcon('images/like.png'))
+        self.like.setIconSize(QSize(20, 20))
+
+        self.korzina.setIcon(QIcon('images/bag.png'))
+        self.korzina.setIconSize(QSize(20, 20))
+
+        self.log_in.setIcon(QIcon('images/log_in.png'))
+        self.log_in.setIconSize(QSize(20, 20))
+
+        self.korzina.clicked.connect(self.open_korzina)
+
         # Connect to the database
         self.conn = sqlite3.connect('cards.db')
         self.cur = self.conn.cursor()
 
         # Берем первые 5 товаров из бд
-
         self.cur.execute("SELECT * FROM items LIMIT 5")
-
         data = self.cur.fetchall()
 
         for i, row in enumerate(data):
@@ -238,14 +290,21 @@ class MainWindow(QMainWindow):
         self.page = 0
         category = self.sender().text()
         self.message = f""" 
-INNER JOIN description ON description.id = items.id
-INNER JOIN categories ON categories."categoy id" = description.category
-WHERE categories.name = '{category}'"""
+    INNER JOIN description ON description.id = items.id
+    INNER JOIN categories ON categories."categoy id" = description.category
+    WHERE categories.name = '{category}'"""
         self.update_data(self.message)
+
+# открывается корзина, нужно сделать так, чтобы закрывалось изначальное окно
+    def open_korzina(self):
+        try:
+            self.korzina_window = korzina_widget()
+            self.korzina_window.show()
+        except Exception as e:
+            print(e)
 
 if __name__ == '__main__':
     import sys
-
     app = QApplication(sys.argv)
     window = MainWindow()
     window.show()
