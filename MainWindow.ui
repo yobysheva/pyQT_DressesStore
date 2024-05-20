@@ -110,7 +110,7 @@ font: 22pt &quot;Futurespore Cyrillic&quot;;
      <string>&gt;</string>
     </property>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -233,7 +233,7 @@ font: 26pt &quot;Futurespore Cyrillic&quot;;
 }</string>
        </property>
        <property name="text">
-        <string>Летнее</string>
+        <string>летнее</string>
        </property>
        <property name="autoDefault">
         <bool>true</bool>
@@ -271,7 +271,7 @@ font: 26pt &quot;Futurespore Cyrillic&quot;;
 }</string>
        </property>
        <property name="text">
-        <string>Офисное</string>
+        <string>офисное</string>
        </property>
        <property name="autoDefault">
         <bool>true</bool>
@@ -279,7 +279,7 @@ font: 26pt &quot;Futurespore Cyrillic&quot;;
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_5">
+      <widget class="QPushButton" name="evening">
        <property name="font">
         <font>
          <family>Futurespore Cyrillic</family>
@@ -309,7 +309,7 @@ font: 26pt &quot;Futurespore Cyrillic&quot;;
 }</string>
        </property>
        <property name="text">
-        <string>Вечернее</string>
+        <string>вечернее</string>
        </property>
        <property name="autoDefault">
         <bool>true</bool>
@@ -528,7 +528,7 @@ font: 20pt &quot;Futurespore Cyrillic&quot;;
      <x>0</x>
      <y>0</y>
      <width>1421</width>
-     <height>26</height>
+     <height>36</height>
     </rect>
    </property>
   </widget>

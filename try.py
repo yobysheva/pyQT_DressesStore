@@ -147,15 +147,6 @@ class big_card(QWidget):
         elif sender == self.prev1 and self.photo_counter == 1 or sender == self.next1 and self.photo_counter == 1:
             self.photo_counter -= 1
             self.photo_label.setPixmap(self.original_image)
-    # def eventFilter(self, obj, event):
-    #     if obj == self.photo_label:
-    #         if event.type() == QEvent.Enter:
-    #             self.photo_label.setPixmap(self.hover_image)
-    #         elif event.type() == QEvent.Leave:
-    #             self.photo_label.setPixmap(self.original_image)
-    #
-    #     return super(big_card, self).eventFilter(obj, event)
-
 
 class card(QWidget):
     def __init__(self, id):
@@ -205,7 +196,9 @@ class MainWindow(QMainWindow):
         self.cur = self.conn.cursor()
 
         # Берем первые 5 товаров из бд
+
         self.cur.execute("SELECT * FROM items LIMIT 5")
+
         data = self.cur.fetchall()
 
         for i, row in enumerate(data):
@@ -213,28 +206,42 @@ class MainWindow(QMainWindow):
             self.gridLayout.addWidget(widget, 0, 4 - i)
 
         self.page = 0
+        self.message = ' '
 
         # листание страниц по нажатию на кнопки
-        self.next.clicked.connect(self.update_data)
-        self.prev.clicked.connect(self.update_data)
+        self.update_data_partial = partial(self.update_data, self.message)
+        self.next.clicked.connect(self.update_data_partial)
+        self.prev.clicked.connect(self.update_data_partial)
+
+        self.summer.clicked.connect(self.categoriesFilter)
+        self.ofice.clicked.connect(self.categoriesFilter)
+        self.evening.clicked.connect(self.categoriesFilter)
 
     # функция для вывода 5 товаров по страницам
-    def update_data(self):
+    def update_data(self, message):
         sender = self.sender()
         # количество товаров в таблице
-        max_pages = self.cur.execute("SELECT COUNT(*) FROM items").fetchone()[0] // 5
+        max_pages = self.cur.execute(f"SELECT COUNT(*) FROM items {self.message}").fetchone()[0] // 5
         if sender == self.next and self.page < max_pages:
             self.page += 1
         elif sender == self.prev and self.page > 0:
             self.page -= 1
 
-        self.cur.execute(f"SELECT * FROM items LIMIT 5 OFFSET 5*{self.page}")
+        self.cur.execute(f"SELECT * FROM items {self.message} LIMIT 5 OFFSET 5*{self.page}")
         data = self.cur.fetchall()
         # добавление товаров в сетку
         for i, row in enumerate(data):
             widget = card(row[0])
             self.gridLayout.addWidget(widget, 0, 4 - i)
 
+    def categoriesFilter(self):
+        self.page = 0
+        category = self.sender().text()
+        self.message = f""" 
+INNER JOIN description ON description.id = items.id
+INNER JOIN categories ON categories."categoy id" = description.category
+WHERE categories.name = '{category}'"""
+        self.update_data(self.message)
 
 if __name__ == '__main__':
     import sys

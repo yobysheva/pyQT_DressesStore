@@ -4,7 +4,7 @@ from PyQt6 import uic
 from PyQt6.QtWidgets import QApplication, QWidget, QCheckBox, QSpinBox, QLabel,  QVBoxLayout, QFrame, QPushButton, \
     QMainWindow, QListWidget, QListWidgetItem
 from PyQt6.QtGui import QFont, QPixmap, QPainterPath, QPainter, QIcon
-from PyQt6.QtCore import QRectF, QSize
+from PyQt6.QtCore import QRectF, QSize, QEvent
 from functools import partial
 from random import randint
 
@@ -42,6 +42,7 @@ class little_card(QWidget):
         #ставим кликбельное изображение в мини-карточку
         self.photo.setIcon(QIcon(photo1))
         self.photo.setIconSize(QSize(width, height))
+
 
         # открываем большую карточку товара при нажатии на фото или на цену
         self.show_description_partial = partial(self.show_description, id)
@@ -113,14 +114,12 @@ class big_card(QWidget):
         self.hover_image = QPixmap(photo2)
         self.photo_label.setPixmap(self.original_image)
 
-        # self.photo_label.installEventFilter(self)
-
         # уменьшение изображения
         self.photo_label.setScaledContents(True)
         self.verticalLayout.addWidget(self.photo_label)
 
-        # self.conn = sqlite3.connect('cards.db')
-        # self.cur = self.conn.cursor()
+        self.conn = sqlite3.connect('cards.db')
+        self.cur = self.conn.cursor()
 
         # пролистывание фоторафий
         self.photo_counter = 0
@@ -145,14 +144,7 @@ class big_card(QWidget):
         elif sender == self.prev1 and self.photo_counter == 1 or sender == self.next1 and self.photo_counter == 1:
             self.photo_counter -= 1
             self.photo_label.setPixmap(self.original_image)
-    # def eventFilter(self, obj, event):
-    #     if obj == self.photo_label:
-    #         if event.type() == QEvent.Enter:
-    #             self.photo_label.setPixmap(self.hover_image)
-    #         elif event.type() == QEvent.Leave:
-    #             self.photo_label.setPixmap(self.original_image)
-    #
-    #     return super(big_card, self).eventFilter(obj, event)
+
 
 class card(QWidget):
     def __init__(self, id):
