@@ -187,6 +187,29 @@ class registration_dialog(QDialog):
         super().__init__()
         uic.loadUi('registration_dialog.ui', self) # загружаем UI файл в текущий виджет
 
+
+class enter_dialog(QDialog):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi('enter_dialog.ui', self)  # загружаем UI файл в текущий виджет
+
+class enter_or_registration_dialog(QDialog):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi('enter_or_registration.ui', self) # загружаем UI файл в текущий виджет
+        self.registrate.clicked.connect(self.registration)
+        self.enter.clicked.connect(self.do_enter)
+
+    def registration(self):
+        self.w2 = registration_dialog()
+        self.close()
+        self.w2.exec()
+
+    def do_enter(self):
+        self.w2 = enter_dialog()
+        self.close()
+        self.w2.exec()
+
 class korzina_widget(QWidget):
     def __init__(self):
         super().__init__()
@@ -229,6 +252,11 @@ class korzina_widget(QWidget):
 
         # кнопка назад закрывает окно
         self.back.clicked.connect(self.close)
+        self.log_in.clicked.connect(self.enter_or_registration)
+
+    def enter_or_registration(self):
+        self.w2 = enter_or_registration_dialog()
+        self.w2.exec()
 
 
 class MainWindow(QMainWindow):
@@ -249,7 +277,7 @@ class MainWindow(QMainWindow):
         self.log_in.setIconSize(QSize(20, 20))
 
         self.korzina.clicked.connect(self.open_korzina)
-        self.log_in.clicked.connect(self.registration)
+        self.log_in.clicked.connect(self.enter_or_registration)
 
         # Connect to the database
         self.conn = sqlite3.connect('cards.db')
@@ -309,8 +337,8 @@ class MainWindow(QMainWindow):
         except Exception as e:
             print(e)
 
-    def registration(self):
-        self.w2 = registration_dialog()
+    def enter_or_registration(self):
+        self.w2 = enter_or_registration_dialog()
         self.w2.exec()
 
 if __name__ == '__main__':

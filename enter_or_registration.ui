@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>559</width>
-    <height>76</height>
+    <width>551</width>
+    <height>115</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,7 +20,7 @@
    <property name="geometry">
     <rect>
      <x>370</x>
-     <y>20</y>
+     <y>70</y>
      <width>171</width>
      <height>39</height>
     </rect>
@@ -64,7 +64,7 @@ font: 26pt &quot;Futurespore Cyrillic&quot;;
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>20</y>
+     <y>70</y>
      <width>351</width>
      <height>39</height>
     </rect>
@@ -102,6 +102,42 @@ font: 26pt &quot;Futurespore Cyrillic&quot;;
    </property>
    <property name="autoDefault">
     <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>20</y>
+     <width>531</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Futurespore Cyrillic</family>
+     <pointsize>26</pointsize>
+     <weight>50</weight>
+     <italic>false</italic>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-weight: bold;
+color: black;
+font: 26pt &quot;Futurespore Cyrillic&quot;;</string>
+   </property>
+   <property name="text">
+    <string>Регистрация/вход</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="margin">
+    <number>3</number>
+   </property>
+   <property name="indent">
+    <number>0</number>
    </property>
   </widget>
  </widget>
