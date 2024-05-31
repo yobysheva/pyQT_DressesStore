@@ -269,7 +269,7 @@ class enter_or_registration_dialog(QDialog1):
         self.close()
         self.w2.exec()
 
-class korzina_widget(QWidget):
+class korzina_widget(QWidget1):
     def __init__(self):
         super().__init__()
         self.conn = sqlite3.connect('cards.db')
@@ -312,31 +312,6 @@ class korzina_widget(QWidget):
         # кнопка назад закрывает окно
         self.back.clicked.connect(self.close)
         self.log_in.clicked.connect(self.enter_or_registration)
-
-        self.animation = QPropertyAnimation(self, b'windowOpacity')
-        self.animation.setDuration(250)  # Продолжительность: 1 секунда
-
-        # Выполните постепенное увеличение
-        self.doShow()
-
-    def doShow(self):
-        try:
-            self.animation.finished.disconnect(self.close)
-        except:
-            pass
-        self.animation.stop()
-        # Диапазон прозрачности постепенно увеличивается от 0 до 1.
-        self.animation.setStartValue(0)
-        self.animation.setEndValue(1)
-        self.animation.start()
-
-    def doClose(self):
-        self.animation.stop()
-        self.animation.finished.connect(self.close)  # Закройте окно, когда анимация будет завершена
-        # Диапазон прозрачности постепенно уменьшается с 1 до 0.
-        self.animation.setStartValue(1)
-        self.animation.setEndValue(0)
-        self.animation.start()
 
     def enter_or_registration(self):
         self.w2 = enter_or_registration_dialog()
