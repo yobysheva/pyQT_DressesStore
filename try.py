@@ -169,6 +169,7 @@ class big_card(QWidget1):
 
         self.price.setText(str(num))
 
+        self.buttons = self.sizes.buttons()
         # иконки для кнопок корзина и избранное
         self.like.setIcon(QIcon('images/like.png'))
         self.like.setIconSize(QSize(25, 25))
@@ -191,7 +192,7 @@ class big_card(QWidget1):
         self.conn = sqlite3.connect('cards.db')
         self.cur = self.conn.cursor()
 
-        # пролистывание фоторафий
+        # пролистывание фотографий
         self.photo_counter = 0
 
         self.next1.clicked.connect(self.update_photo)
@@ -204,6 +205,21 @@ class big_card(QWidget1):
         for i in ids:
             widget = little_card(i)
             self.horizontalLayout.addWidget(widget)
+
+        self.current_button = None
+        # Проходим по всем кнопкам и связываем их с обработчиками
+        self.buttons = self.sizes.buttons()
+
+        # Проходим по всем кнопкам и связываем их с обработчиками
+        for button in self.buttons:
+            button.clicked.connect(lambda checked, b=button: self.size_pushed(b))
+
+    def size_pushed(self, button):
+        if self.current_button:
+            self.current_button.setStyleSheet("border: 1px solid #000; border-radius: 13px; border-style: outset; color: black; font-weight: bold; font: 18pt 'HelveticaNeueCyr'; ")
+
+        button.setStyleSheet("border: 0px solid #000; border-radius: 13px; border-style: outset; background: black; color: rgb(254,254,254); font-weight: bold; font: 18pt 'HelveticaNeueCyr';")
+        self.current_button = button
 
     # листание фото (пока по нажатию, но должно быть по наведению)
     def update_photo(self):
