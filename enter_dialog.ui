@@ -69,8 +69,11 @@ color: black;
 font-weight: bold;
 font: 26pt &quot;HelveticaNeueCyr&quot;;</string>
    </property>
+   <property name="text">
+    <string>Введите логин</string>
+   </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit_2">
+  <widget class="QLineEdit" name="password">
    <property name="geometry">
     <rect>
      <x>140</x>
@@ -86,6 +89,9 @@ border-style: outset;
 color: black;
 font-weight: bold;
 font: 26pt &quot;HelveticaNeueCyr&quot;;</string>
+   </property>
+   <property name="text">
+    <string>Введите пароль</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_3">
