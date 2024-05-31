@@ -4,10 +4,69 @@ from PyQt6 import uic
 from PyQt6.QtWidgets import QApplication, QWidget, QCheckBox, QSpinBox, QLabel, QVBoxLayout, QFrame, QPushButton, \
     QMainWindow, QListWidget, QListWidgetItem, QDialog, QMessageBox
 from PyQt6.QtGui import QFont, QPixmap, QPainterPath, QPainter, QIcon
-from PyQt6.QtCore import QRectF, QSize, QEvent
+from PyQt6.QtCore import QRectF, QSize, QEvent, QPropertyAnimation
 from functools import partial
 from random import randint
+current_user_id = 0
 
+# классы с анимацией для наследования другими классами
+class QWidget1(QWidget):
+    def __init__(self):
+        super().__init__()
+        # Класс анимации прозрачности окна
+        self.animation = QPropertyAnimation(self, b'windowOpacity')
+        self.animation.setDuration(200)  # Продолжительность: 1 секунда
+
+        # Выполните постепенное увеличение
+        self.doShow()
+
+    def doShow(self):
+        try:
+            self.animation.finished.disconnect(self.close)
+        except:
+            pass
+        self.animation.stop()
+        # Диапазон прозрачности постепенно увеличивается от 0 до 1.
+        self.animation.setStartValue(0)
+        self.animation.setEndValue(1)
+        self.animation.start()
+
+    def doClose(self):
+        self.animation.stop()
+        self.animation.finished.connect(self.close)  # Закройте окно, когда анимация будет завершена
+        # Диапазон прозрачности постепенно уменьшается с 1 до 0.
+        self.animation.setStartValue(1)
+        self.animation.setEndValue(0)
+        self.animation.start()
+
+class QDialog1(QDialog):
+    def __init__(self):
+        super().__init__()
+        # Класс анимации прозрачности окна
+        self.animation = QPropertyAnimation(self, b'windowOpacity')
+        self.animation.setDuration(200)  # Продолжительность: 1 секунда
+
+        # Выполните постепенное увеличение
+        self.doShow()
+
+    def doShow(self):
+        try:
+            self.animation.finished.disconnect(self.close)
+        except:
+            pass
+        self.animation.stop()
+        # Диапазон прозрачности постепенно увеличивается от 0 до 1.
+        self.animation.setStartValue(0)
+        self.animation.setEndValue(1)
+        self.animation.start()
+
+    def doClose(self):
+        self.animation.stop()
+        self.animation.finished.connect(self.close)  # Закройте окно, когда анимация будет завершена
+        # Диапазон прозрачности постепенно уменьшается с 1 до 0.
+        self.animation.setStartValue(1)
+        self.animation.setEndValue(0)
+        self.animation.start()
 
 class little_card(QWidget):
     def __init__(self, id):
@@ -55,7 +114,7 @@ class little_card(QWidget):
         self.w2.show()
 
 
-class big_card(QWidget):
+class big_card(QWidget1):
     def __init__(self, id):
         super().__init__()
         # выгрузка данных для карточки товара из базы данных
@@ -184,12 +243,12 @@ class card(QWidget):
         self.w2.show()
 
 
-class registration_dialog(QDialog):
+class registration_dialog(QDialog1):
     def __init__(self):
         super().__init__()
         uic.loadUi('registration_dialog.ui', self)  # загружаем UI файл в текущий виджет
         try:
-            self.enter.clicked.connect(
+            self.registrate.clicked.connect(
                 lambda: self.add_row(self.login.text(), self.password.text(), self.fio.text(), self.card_number.text(), self.expiration_date.text(), self.cvv.text(), self.post_index.text()))
         except Exception as e:
             print(e)
@@ -219,13 +278,13 @@ class registration_dialog(QDialog):
             message.exec()
             print(e)
 
-class enter_dialog(QDialog):
+class enter_dialog(QDialog1):
     def __init__(self):
         super().__init__()
         uic.loadUi('enter_dialog.ui', self)  # загружаем UI файл в текущий виджет
 
 
-class enter_or_registration_dialog(QDialog):
+class enter_or_registration_dialog(QDialog1):
     def __init__(self):
         super().__init__()
         uic.loadUi('enter_or_registration.ui', self)  # загружаем UI файл в текущий виджет
@@ -243,7 +302,7 @@ class enter_or_registration_dialog(QDialog):
         self.w2.exec()
 
 
-class korzina_widget(QWidget):
+class korzina_widget(QWidget1):
     def __init__(self):
         super().__init__()
         self.conn = sqlite3.connect('cards.db')
