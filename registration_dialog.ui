@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>712</width>
-    <height>364</height>
+    <height>360</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
   <widget class="QPushButton" name="enter">
    <property name="geometry">
     <rect>
-     <x>490</x>
+     <x>500</x>
      <y>310</y>
      <width>211</width>
      <height>39</height>
@@ -145,7 +145,7 @@ font: 26pt &quot;Futurespore Cyrillic&quot;;</string>
     <rect>
      <x>20</x>
      <y>50</y>
-     <width>671</width>
+     <width>681</width>
      <height>251</height>
     </rect>
    </property>
@@ -157,388 +157,306 @@ font: 26pt &quot;Futurespore Cyrillic&quot;;</string>
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>669</width>
-      <height>249</height>
+      <width>658</width>
+      <height>624</height>
      </rect>
     </property>
-    <widget class="QLabel" name="label_9">
-     <property name="geometry">
-      <rect>
-       <x>-30</x>
-       <y>530</y>
-       <width>711</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>Futurespore Cyrillic</family>
-       <pointsize>20</pointsize>
-       <weight>50</weight>
-       <italic>false</italic>
-       <bold>false</bold>
-      </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">font-weight: bold;
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QLabel" name="label_3">
+       <property name="font">
+        <font>
+         <family>Futurespore Cyrillic</family>
+         <pointsize>20</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font-weight: bold;
 color: black;
 font: 20pt &quot;Futurespore Cyrillic&quot;;</string>
-     </property>
-     <property name="text">
-      <string>почтовый индекс</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-     <property name="margin">
-      <number>3</number>
-     </property>
-     <property name="indent">
-      <number>0</number>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="expiration_date">
-     <property name="geometry">
-      <rect>
-       <x>110</x>
-       <y>400</y>
-       <width>431</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">border: 2px solid #000;
+       </property>
+       <property name="text">
+        <string>Логин</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+       <property name="margin">
+        <number>3</number>
+       </property>
+       <property name="indent">
+        <number>0</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="login">
+       <property name="styleSheet">
+        <string notr="true">border: 2px solid #000;
 border-radius: 10px;
 border-style: outset;
 color: black;
 font-weight: bold;
 font: 26pt &quot;Futurespore Cyrillic&quot;;</string>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="lineEdit_4">
-     <property name="geometry">
-      <rect>
-       <x>110</x>
-       <y>570</y>
-       <width>431</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">border: 2px solid #000;
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_4">
+       <property name="font">
+        <font>
+         <family>Futurespore Cyrillic</family>
+         <pointsize>20</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font-weight: bold;
+color: black;
+font: 20pt &quot;Futurespore Cyrillic&quot;;</string>
+       </property>
+       <property name="text">
+        <string>Пароль</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+       <property name="margin">
+        <number>3</number>
+       </property>
+       <property name="indent">
+        <number>0</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="password">
+       <property name="styleSheet">
+        <string notr="true">border: 2px solid #000;
 border-radius: 10px;
 border-style: outset;
 color: black;
 font-weight: bold;
 font: 26pt &quot;Futurespore Cyrillic&quot;;</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_3">
-     <property name="geometry">
-      <rect>
-       <x>-30</x>
-       <y>0</y>
-       <width>711</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>Futurespore Cyrillic</family>
-       <pointsize>20</pointsize>
-       <weight>50</weight>
-       <italic>false</italic>
-       <bold>false</bold>
-      </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">font-weight: bold;
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_7">
+       <property name="font">
+        <font>
+         <family>Futurespore Cyrillic</family>
+         <pointsize>20</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font-weight: bold;
 color: black;
 font: 20pt &quot;Futurespore Cyrillic&quot;;</string>
-     </property>
-     <property name="text">
-      <string>Логин</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-     <property name="margin">
-      <number>3</number>
-     </property>
-     <property name="indent">
-      <number>0</number>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="login">
-     <property name="geometry">
-      <rect>
-       <x>110</x>
-       <y>40</y>
-       <width>431</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">border: 2px solid #000;
+       </property>
+       <property name="text">
+        <string>ФИО</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+       <property name="margin">
+        <number>3</number>
+       </property>
+       <property name="indent">
+        <number>0</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="fio">
+       <property name="styleSheet">
+        <string notr="true">border: 2px solid #000;
 border-radius: 10px;
 border-style: outset;
 color: black;
 font-weight: bold;
 font: 26pt &quot;Futurespore Cyrillic&quot;;</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_5">
-     <property name="geometry">
-      <rect>
-       <x>-30</x>
-       <y>270</y>
-       <width>711</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>Futurespore Cyrillic</family>
-       <pointsize>20</pointsize>
-       <weight>50</weight>
-       <italic>false</italic>
-       <bold>false</bold>
-      </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">font-weight: bold;
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_5">
+       <property name="font">
+        <font>
+         <family>Futurespore Cyrillic</family>
+         <pointsize>20</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font-weight: bold;
 color: black;
 font: 20pt &quot;Futurespore Cyrillic&quot;;</string>
-     </property>
-     <property name="text">
-      <string>Номер карты</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-     <property name="margin">
-      <number>3</number>
-     </property>
-     <property name="indent">
-      <number>0</number>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_8">
-     <property name="geometry">
-      <rect>
-       <x>-30</x>
-       <y>440</y>
-       <width>711</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>Futurespore Cyrillic</family>
-       <pointsize>20</pointsize>
-       <weight>50</weight>
-       <italic>false</italic>
-       <bold>false</bold>
-      </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">font-weight: bold;
-color: black;
-font: 20pt &quot;Futurespore Cyrillic&quot;;</string>
-     </property>
-     <property name="text">
-      <string>Cvv</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-     <property name="margin">
-      <number>3</number>
-     </property>
-     <property name="indent">
-      <number>0</number>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_4">
-     <property name="geometry">
-      <rect>
-       <x>-30</x>
-       <y>90</y>
-       <width>711</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>Futurespore Cyrillic</family>
-       <pointsize>20</pointsize>
-       <weight>50</weight>
-       <italic>false</italic>
-       <bold>false</bold>
-      </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">font-weight: bold;
-color: black;
-font: 20pt &quot;Futurespore Cyrillic&quot;;</string>
-     </property>
-     <property name="text">
-      <string>Пароль</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-     <property name="margin">
-      <number>3</number>
-     </property>
-     <property name="indent">
-      <number>0</number>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="fio">
-     <property name="geometry">
-      <rect>
-       <x>110</x>
-       <y>220</y>
-       <width>431</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">border: 2px solid #000;
+       </property>
+       <property name="text">
+        <string>Номер карты</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+       <property name="margin">
+        <number>3</number>
+       </property>
+       <property name="indent">
+        <number>0</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="card_number">
+       <property name="styleSheet">
+        <string notr="true">border: 2px solid #000;
 border-radius: 10px;
 border-style: outset;
 color: black;
 font-weight: bold;
 font: 26pt &quot;Futurespore Cyrillic&quot;;</string>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="password">
-     <property name="geometry">
-      <rect>
-       <x>110</x>
-       <y>130</y>
-       <width>431</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">border: 2px solid #000;
-border-radius: 10px;
-border-style: outset;
-color: black;
-font-weight: bold;
-font: 26pt &quot;Futurespore Cyrillic&quot;;</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_7">
-     <property name="geometry">
-      <rect>
-       <x>-30</x>
-       <y>180</y>
-       <width>711</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>Futurespore Cyrillic</family>
-       <pointsize>20</pointsize>
-       <weight>50</weight>
-       <italic>false</italic>
-       <bold>false</bold>
-      </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">font-weight: bold;
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_6">
+       <property name="font">
+        <font>
+         <family>Futurespore Cyrillic</family>
+         <pointsize>20</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font-weight: bold;
 color: black;
 font: 20pt &quot;Futurespore Cyrillic&quot;;</string>
-     </property>
-     <property name="text">
-      <string>ФИО</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-     <property name="margin">
-      <number>3</number>
-     </property>
-     <property name="indent">
-      <number>0</number>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="cvv">
-     <property name="geometry">
-      <rect>
-       <x>110</x>
-       <y>480</y>
-       <width>431</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">border: 2px solid #000;
+       </property>
+       <property name="text">
+        <string>Действительна до</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+       <property name="margin">
+        <number>3</number>
+       </property>
+       <property name="indent">
+        <number>0</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="expiration_date">
+       <property name="styleSheet">
+        <string notr="true">border: 2px solid #000;
 border-radius: 10px;
 border-style: outset;
 color: black;
 font-weight: bold;
 font: 26pt &quot;Futurespore Cyrillic&quot;;</string>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="card_number">
-     <property name="geometry">
-      <rect>
-       <x>110</x>
-       <y>310</y>
-       <width>431</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">border: 2px solid #000;
-border-radius: 10px;
-border-style: outset;
-color: black;
-font-weight: bold;
-font: 26pt &quot;Futurespore Cyrillic&quot;;</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_6">
-     <property name="geometry">
-      <rect>
-       <x>-30</x>
-       <y>360</y>
-       <width>711</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>Futurespore Cyrillic</family>
-       <pointsize>20</pointsize>
-       <weight>50</weight>
-       <italic>false</italic>
-       <bold>false</bold>
-      </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">font-weight: bold;
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_8">
+       <property name="font">
+        <font>
+         <family>Futurespore Cyrillic</family>
+         <pointsize>20</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font-weight: bold;
 color: black;
 font: 20pt &quot;Futurespore Cyrillic&quot;;</string>
-     </property>
-     <property name="text">
-      <string>Действительна до</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-     <property name="margin">
-      <number>3</number>
-     </property>
-     <property name="indent">
-      <number>0</number>
-     </property>
-    </widget>
+       </property>
+       <property name="text">
+        <string>Cvv</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+       <property name="margin">
+        <number>3</number>
+       </property>
+       <property name="indent">
+        <number>0</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="cvv">
+       <property name="styleSheet">
+        <string notr="true">border: 2px solid #000;
+border-radius: 10px;
+border-style: outset;
+color: black;
+font-weight: bold;
+font: 26pt &quot;Futurespore Cyrillic&quot;;</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_9">
+       <property name="font">
+        <font>
+         <family>Futurespore Cyrillic</family>
+         <pointsize>20</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font-weight: bold;
+color: black;
+font: 20pt &quot;Futurespore Cyrillic&quot;;</string>
+       </property>
+       <property name="text">
+        <string>почтовый индекс</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+       <property name="margin">
+        <number>3</number>
+       </property>
+       <property name="indent">
+        <number>0</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="lineEdit_4">
+       <property name="styleSheet">
+        <string notr="true">border: 2px solid #000;
+border-radius: 10px;
+border-style: outset;
+color: black;
+font-weight: bold;
+font: 26pt &quot;Futurespore Cyrillic&quot;;</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
   </widget>
  </widget>
