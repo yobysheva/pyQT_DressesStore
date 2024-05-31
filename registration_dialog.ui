@@ -16,7 +16,7 @@
   <property name="styleSheet">
    <string notr="true">background: rgb(254,254,254)</string>
   </property>
-  <widget class="QPushButton" name="enter">
+  <widget class="QPushButton" name="registrate">
    <property name="geometry">
     <rect>
      <x>230</x>
