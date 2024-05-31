@@ -67,7 +67,7 @@ border-radius: 10px;
 border-style: outset;
 color: black;
 font-weight: bold;
-font: 26pt &quot;Futurespore Cyrillic&quot;;</string>
+font: 26pt &quot;HelveticaNeueCyr&quot;;</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="lineEdit_2">
@@ -85,7 +85,7 @@ border-radius: 10px;
 border-style: outset;
 color: black;
 font-weight: bold;
-font: 26pt &quot;Futurespore Cyrillic&quot;;</string>
+font: 26pt &quot;HelveticaNeueCyr&quot;;</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_3">
