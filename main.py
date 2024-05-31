@@ -187,7 +187,6 @@ class registration_dialog(QDialog):
         super().__init__()
         uic.loadUi('registration_dialog.ui', self) # загружаем UI файл в текущий виджет
 
-
 class enter_dialog(QDialog):
     def __init__(self):
         super().__init__()
