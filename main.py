@@ -257,9 +257,7 @@ class registration_dialog(QDialog1):
         super().__init__()
         uic.loadUi('registration_dialog.ui', self)  # загружаем UI файл в текущий виджет
         self.setWindowTitle("Регистрация")
-
         try:
-            if self.escape.clicked.connect(): self.close()
             self.registrate.clicked.connect(
                 lambda: self.add_row(self.login.text(), self.password.text(), self.fio.text(), self.card_number.text(), self.expiration_date.text(), self.cvv.text(), self.post_index.text()))
         except Exception as e:
@@ -355,6 +353,61 @@ class enter_or_registration_dialog(QDialog1):
         self.close()
         self.w2.exec()
 
+class korsina_item(QWidget):
+    def __init__(self, id):
+        super().__init__()
+        self.conn = sqlite3.connect('cards.db')
+        self.cur = self.conn.cursor()
+
+        self.cur.execute(f"SELECT * FROM items WHERE id = {id}")
+        data = self.cur.fetchall()
+        text, num, photo1, photo2, order_quantity = data[0][1:]
+
+        description = text
+
+        # составление описания при помощи таблицы description
+        try:
+            self.cur.execute(f"""SELECT materials.name, models.name, colors.name, length.name, categories.name FROM description 
+                            INNER JOIN items ON items.id = description.id
+                            INNER JOIN materials ON materials."material id" = description.material
+                            INNER JOIN models ON models."models id" = description.model
+                            INNER JOIN colors ON colors."colors id" = description.color
+                            INNER JOIN length ON length."length id" = description.length
+                            INNER JOIN categories ON categories."categoy id" = description.category
+                            WHERE items.id = {id}""")
+
+            data = self.cur.fetchall()
+
+            material, model, color, length, category = data[0]
+
+            description = f"Тип товара: платье\nМодель: {model}\nМатериал: {material}\nЦвет: {color}\n" \
+                          f"Длина: {length}\nКатегория: {category}"
+        except Exception as e:
+            print(e)
+
+        # Загрузить пользовательский интерфейс из файла .ui
+        uic.loadUi('koraina_item.ui', self)
+
+        # поставили значения из бд в соответствующие поля
+        self.name.setText(text)
+        self.name.setWordWrap(True)
+
+        # Установить переданные значения
+        self.long_description.setText(description)
+        self.long_description.setWordWrap(True)
+
+        self.price.setText(str(num))
+
+        self.photo_label = QLabel(self)
+
+        # подключение к фотографиям айтемов из db
+        self.original_image = QPixmap(photo1)
+        self.photo_label.setPixmap(self.original_image)
+
+        # уменьшение изображения
+        self.photo_label.setScaledContents(True)
+        self.verticalLayout.addWidget(self.photo_label)
+
 
 class korzina_widget(QWidget1):
     def __init__(self):
@@ -364,10 +417,7 @@ class korzina_widget(QWidget1):
         self.cur = self.conn.cursor()
         id = 1
 
-        # Берем первые 5 товаров из бд
-        self.cur.execute(f"SELECT * FROM items WHERE id = {id}")
-        data = self.cur.fetchall()
-        text, num, photo1, photo2, order_quantity = data[0][1:]
+
 
         # Загрузить пользовательский интерфейс из файла .ui
         uic.loadUi('korzina.ui', self)
@@ -382,20 +432,26 @@ class korzina_widget(QWidget1):
         self.log_in.setIcon(QIcon('images/log_in.png'))
         self.log_in.setIconSize(QSize(20, 20))
 
-        max_item = self.cur.execute("SELECT COUNT(*) FROM items").fetchone()[0]
-        ids = [randint(1, max_item) for i in range(10)]
+        if current_user_id == 0:
+            max_item = self.cur.execute("SELECT COUNT(*) FROM items").fetchone()[0]
+            ids = [randint(1, max_item) for i in range(10)]
 
-        # добавление рекомендаций
-        for i in ids:
-            widget = little_card(i)
-            self.horizontalLayout_2.addWidget(widget)
+            # добавление рекомендаций
+            for i in ids:
+                widget = little_card(i)
+                self.horizontalLayout_2.addWidget(widget)
 
-        ids = [randint(1, max_item) for i in range(10)]
+            ids = [randint(1, max_item) for i in range(10)]
 
-        # добавление рекомендаций
-        for i in ids:
-            widget = little_card(i)
-            self.horizontalLayout_4.addWidget(widget)
+            # добавление рекомендаций
+            for i in ids:
+                widget = little_card(i)
+                self.horizontalLayout_4.addWidget(widget)
+
+        else:
+            # Берем первые 5 товаров из бд
+            self.cur.execute(f"SELECT * FROM items WHERE id = {current_user_id}")
+            data = self.cur.fetchall()
 
         # кнопка назад закрывает окно
         self.back.clicked.connect(self.close)
