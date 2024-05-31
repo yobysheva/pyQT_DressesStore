@@ -249,10 +249,12 @@ class registration_dialog(QDialog1):
         uic.loadUi('registration_dialog.ui', self)  # загружаем UI файл в текущий виджет
 
         try:
+            if self.escape.clicked.connect(): self.close()
             self.registrate.clicked.connect(
                 lambda: self.add_row(self.login.text(), self.password.text(), self.fio.text(), self.card_number.text(), self.expiration_date.text(), self.cvv.text(), self.post_index.text()))
         except Exception as e:
             print(e)
+        self.escape.clicked.connect(self.close)
     def add_row(self, login, password, fio, card_number, expiration_date, cvv, post_index):
         self.con = sqlite3.connect("cards.db")
 
@@ -291,6 +293,7 @@ class enter_dialog(QDialog1):
 
         except Exception as e:
             print(e)
+        self.escape.clicked.connect(self.close)
     def check_enter(self, login, entered_password):
         self.con = sqlite3.connect("cards.db")
         self.conn = sqlite3.connect('cards.db')

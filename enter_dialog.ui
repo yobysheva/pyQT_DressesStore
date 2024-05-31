@@ -70,7 +70,7 @@ font-weight: bold;
 font: 26pt &quot;HelveticaNeueCyr&quot;;</string>
    </property>
    <property name="text">
-    <string>Введите логин</string>
+    <string/>
    </property>
   </widget>
   <widget class="QLineEdit" name="password">
@@ -91,7 +91,7 @@ font-weight: bold;
 font: 26pt &quot;HelveticaNeueCyr&quot;;</string>
    </property>
    <property name="text">
-    <string>Введите пароль</string>
+    <string/>
    </property>
   </widget>
   <widget class="QLabel" name="label_3">
