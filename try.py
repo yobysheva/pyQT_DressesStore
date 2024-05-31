@@ -68,6 +68,14 @@ class QDialog1(QDialog):
         self.animation.setEndValue(0)
         self.animation.start()
 
+class QMessageBox1(QMessageBox):
+    def __init__(self):
+        super().__init__()
+        self.setStyleSheet("""background: rgb(254,254,254);
+        font-weight: bold;
+        color: black;
+        font: 24pt "HelveticaNeueCyr";""")
+
 class little_card(QWidget):
     def __init__(self, id):
         super().__init__()
@@ -149,6 +157,7 @@ class big_card(QWidget1):
 
         # Загрузить пользовательский интерфейс из файла .ui
         uic.loadUi('description.ui', self)
+        self.setWindowTitle("Карточка товара")
 
         # поставили значения из бд в соответствующие поля
         self.name.setText(text)
@@ -247,6 +256,7 @@ class registration_dialog(QDialog1):
     def __init__(self):
         super().__init__()
         uic.loadUi('registration_dialog.ui', self)  # загружаем UI файл в текущий виджет
+        self.setWindowTitle("Регистрация")
 
         try:
             if self.escape.clicked.connect(): self.close()
@@ -265,17 +275,16 @@ class registration_dialog(QDialog1):
             self.con.commit()
             cur.close()
 
-            message = QMessageBox()
+            message = QMessageBox1()
             message.setWindowTitle("Успешная регистрация")
             message.setText("Аккаунт зарегистрирован.")
-
             message.exec()
 
             current_user_id = f"""SELECT user_id FROM users WHERE login = "{login}" """
             self.close()
 
         except Exception as e:
-            message = QMessageBox()
+            message = QMessageBox1()
             message.setWindowTitle("Аккаунт не зарегистрирован")
             message.setText("Не удалось зарегистрировать. Убедитесь, что данные внесены верно. Логин должен быть уникален.")
 
@@ -286,6 +295,7 @@ class enter_dialog(QDialog1):
     def __init__(self):
         super().__init__()
         uic.loadUi('enter_dialog.ui', self)  # загружаем UI файл в текущий виджет
+        self.setWindowTitle("Вход в аккаунт")
 
         try:
             self.enter.clicked.connect(
@@ -321,7 +331,7 @@ class enter_dialog(QDialog1):
         else:
             self.create_massege()
     def create_massege(self):
-        message = QMessageBox()
+        message = QMessageBox1()
         message.setWindowTitle("Вход не выполнен")
         message.setText("Не удалось войти в аккаунт. Убедитесь, что данные внесены верно или зарегистрируйтесь.")
         message.exec()
@@ -331,6 +341,7 @@ class enter_or_registration_dialog(QDialog1):
     def __init__(self):
         super().__init__()
         uic.loadUi('enter_or_registration.ui', self)  # загружаем UI файл в текущий виджет
+        self.setWindowTitle("Войдите или зарегистрируйтесь")
         self.registrate.clicked.connect(self.registration)
         self.enter.clicked.connect(self.do_enter)
 
@@ -348,6 +359,7 @@ class enter_or_registration_dialog(QDialog1):
 class korzina_widget(QWidget1):
     def __init__(self):
         super().__init__()
+        self.setWindowTitle("Корзина")
         self.conn = sqlite3.connect('cards.db')
         self.cur = self.conn.cursor()
         id = 1
@@ -397,9 +409,9 @@ class korzina_widget(QWidget1):
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-
         # Загрузить пользовательский интерфейс главного окна из файла .ui
         uic.loadUi('MainWindow.ui', self)
+        self.setWindowTitle("Karmen - магазин премиальной одежды")
 
         # иконки для кнопок корзина, вход и избранное
         self.like.setIcon(QIcon('images/like.png'))

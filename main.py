@@ -4,9 +4,10 @@ from PyQt6 import uic
 from PyQt6.QtWidgets import QApplication, QWidget, QCheckBox, QSpinBox, QLabel, QVBoxLayout, QFrame, QPushButton, \
     QMainWindow, QListWidget, QListWidgetItem, QDialog, QMessageBox
 from PyQt6.QtGui import QFont, QPixmap, QPainterPath, QPainter, QIcon
-from PyQt6.QtCore import QRectF, QSize, QEvent, QSequentialAnimationGroup, QPropertyAnimation, QRect
+from PyQt6.QtCore import QRectF, QSize, QEvent, QPropertyAnimation
 from functools import partial
 from random import randint
+current_user_id = 0
 
 # классы с анимацией для наследования другими классами
 class QWidget1(QWidget):
@@ -106,7 +107,7 @@ class little_card(QWidget):
         width = self.photo.size().width()
         height = self.photo.size().height()
 
-        #ставим кликбельное изображение в мини-карточку
+        # ставим кликбельное изображение в мини-карточку
         self.photo.setIcon(QIcon(photo1))
         self.photo.setIconSize(QSize(width, height))
 
@@ -124,7 +125,6 @@ class little_card(QWidget):
 class big_card(QWidget1):
     def __init__(self, id):
         super().__init__()
-
         # выгрузка данных для карточки товара из базы данных
         self.conn = sqlite3.connect('cards.db')
         self.cur = self.conn.cursor()
@@ -135,7 +135,7 @@ class big_card(QWidget1):
 
         description = text
 
-        #составление описания при помощи таблицы description
+        # составление описания при помощи таблицы description
         try:
             self.cur.execute(f"""SELECT materials.name, models.name, colors.name, length.name, categories.name FROM description 
                     INNER JOIN items ON items.id = description.id
@@ -157,6 +157,7 @@ class big_card(QWidget1):
 
         # Загрузить пользовательский интерфейс из файла .ui
         uic.loadUi('description.ui', self)
+        self.setWindowTitle("Карточка товара")
 
         # поставили значения из бд в соответствующие поля
         self.name.setText(text)
@@ -250,16 +251,20 @@ class card(QWidget):
         self.w2 = big_card(id)
         self.w2.show()
 
+
 class registration_dialog(QDialog1):
     def __init__(self):
         super().__init__()
         uic.loadUi('registration_dialog.ui', self)  # загружаем UI файл в текущий виджет
+        self.setWindowTitle("Регистрация")
 
         try:
+            if self.escape.clicked.connect(): self.close()
             self.registrate.clicked.connect(
                 lambda: self.add_row(self.login.text(), self.password.text(), self.fio.text(), self.card_number.text(), self.expiration_date.text(), self.cvv.text(), self.post_index.text()))
         except Exception as e:
             print(e)
+        self.escape.clicked.connect(self.close)
     def add_row(self, login, password, fio, card_number, expiration_date, cvv, post_index):
         self.con = sqlite3.connect("cards.db")
 
@@ -270,17 +275,16 @@ class registration_dialog(QDialog1):
             self.con.commit()
             cur.close()
 
-            message = QMessageBox()
+            message = QMessageBox1()
             message.setWindowTitle("Успешная регистрация")
             message.setText("Аккаунт зарегистрирован.")
-
             message.exec()
 
             current_user_id = f"""SELECT user_id FROM users WHERE login = "{login}" """
             self.close()
 
         except Exception as e:
-            message = QMessageBox()
+            message = QMessageBox1()
             message.setWindowTitle("Аккаунт не зарегистрирован")
             message.setText("Не удалось зарегистрировать. Убедитесь, что данные внесены верно. Логин должен быть уникален.")
 
@@ -291,6 +295,7 @@ class enter_dialog(QDialog1):
     def __init__(self):
         super().__init__()
         uic.loadUi('enter_dialog.ui', self)  # загружаем UI файл в текущий виджет
+        self.setWindowTitle("Вход в аккаунт")
 
         try:
             self.enter.clicked.connect(
@@ -298,6 +303,7 @@ class enter_dialog(QDialog1):
 
         except Exception as e:
             print(e)
+        self.escape.clicked.connect(self.close)
     def check_enter(self, login, entered_password):
         self.con = sqlite3.connect("cards.db")
         self.conn = sqlite3.connect('cards.db')
@@ -334,7 +340,8 @@ class enter_dialog(QDialog1):
 class enter_or_registration_dialog(QDialog1):
     def __init__(self):
         super().__init__()
-        uic.loadUi('enter_or_registration.ui', self) # загружаем UI файл в текущий виджет
+        uic.loadUi('enter_or_registration.ui', self)  # загружаем UI файл в текущий виджет
+        self.setWindowTitle("Войдите или зарегистрируйтесь")
         self.registrate.clicked.connect(self.registration)
         self.enter.clicked.connect(self.do_enter)
 
@@ -348,9 +355,11 @@ class enter_or_registration_dialog(QDialog1):
         self.close()
         self.w2.exec()
 
+
 class korzina_widget(QWidget1):
     def __init__(self):
         super().__init__()
+        self.setWindowTitle("Корзина")
         self.conn = sqlite3.connect('cards.db')
         self.cur = self.conn.cursor()
         id = 1
@@ -380,7 +389,7 @@ class korzina_widget(QWidget1):
         for i in ids:
             widget = little_card(i)
             self.horizontalLayout_2.addWidget(widget)
-            
+
         ids = [randint(1, max_item) for i in range(10)]
 
         # добавление рекомендаций
@@ -400,9 +409,9 @@ class korzina_widget(QWidget1):
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-
         # Загрузить пользовательский интерфейс главного окна из файла .ui
         uic.loadUi('MainWindow.ui', self)
+        self.setWindowTitle("Karmen - магазин премиальной одежды")
 
         # иконки для кнопок корзина, вход и избранное
         self.like.setIcon(QIcon('images/like.png'))
@@ -479,8 +488,10 @@ class MainWindow(QMainWindow):
         self.w2 = enter_or_registration_dialog()
         self.w2.exec()
 
+
 if __name__ == '__main__':
     import sys
+
     app = QApplication(sys.argv)
     window = MainWindow()
     window.show()
