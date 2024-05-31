@@ -4,9 +4,37 @@ from PyQt6 import uic
 from PyQt6.QtWidgets import QApplication, QWidget, QCheckBox, QSpinBox, QLabel,  QVBoxLayout, QFrame, QPushButton, \
     QMainWindow, QListWidget, QListWidgetItem, QDialog
 from PyQt6.QtGui import QFont, QPixmap, QPainterPath, QPainter, QIcon
-from PyQt6.QtCore import QRectF, QSize, QEvent
+from PyQt6.QtCore import QRectF, QSize, QEvent, QSequentialAnimationGroup, QPropertyAnimation, QRect
 from functools import partial
 from random import randint
+def QWidget1(QWidget):
+    def __init__(self, id):
+        super().__init__()
+        # Класс анимации прозрачности окна
+        self.animation = QPropertyAnimation(self, b'windowOpacity')
+        self.animation.setDuration(250)  # Продолжительность: 1 секунда
+
+        # Выполните постепенное увеличение
+        self.doShow()
+
+    def doShow(self):
+        try:
+            self.animation.finished.disconnect(self.close)
+        except:
+            pass
+        self.animation.stop()
+        # Диапазон прозрачности постепенно увеличивается от 0 до 1.
+        self.animation.setStartValue(0)
+        self.animation.setEndValue(1)
+        self.animation.start()
+
+    def doClose(self):
+        self.animation.stop()
+        self.animation.finished.connect(self.close)  # Закройте окно, когда анимация будет завершена
+        # Диапазон прозрачности постепенно уменьшается с 1 до 0.
+        self.animation.setStartValue(1)
+        self.animation.setEndValue(0)
+        self.animation.start()
 
 class little_card(QWidget):
     def __init__(self, id):
@@ -136,6 +164,32 @@ class big_card(QWidget):
             widget = little_card(i)
             self.horizontalLayout.addWidget(widget)
 
+        # Класс анимации прозрачности окна
+        self.animation = QPropertyAnimation(self, b'windowOpacity')
+        self.animation.setDuration(250)  # Продолжительность: 1 секунда
+
+        # Выполните постепенное увеличение
+        self.doShow()
+
+    def doShow(self):
+        try:
+            self.animation.finished.disconnect(self.close)
+        except:
+            pass
+        self.animation.stop()
+        # Диапазон прозрачности постепенно увеличивается от 0 до 1.
+        self.animation.setStartValue(0)
+        self.animation.setEndValue(1)
+        self.animation.start()
+
+    def doClose(self):
+        self.animation.stop()
+        self.animation.finished.connect(self.close)  # Закройте окно, когда анимация будет завершена
+        # Диапазон прозрачности постепенно уменьшается с 1 до 0.
+        self.animation.setStartValue(1)
+        self.animation.setEndValue(0)
+        self.animation.start()
+
     # листание фото (пока по нажатию, но должно быть по наведению)
     def update_photo(self):
         sender = self.sender()
@@ -252,6 +306,31 @@ class korzina_widget(QWidget):
         # кнопка назад закрывает окно
         self.back.clicked.connect(self.close)
         self.log_in.clicked.connect(self.enter_or_registration)
+
+        self.animation = QPropertyAnimation(self, b'windowOpacity')
+        self.animation.setDuration(250)  # Продолжительность: 1 секунда
+
+        # Выполните постепенное увеличение
+        self.doShow()
+
+    def doShow(self):
+        try:
+            self.animation.finished.disconnect(self.close)
+        except:
+            pass
+        self.animation.stop()
+        # Диапазон прозрачности постепенно увеличивается от 0 до 1.
+        self.animation.setStartValue(0)
+        self.animation.setEndValue(1)
+        self.animation.start()
+
+    def doClose(self):
+        self.animation.stop()
+        self.animation.finished.connect(self.close)  # Закройте окно, когда анимация будет завершена
+        # Диапазон прозрачности постепенно уменьшается с 1 до 0.
+        self.animation.setStartValue(1)
+        self.animation.setEndValue(0)
+        self.animation.start()
 
     def enter_or_registration(self):
         self.w2 = enter_or_registration_dialog()
