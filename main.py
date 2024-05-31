@@ -2,7 +2,7 @@ import sqlite3
 
 from PyQt6 import uic
 from PyQt6.QtWidgets import QApplication, QWidget, QCheckBox, QSpinBox, QLabel,  QVBoxLayout, QFrame, QPushButton, \
-    QMainWindow, QListWidget, QListWidgetItem
+    QMainWindow, QListWidget, QListWidgetItem, QDialog
 from PyQt6.QtGui import QFont, QPixmap, QPainterPath, QPainter, QIcon
 from PyQt6.QtCore import QRectF, QSize, QEvent
 from functools import partial
@@ -182,6 +182,10 @@ class card(QWidget):
         self.w2 = big_card(id)
         self.w2.show()
 
+class registration_dialog(QDialog):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi('registration_dialog.ui', self) # загружаем UI файл в текущий виджет
 
 class korzina_widget(QWidget):
     def __init__(self):
@@ -245,6 +249,7 @@ class MainWindow(QMainWindow):
         self.log_in.setIconSize(QSize(20, 20))
 
         self.korzina.clicked.connect(self.open_korzina)
+        self.log_in.clicked.connect(self.registration)
 
         # Connect to the database
         self.conn = sqlite3.connect('cards.db')
@@ -303,6 +308,10 @@ class MainWindow(QMainWindow):
             self.korzina_window.show()
         except Exception as e:
             print(e)
+
+    def registration(self):
+        self.w2 = registration_dialog()
+        self.w2.exec()
 
 if __name__ == '__main__':
     import sys
