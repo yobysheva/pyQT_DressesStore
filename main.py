@@ -2,12 +2,12 @@ import sqlite3
 
 from PyQt6 import uic
 from PyQt6.QtWidgets import QApplication, QWidget, QCheckBox, QSpinBox, QLabel, QVBoxLayout, QFrame, QPushButton, \
-    QMainWindow, QListWidget, QListWidgetItem, QDialog, QMessageBox
+    QMainWindow, QListWidget, QListWidgetItem, QDialog, QMessageBox, QScrollArea
 from PyQt6.QtGui import QFont, QPixmap, QPainterPath, QPainter, QIcon
-from PyQt6.QtCore import QRectF, QSize, QEvent, QPropertyAnimation
+from PyQt6.QtCore import QRectF, QSize, QEvent, QPropertyAnimation, QRect
 from functools import partial
 from random import randint
-current_user_id = 0
+current_user_id = 1
 
 # классы с анимацией для наследования другими классами
 class QWidget1(QWidget):
@@ -169,6 +169,7 @@ class big_card(QWidget1):
 
         self.price.setText(str(num))
 
+        self.buttons = self.sizes.buttons()
         # иконки для кнопок корзина и избранное
         self.like.setIcon(QIcon('images/like.png'))
         self.like.setIconSize(QSize(25, 25))
@@ -191,7 +192,7 @@ class big_card(QWidget1):
         self.conn = sqlite3.connect('cards.db')
         self.cur = self.conn.cursor()
 
-        # пролистывание фоторафий
+        # пролистывание фотографий
         self.photo_counter = 0
 
         self.next1.clicked.connect(self.update_photo)
@@ -204,6 +205,21 @@ class big_card(QWidget1):
         for i in ids:
             widget = little_card(i)
             self.horizontalLayout.addWidget(widget)
+
+        self.current_button = None
+        # Проходим по всем кнопкам и связываем их с обработчиками
+        self.buttons = self.sizes.buttons()
+
+        # Проходим по всем кнопкам и связываем их с обработчиками
+        for button in self.buttons:
+            button.clicked.connect(lambda checked, b=button: self.size_pushed(b))
+
+    def size_pushed(self, button):
+        if self.current_button:
+            self.current_button.setStyleSheet("border: 1px solid #000; border-radius: 13px; border-style: outset; color: black; font-weight: bold; font: 18pt 'HelveticaNeueCyr'; ")
+
+        button.setStyleSheet("border: 0px solid #000; border-radius: 13px; border-style: outset; background: black; color: rgb(254,254,254); font-weight: bold; font: 18pt 'HelveticaNeueCyr';")
+        self.current_button = button
 
     # листание фото (пока по нажатию, но должно быть по наведению)
     def update_photo(self):
@@ -314,7 +330,7 @@ class enter_dialog(QDialog1):
                 password = data[0]
 
                 if entered_password == password:
-                    message = QMessageBox()
+                    message = QMessageBox1()
                     message.setWindowTitle("Успешное выполнение")
                     message.setText("Вы вошли в аккаунт.")
 
@@ -362,7 +378,6 @@ class korsina_item(QWidget):
         self.cur.execute(f"SELECT * FROM items WHERE id = {id}")
         data = self.cur.fetchall()
         text, num, photo1, photo2, order_quantity = data[0][1:]
-
         description = text
 
         # составление описания при помощи таблицы description
@@ -375,18 +390,16 @@ class korsina_item(QWidget):
                             INNER JOIN length ON length."length id" = description.length
                             INNER JOIN categories ON categories."categoy id" = description.category
                             WHERE items.id = {id}""")
-
             data = self.cur.fetchall()
 
             material, model, color, length, category = data[0]
-
             description = f"Тип товара: платье\nМодель: {model}\nМатериал: {material}\nЦвет: {color}\n" \
                           f"Длина: {length}\nКатегория: {category}"
         except Exception as e:
             print(e)
 
         # Загрузить пользовательский интерфейс из файла .ui
-        uic.loadUi('koraina_item.ui', self)
+        uic.loadUi('korzina_item.ui', self)
 
         # поставили значения из бд в соответствующие поля
         self.name.setText(text)
@@ -408,6 +421,32 @@ class korsina_item(QWidget):
         self.photo_label.setScaledContents(True)
         self.verticalLayout.addWidget(self.photo_label)
 
+class items_scroll(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Корзина")
+        self.conn = sqlite3.connect('cards.db')
+        self.cur = self.conn.cursor()
+        self.cur.execute(f"SELECT item_id FROM bag WHERE user_id = {current_user_id}")
+        data = self.cur.fetchall()
+
+        self.mainLayout = QVBoxLayout()
+
+        # Создание QVBoxLayout, в который будут добавляться виджеты
+        layout = QVBoxLayout()
+
+        for i in data:
+            widget = korsina_item(i[0])
+            layout.addWidget(widget)
+
+        # Создание QWidget для установки QVBoxLayout
+        scrollAreaWidgetContents = QWidget()
+        scrollAreaWidgetContents.setLayout(layout)
+
+        # Создание QScrollArea и установка QWidget внутри него
+        self.scrollArea = QScrollArea()  # Устанавливаем родительский виджет
+        self.scrollArea.setWidget(scrollAreaWidgetContents)
+
 
 class korzina_widget(QWidget1):
     def __init__(self):
@@ -415,9 +454,6 @@ class korzina_widget(QWidget1):
         self.setWindowTitle("Корзина")
         self.conn = sqlite3.connect('cards.db')
         self.cur = self.conn.cursor()
-        id = 1
-
-
 
         # Загрузить пользовательский интерфейс из файла .ui
         uic.loadUi('korzina.ui', self)
@@ -449,9 +485,10 @@ class korzina_widget(QWidget1):
                 self.horizontalLayout_4.addWidget(widget)
 
         else:
-            # Берем первые 5 товаров из бд
-            self.cur.execute(f"SELECT * FROM items WHERE id = {current_user_id}")
-            data = self.cur.fetchall()
+            self.scroll = items_scroll()
+            self.lay = QVBoxLayout()
+            self.lay.setGeometry(QRect(100,100,1000,100))
+            self.lay.addWidget(self.scroll())
 
         # кнопка назад закрывает окно
         self.back.clicked.connect(self.close)
