@@ -257,9 +257,7 @@ class registration_dialog(QDialog1):
         super().__init__()
         uic.loadUi('registration_dialog.ui', self)  # загружаем UI файл в текущий виджет
         self.setWindowTitle("Регистрация")
-
         try:
-            if self.escape.clicked.connect(): self.close()
             self.registrate.clicked.connect(
                 lambda: self.add_row(self.login.text(), self.password.text(), self.fio.text(), self.card_number.text(), self.expiration_date.text(), self.cvv.text(), self.post_index.text()))
         except Exception as e:
