@@ -67,27 +67,13 @@ class QDialog1(QDialog):
         self.animation.setEndValue(0)
         self.animation.start()
 
-class QmessageBox1(QMessageBox):
+class QMessageBox1(QMessageBox):
     def __init__(self):
         super().__init__()
         self.setStyleSheet("""background: rgb(254,254,254);
-         QPushButton:pressed {
-        border: 0px solid #000;
-        border-radius: 13px;
-        border-style: outset;
-        background: black;
-        color: rgb(254,254,254);
         font-weight: bold;
-        font: 20pt "Futurespore Cyrillic";
-        }
-        QPushButton {
-        border: 2px solid #000;
-        border-radius: 13px;
-        border-style: outset;
         color: black;
-        font-weight: bold;
-        font: 20pt "Futurespore Cyrillic";
-        }""")
+        font: 24pt "HelveticaNeueCyr";""")
 
 class little_card(QWidget):
     def __init__(self, id):
@@ -268,6 +254,7 @@ class registration_dialog(QDialog1):
     def __init__(self):
         super().__init__()
         uic.loadUi('registration_dialog.ui', self)  # загружаем UI файл в текущий виджет
+
         try:
             self.registrate.clicked.connect(
                 lambda: self.add_row(self.login.text(), self.password.text(), self.fio.text(), self.card_number.text(), self.expiration_date.text(), self.cvv.text(), self.post_index.text()))
@@ -275,7 +262,7 @@ class registration_dialog(QDialog1):
             print(e)
     def add_row(self, login, password, fio, card_number, expiration_date, cvv, post_index):
         self.con = sqlite3.connect("cards.db")
-        print(login, password, fio, card_number, expiration_date, cvv, post_index)
+
         try:
             cur = self.con.cursor()
             a = f"""INSERT INTO users(login, password, FIO, card_number, validity_period, CVV, postal_code) VALUES("{login}", "{password}", "{fio}", {card_number}, "{expiration_date}", {cvv}, {post_index}) """
@@ -284,16 +271,18 @@ class registration_dialog(QDialog1):
             cur.close()
 
             message = QMessageBox()
-            message.setWindowTitle("Успешное добавление")
-            message.setText("Запись успешно добавлена.")
+            message.setWindowTitle("Успешная регистрация")
+            message.setText("Аккаунт зарегистрирован.")
 
             message.exec()
+
+            current_user_id = f"""SELECT user_id FROM users WHERE login = "{login}" """
             self.close()
 
         except Exception as e:
             message = QMessageBox()
-            message.setWindowTitle("Не добавлено")
-            message.setText("Не удалось добавить запись. Убедитесь, что данные внесены верно.")
+            message.setWindowTitle("Аккаунт не зарегистрирован")
+            message.setText("Не удалось зарегистрировать. Убедитесь, что данные внесены верно. Логин должен быть уникален.")
 
             message.exec()
             print(e)
@@ -302,6 +291,45 @@ class enter_dialog(QDialog1):
     def __init__(self):
         super().__init__()
         uic.loadUi('enter_dialog.ui', self)  # загружаем UI файл в текущий виджет
+
+        try:
+            self.enter.clicked.connect(
+                lambda: self.check_enter(self.login.text(), self.password.text()))
+
+        except Exception as e:
+            print(e)
+    def check_enter(self, login, entered_password):
+        self.con = sqlite3.connect("cards.db")
+        self.conn = sqlite3.connect('cards.db')
+        self.cur = self.conn.cursor()
+        data = []
+        if self.login.text() != "" and self.password.text() != "":
+            self.cur.execute(f"""SELECT password FROM users WHERE login = "{login}" """)
+            data = self.cur.fetchone()
+            if data:
+                password = data[0]
+
+                if entered_password == password:
+                    message = QMessageBox()
+                    message.setWindowTitle("Успешное выполнение")
+                    message.setText("Вы вошли в аккаунт.")
+
+                    message.exec()
+
+                    current_user_id = f"""SELECT user_id FROM users WHERE login = "{login}" """
+                    self.close()
+                else:
+                    self.create_massege()
+            else:
+                self.create_massege()
+        else:
+            self.create_massege()
+    def create_massege(self):
+        message = QMessageBox1()
+        message.setWindowTitle("Вход не выполнен")
+        message.setText("Не удалось войти в аккаунт. Убедитесь, что данные внесены верно или зарегистрируйтесь.")
+        message.exec()
+
 
 class enter_or_registration_dialog(QDialog1):
     def __init__(self):

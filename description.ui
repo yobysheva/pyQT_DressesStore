@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
+ <class>Description</class>
+ <widget class="QWidget" name="Description">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -158,6 +158,9 @@ font: 18pt &quot;HelveticaNeueCyr&quot;;
    <property name="text">
     <string>40</string>
    </property>
+   <attribute name="buttonGroup">
+    <string notr="true">sizes</string>
+   </attribute>
   </widget>
   <widget class="QPushButton" name="size42">
    <property name="geometry">
@@ -199,6 +202,9 @@ font: 18pt &quot;HelveticaNeueCyr&quot;;
    <property name="text">
     <string>42</string>
    </property>
+   <attribute name="buttonGroup">
+    <string notr="true">sizes</string>
+   </attribute>
   </widget>
   <widget class="QPushButton" name="size44">
    <property name="geometry">
@@ -240,6 +246,9 @@ font: 18pt &quot;HelveticaNeueCyr&quot;;
    <property name="text">
     <string>44</string>
    </property>
+   <attribute name="buttonGroup">
+    <string notr="true">sizes</string>
+   </attribute>
   </widget>
   <widget class="QPushButton" name="size48">
    <property name="geometry">
@@ -281,6 +290,9 @@ font: 18pt &quot;HelveticaNeueCyr&quot;;
    <property name="text">
     <string>48</string>
    </property>
+   <attribute name="buttonGroup">
+    <string notr="true">sizes</string>
+   </attribute>
   </widget>
   <widget class="QPushButton" name="size50">
    <property name="geometry">
@@ -322,6 +334,9 @@ font: 18pt &quot;HelveticaNeueCyr&quot;;
    <property name="text">
     <string>50</string>
    </property>
+   <attribute name="buttonGroup">
+    <string notr="true">sizes</string>
+   </attribute>
   </widget>
   <widget class="QPushButton" name="size46">
    <property name="geometry">
@@ -363,6 +378,9 @@ font: 18pt &quot;HelveticaNeueCyr&quot;;
    <property name="text">
     <string>46</string>
    </property>
+   <attribute name="buttonGroup">
+    <string notr="true">sizes</string>
+   </attribute>
   </widget>
   <widget class="QLabel" name="label">
    <property name="geometry">
@@ -555,4 +573,7 @@ font: 20pt &quot;Futurespore Cyrillic&quot;;
  </widget>
  <resources/>
  <connections/>
+ <buttongroups>
+  <buttongroup name="sizes"/>
+ </buttongroups>
 </ui>
