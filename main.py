@@ -1,8 +1,8 @@
 import sqlite3
 
 from PyQt6 import uic
-from PyQt6.QtWidgets import QApplication, QWidget, QCheckBox, QSpinBox, QLabel,  QVBoxLayout, QFrame, QPushButton, \
-    QMainWindow, QListWidget, QListWidgetItem, QDialog
+from PyQt6.QtWidgets import QApplication, QWidget, QCheckBox, QSpinBox, QLabel, QVBoxLayout, QFrame, QPushButton, \
+    QMainWindow, QListWidget, QListWidgetItem, QDialog, QMessageBox
 from PyQt6.QtGui import QFont, QPixmap, QPainterPath, QPainter, QIcon
 from PyQt6.QtCore import QRectF, QSize, QEvent, QSequentialAnimationGroup, QPropertyAnimation, QRect
 from functools import partial
@@ -66,6 +66,28 @@ class QDialog1(QDialog):
         self.animation.setStartValue(1)
         self.animation.setEndValue(0)
         self.animation.start()
+
+class QmessageBox1(QMessageBox):
+    def __init__(self):
+        super().__init__()
+        self.setStyleSheet("""background: rgb(254,254,254);
+         QPushButton:pressed {
+        border: 0px solid #000;
+        border-radius: 13px;
+        border-style: outset;
+        background: black;
+        color: rgb(254,254,254);
+        font-weight: bold;
+        font: 20pt "Futurespore Cyrillic";
+        }
+        QPushButton {
+        border: 2px solid #000;
+        border-radius: 13px;
+        border-style: outset;
+        color: black;
+        font-weight: bold;
+        font: 20pt "Futurespore Cyrillic";
+        }""")
 
 class little_card(QWidget):
     def __init__(self, id):
@@ -245,7 +267,36 @@ class card(QWidget):
 class registration_dialog(QDialog1):
     def __init__(self):
         super().__init__()
-        uic.loadUi('registration_dialog.ui', self) # загружаем UI файл в текущий виджет
+        uic.loadUi('registration_dialog.ui', self)  # загружаем UI файл в текущий виджет
+        try:
+            self.registrate.clicked.connect(
+                lambda: self.add_row(self.login.text(), self.password.text(), self.fio.text(), self.card_number.text(), self.expiration_date.text(), self.cvv.text(), self.post_index.text()))
+        except Exception as e:
+            print(e)
+    def add_row(self, login, password, fio, card_number, expiration_date, cvv, post_index):
+        self.con = sqlite3.connect("cards.db")
+        print(login, password, fio, card_number, expiration_date, cvv, post_index)
+        try:
+            cur = self.con.cursor()
+            a = f"""INSERT INTO users(login, password, FIO, card_number, validity_period, CVV, postal_code) VALUES("{login}", "{password}", "{fio}", {card_number}, "{expiration_date}", {cvv}, {post_index}) """
+            cur.execute(a)
+            self.con.commit()
+            cur.close()
+
+            message = QMessageBox()
+            message.setWindowTitle("Успешное добавление")
+            message.setText("Запись успешно добавлена.")
+
+            message.exec()
+            self.close()
+
+        except Exception as e:
+            message = QMessageBox()
+            message.setWindowTitle("Не добавлено")
+            message.setText("Не удалось добавить запись. Убедитесь, что данные внесены верно.")
+
+            message.exec()
+            print(e)
 
 class enter_dialog(QDialog1):
     def __init__(self):
