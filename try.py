@@ -2,11 +2,12 @@ import sqlite3
 
 from PyQt6 import uic
 from PyQt6.QtWidgets import QApplication, QWidget, QCheckBox, QSpinBox, QLabel, QVBoxLayout, QFrame, QPushButton, \
-    QMainWindow, QListWidget, QListWidgetItem
+    QMainWindow, QListWidget, QListWidgetItem, QDialog, QMessageBox
 from PyQt6.QtGui import QFont, QPixmap, QPainterPath, QPainter, QIcon
-from PyQt6.QtCore import QRectF, QSize
+from PyQt6.QtCore import QRectF, QSize, QEvent
 from functools import partial
 from random import randint
+
 
 class little_card(QWidget):
     def __init__(self, id):
@@ -115,11 +116,12 @@ class big_card(QWidget):
         self.hover_image = QPixmap(photo2)
         self.photo_label.setPixmap(self.original_image)
 
-        # self.photo_label.installEventFilter(self)
-
         # уменьшение изображения
         self.photo_label.setScaledContents(True)
         self.verticalLayout.addWidget(self.photo_label)
+
+        self.conn = sqlite3.connect('cards.db')
+        self.cur = self.conn.cursor()
 
         # пролистывание фоторафий
         self.photo_counter = 0
@@ -182,6 +184,65 @@ class card(QWidget):
         self.w2.show()
 
 
+class registration_dialog(QDialog):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi('registration_dialog.ui', self)  # загружаем UI файл в текущий виджет
+        try:
+            self.enter.clicked.connect(
+                lambda: self.add_row(self.login.text(), self.password.text(), self.fio.text(), self.card_number.text(), self.expiration_date.text(), self.cvv.text(), self.post_index.text()))
+        except Exception as e:
+            print(e)
+    def add_row(self, login, password, fio, card_number, expiration_date, cvv, post_index):
+        self.con = sqlite3.connect("cards.db")
+        print(login, password, fio, card_number, expiration_date, cvv, post_index)
+        try:
+            cur = self.con.cursor()
+            a = f"""INSERT INTO users(login, password, FIO, card_number, validity_period, CVV, postal_code) VALUES("{login}", "{password}", "{fio}", {card_number}, "{expiration_date}", {cvv}, {post_index}) """
+            cur.execute(a)
+            self.con.commit()
+            cur.close()
+
+            message = QMessageBox()
+            message.setWindowTitle("Успешное добавление")
+            message.setText("Запись успешно добавлена.")
+
+            message.exec()
+            self.close()
+
+
+        except Exception as e:
+            message = QMessageBox()
+            message.setWindowTitle("Не добавлено")
+            message.setText("Не удалось добавить запись. Убедитесь, что данные внесены верно.")
+
+            message.exec()
+            print(e)
+
+class enter_dialog(QDialog):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi('enter_dialog.ui', self)  # загружаем UI файл в текущий виджет
+
+
+class enter_or_registration_dialog(QDialog):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi('enter_or_registration.ui', self)  # загружаем UI файл в текущий виджет
+        self.registrate.clicked.connect(self.registration)
+        self.enter.clicked.connect(self.do_enter)
+
+    def registration(self):
+        self.w2 = registration_dialog()
+        self.close()
+        self.w2.exec()
+
+    def do_enter(self):
+        self.w2 = enter_dialog()
+        self.close()
+        self.w2.exec()
+
+
 class korzina_widget(QWidget):
     def __init__(self):
         super().__init__()
@@ -224,6 +285,11 @@ class korzina_widget(QWidget):
 
         # кнопка назад закрывает окно
         self.back.clicked.connect(self.close)
+        self.log_in.clicked.connect(self.enter_or_registration)
+
+    def enter_or_registration(self):
+        self.w2 = enter_or_registration_dialog()
+        self.w2.exec()
 
 
 class MainWindow(QMainWindow):
@@ -244,6 +310,7 @@ class MainWindow(QMainWindow):
         self.log_in.setIconSize(QSize(20, 20))
 
         self.korzina.clicked.connect(self.open_korzina)
+        self.log_in.clicked.connect(self.enter_or_registration)
 
         # Connect to the database
         self.conn = sqlite3.connect('cards.db')
@@ -295,7 +362,7 @@ class MainWindow(QMainWindow):
     WHERE categories.name = '{category}'"""
         self.update_data(self.message)
 
-# открывается корзина, нужно сделать так, чтобы закрывалось изначальное окно
+    # открывается корзина, нужно сделать так, чтобы закрывалось изначальное окно
     def open_korzina(self):
         try:
             self.korzina_window = korzina_widget()
@@ -303,8 +370,14 @@ class MainWindow(QMainWindow):
         except Exception as e:
             print(e)
 
+    def enter_or_registration(self):
+        self.w2 = enter_or_registration_dialog()
+        self.w2.exec()
+
+
 if __name__ == '__main__':
     import sys
+
     app = QApplication(sys.argv)
     window = MainWindow()
     window.show()
