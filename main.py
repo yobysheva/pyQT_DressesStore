@@ -326,7 +326,6 @@ class enter_dialog(QDialog1):
             print(e)
         self.escape.clicked.connect(self.close)
     def check_enter(self, login, entered_password):
-        self.con = sqlite3.connect("cards.db")
         self.conn = sqlite3.connect('cards.db')
         self.cur = self.conn.cursor()
         data = []
