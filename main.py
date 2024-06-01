@@ -4,10 +4,9 @@ from PyQt6 import uic
 from PyQt6.QtWidgets import QApplication, QWidget, QCheckBox, QSpinBox, QLabel, QVBoxLayout, QFrame, QPushButton, \
     QMainWindow, QListWidget, QListWidgetItem, QDialog, QMessageBox, QScrollArea, QFormLayout, QGroupBox
 from PyQt6.QtGui import QFont, QPixmap, QPainterPath, QPainter, QIcon
-from PyQt6.QtCore import Qt, QRectF, QSize, QEvent, QPropertyAnimation, QRect
+from PyQt6.QtCore import Qt, QRectF, QSize, QEvent, QPropertyAnimation, QRect, QTimer
 from functools import partial
 from random import randint
-current_user_id = 1
 
 # классы с анимацией для наследования другими классами
 class QWidget1(QWidget):
@@ -223,16 +222,26 @@ class big_card(QWidget1):
         self.like.clicked.connect(self.korzina_or_like_pushed_partial)
     def size_pushed(self, button):
         if self.current_size:
-            self.current_size.setStyleSheet("border: 1px solid #000; border-radius: 13px; border-style: outset; color: black; font-weight: bold; font: 18pt 'HelveticaNeueCyr'; ")
+            self.current_size.setStyleSheet("""border: 1px solid #000; 
+            border-radius: 13px; 
+            border-style: outset; 
+            color: black; 
+            font-weight: 
+            bold; font: 18pt 'HelveticaNeueCyr'; """)
 
-        button.setStyleSheet("border: 0px solid #000; border-radius: 13px; border-style: outset; background: black; color: rgb(254,254,254); font-weight: bold; font: 18pt 'HelveticaNeueCyr';")
+        button.setStyleSheet("""border: 0px solid #000; 
+        border-radius: 13px; 
+        border-style: outset; 
+        background: black; 
+        color: rgb(254,254,254); 
+        font-weight: bold; font: 18pt 'HelveticaNeueCyr';""")
         self.current_size = button
         self.current_size_num = button.text()
 
     def korzina_or_like_pushed(self, id):
         self.value = self.spinBox.value()
         self.cur = self.conn.cursor()
-        self.cur.execute(f"""SELECT  user_id FROM current_user_id""")
+        self.cur.execute(f"""SELECT user_id FROM current_user_id""")
         data = self.cur.fetchone()
         current_user_id = data[0]
 
@@ -252,8 +261,6 @@ class big_card(QWidget1):
             message.exec()
         else:
             self.add_row(id, self.current_size_num, self.value, current_user_id)
-
-
 
 
     def add_row(self, item_id, size, count, current_user_id):
@@ -462,6 +469,10 @@ class korzina_item(QWidget):
         self.conn = sqlite3.connect('cards.db')
         self.cur = self.conn.cursor()
 
+        self.cur.execute(f"""SELECT user_id FROM current_user_id""")
+        data = self.cur.fetchone()
+        self.current_user_id = data[0]
+
         self.cur.execute(
             f"""SELECT korzina_item_id, item_id, size, count, is_chosen FROM bag WHERE korzina_item_id = {korzina_item_id}""")
         desc2_data = self.cur.fetchone()
@@ -520,7 +531,7 @@ class korzina_item(QWidget):
 
         if is_chosen:
             print(2)
-            chosen_count = self.cur.execute(f"SELECT COUNT(*) FROM bag WHERE user_id = {current_user_id} AND is_chosen = 1").fetchone()[0]
+            chosen_count = self.cur.execute(f"SELECT COUNT(*) FROM bag WHERE user_id = {self.current_user_id} AND is_chosen = 1").fetchone()[0]
             if chosen_count > 5:
                 message = QMessageBox1()
                 message.setWindowTitle("Не удалось добавить товар в заказ")
@@ -533,37 +544,6 @@ class korzina_item(QWidget):
                 print(3)
 
 
-class items_scroll(QWidget):
-    def __init__(self):
-        super().__init__()
-        self.conn = sqlite3.connect('cards.db')
-        self.cur = self.conn.cursor()
-        self.cur.execute(f"SELECT item_id FROM bag WHERE user_id = {current_user_id}")
-        data = self.cur.fetchall()
-
-        formLayout = QFormLayout()
-        groupBox = QGroupBox("Items in Bag")
-
-        if data:
-            for i in data:
-                print(f"Adding widget for item id {i[0]}")
-                widget = korzina_item(i[0])
-                formLayout.addWidget(widget)
-
-        else:
-            print("No items found in the bag")
-
-        groupBox.setLayout(formLayout)
-
-        self.scrollArea = QScrollArea()
-        self.scrollArea.setWidget(groupBox)
-        self.scrollArea.setWidgetResizable(True)
-        self.scrollArea.setFixedHeight(300)
-
-        layout = QVBoxLayout()
-        layout.addWidget(self.scrollArea)
-        self.setLayout(layout)
-
 class korzina_widget(QWidget1):
     def __init__(self):
         super().__init__()
@@ -571,12 +551,18 @@ class korzina_widget(QWidget1):
         self.conn = sqlite3.connect('cards.db')
         self.cur = self.conn.cursor()
 
+        self.cur.execute(f"""SELECT user_id FROM current_user_id""")
+        data = self.cur.fetchone()
+        self.current_user_id = data[0]
+
         # Загрузить пользовательский интерфейс из файла .ui
         uic.loadUi('korzina.ui', self)
 
         self.page = 0
+        self.current_price = 0
+        self.timer = QTimer(self)
 
-        if current_user_id == 0:
+        if self.current_user_id == 0:
             max_item = self.cur.execute("SELECT COUNT(*) FROM items").fetchone()[0]
             ids = [randint(1, max_item) for _ in range(20)]
 
@@ -606,7 +592,7 @@ class korzina_widget(QWidget1):
         self.update_price()
         self.clear_layout(self.gridLayout)
 
-        self.cur.execute(f"SELECT korzina_item_id FROM bag WHERE user_id = {current_user_id} LIMIT 2 OFFSET {self.page * 2}")
+        self.cur.execute(f"SELECT korzina_item_id FROM bag WHERE user_id = {self.current_user_id} LIMIT 2 OFFSET {self.page * 2}")
         data = self.cur.fetchall()
 
         for i in range(len(data)):
@@ -616,7 +602,8 @@ class korzina_widget(QWidget1):
 
     def update_page(self):
         sender = self.sender()
-        max_pages = self.cur.execute(f"SELECT COUNT(*) FROM bag WHERE user_id = {current_user_id}").fetchone()[0] // 2
+        max_pages = self.cur.execute(f"SELECT COUNT(*) FROM bag WHERE user_id = {self.current_user_id}").fetchone()[0]
+        max_pages = max_pages//2 if max_pages % 2 == 1 else max_pages//2 - 1
 
         if sender == self.next and self.page < max_pages:
             self.page += 1
@@ -637,17 +624,37 @@ class korzina_widget(QWidget1):
     def update_price(self):
         chosen_count = self.cur.execute(
             f"""SELECT COUNT(*) FROM bag
-            WHERE user_id = {current_user_id} AND is_chosen = 1""").fetchone()[0]
-        chosen_imems = self.cur.execute(
-                f"""SELECT bag.count, items.cost, bag.is_chosen FROM bag
-                    INNER JOIN items ON items.id = bag.item_id
-                    WHERE bag.user_id = {current_user_id}""").fetchall()
-        new_price = 0
-        for count, price, is_chosen in chosen_imems:
-            new_price += count * price * is_chosen
+            WHERE user_id = {self.current_user_id} AND is_chosen = 1""").fetchone()[0]
 
-        self.label_3.setText(f"В корзине всего {chosen_count} товаров на сумму {new_price}")
-        self.price = new_price
+        chosen_items = self.cur.execute(
+            f"""SELECT bag.count, items.cost, bag.is_chosen FROM bag
+                INNER JOIN items ON items.id = bag.item_id
+                WHERE bag.user_id = {self.current_user_id}""").fetchall()
+
+        new_price = sum(count * price * is_chosen for count, price, is_chosen in chosen_items)
+
+        self.animate_price_change(new_price, chosen_count)
+
+    def animate_price_change(self, new_price, chosen_count):
+        self.animation_steps = 100  # number of steps for the animation
+        self.animation_duration = 1000  # duration of the animation in milliseconds
+
+        self.step_value = (new_price - self.current_price) / self.animation_steps
+        self.step_duration = int(self.animation_duration / self.animation_steps)  # Ensure integer value
+
+        self.target_price = new_price
+        self.chosen_count = chosen_count
+
+        self.timer.timeout.connect(self.update_label)
+        self.timer.start(self.step_duration)
+
+    def update_label(self):
+        self.current_price += self.step_value
+        if (self.step_value > 0 and self.current_price >= self.target_price) or (self.step_value < 0 and self.current_price <= self.target_price):
+            self.current_price = self.target_price
+            self.timer.stop()
+
+        self.label_3.setText(f"В корзине всего {self.chosen_count} товаров на сумму {int(self.current_price)}")
 
 
 class MainWindow(QMainWindow):
@@ -703,7 +710,8 @@ class MainWindow(QMainWindow):
     def update_data(self, message):
         sender = self.sender()
         # количество товаров в таблице
-        max_pages = self.cur.execute(f"SELECT COUNT(*) FROM items {self.message}").fetchone()[0] // 5
+        max_pages = self.cur.execute(f"SELECT COUNT(*) FROM items {self.message}").fetchone()[0]
+        max_pages = max_pages // 5 if max_pages % 2 != 0 else max_pages // 5 - 1
         if sender == self.next and self.page < max_pages:
             self.page += 1
         elif sender == self.prev and self.page > 0:
@@ -734,8 +742,8 @@ class MainWindow(QMainWindow):
             print(e)
 
     def enter_or_registration(self):
-        self.w2 = enter_or_registration_dialog()
-        self.w2.exec()
+        w2 = enter_or_registration_dialog()
+        w2.exec()
 
 
 if __name__ == '__main__':
