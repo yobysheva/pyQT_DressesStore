@@ -4,7 +4,7 @@ from PyQt6 import uic
 from PyQt6.QtWidgets import QApplication, QWidget, QCheckBox, QSpinBox, QLabel, QVBoxLayout, QFrame, QPushButton, \
     QMainWindow, QListWidget, QListWidgetItem, QDialog, QMessageBox, QScrollArea, QFormLayout, QGroupBox
 from PyQt6.QtGui import QFont, QPixmap, QPainterPath, QPainter, QIcon
-from PyQt6.QtCore import QRectF, QSize, QEvent, QPropertyAnimation, QRect
+from PyQt6.QtCore import Qt, QRectF, QSize, QEvent, QPropertyAnimation, QRect
 from functools import partial
 from random import randint
 current_user_id = 1
@@ -38,6 +38,7 @@ class QWidget1(QWidget):
         self.animation.setStartValue(1)
         self.animation.setEndValue(0)
         self.animation.start()
+
 
 class QDialog1(QDialog):
     def __init__(self):
@@ -294,8 +295,8 @@ class registration_dialog(QDialog1):
             message.setText("Аккаунт зарегистрирован.")
             message.exec()
 
-            current_user_id = f"""SELECT user_id FROM users WHERE login = "{login}" """
-            self.close()
+            self.con = sqlite3.connect("cards.db")
+            self.conn = sqlite3.connect('cards.db')
 
         except Exception as e:
             message = QMessageBox1()
@@ -304,6 +305,12 @@ class registration_dialog(QDialog1):
 
             message.exec()
             print(e)
+        self.cur = self.conn.cursor()
+        self.cur.execute(f"""SELECT  user_id FROM users WHERE login = "{login}" """)
+        data = self.cur.fetchone()
+        self.close()
+        current_user_id = data[0]
+        print(current_user_id)
 
 class enter_dialog(QDialog1):
     def __init__(self):
@@ -324,7 +331,7 @@ class enter_dialog(QDialog1):
         self.cur = self.conn.cursor()
         data = []
         if self.login.text() != "" and self.password.text() != "":
-            self.cur.execute(f"""SELECT password FROM users WHERE login = "{login}" """)
+            self.cur.execute(f"""SELECT password, user_id FROM users WHERE login = "{login}" """)
             data = self.cur.fetchone()
             if data:
                 password = data[0]
@@ -336,7 +343,7 @@ class enter_dialog(QDialog1):
 
                     message.exec()
 
-                    current_user_id = f"""SELECT user_id FROM users WHERE login = "{login}" """
+                    current_user_id = data[1]
                     self.close()
                 else:
                     self.create_massege()
@@ -344,6 +351,7 @@ class enter_dialog(QDialog1):
                 self.create_massege()
         else:
             self.create_massege()
+        print(current_user_id)
     def create_massege(self):
         message = QMessageBox1()
         message.setWindowTitle("Вход не выполнен")
@@ -369,61 +377,82 @@ class enter_or_registration_dialog(QDialog1):
         self.close()
         self.w2.exec()
 
-class korsina_item(QWidget):
-    def __init__(self, id):
+class korzina_item(QWidget):
+    def __init__(self, korzina_item_id):
         super().__init__()
         self.conn = sqlite3.connect('cards.db')
         self.cur = self.conn.cursor()
 
-        self.cur.execute(f"SELECT * FROM items WHERE id = {id}")
-        data = self.cur.fetchone()
-        if data:
-            text, num, photo1, photo2, order_quantity = data[1:]
-            description = text
+        self.cur.execute(
+            f"""SELECT korzina_item_id, item_id, size, count, is_chosen FROM bag WHERE korzina_item_id = {korzina_item_id}""")
+        desc2_data = self.cur.fetchone()
+        self.korzina_item_id, user_id, size, count, is_chosen = desc2_data
+        description2 = f"Размер: {size}\nКоличество: {count}"
 
-            # составление описания при помощи таблицы description
-            self.cur.execute(f"""SELECT materials.name, models.name, colors.name, length.name, categories.name FROM description 
+        self.cur.execute(f"SELECT * FROM items WHERE id = {user_id}")
+        data = self.cur.fetchone()
+        text, num, photo1, photo2, order_quantity = data[1:]
+        description = text
+
+        # составление описания при помощи таблицы description
+        self.cur.execute(f"""SELECT materials.name, models.name, colors.name, length.name, categories.name FROM description 
                             INNER JOIN items ON items.id = description.id
                             INNER JOIN materials ON materials."material id" = description.material
                             INNER JOIN models ON models."models id" = description.model
                             INNER JOIN colors ON colors."colors id" = description.color
                             INNER JOIN length ON length."length id" = description.length
                             INNER JOIN categories ON categories."categoy id" = description.category
-                            WHERE items.id = {id}""")
-            desc_data = self.cur.fetchone()
-            if desc_data:
-                material, model, color, length, category = desc_data
-                description = f"Модель: {model}\nМатериал: {material}\nЦвет: {color}\n" \
+                            WHERE items.id = {user_id}""")
+        desc_data = self.cur.fetchone()
+        if desc_data:
+            material, model, color, length, category = desc_data
+            description = f"Модель: {model}\nМатериал: {material}\nЦвет: {color}\n" \
                                 f"Длина: {length}\nКатегория: {category}"
 
-            self.cur.execute(f"""SELECT size, count FROM bag WHERE user_id = {current_user_id} AND item_id = {id}""")
-            desc2_data = self.cur.fetchone()
-            if desc2_data:
-                size, count = desc2_data
-                description2 = f"Размер: {size}\nКоличество: {count}"
 
+        # Загрузить пользовательский интерфейс из файла .ui
+        uic.loadUi('korzina_item.ui', self)
 
-            # Загрузить пользовательский интерфейс из файла .ui
-            uic.loadUi('korzina_item.ui', self)
+        # Установить значения из бд в соответствующие поля
+        self.name.setText(text)
+        self.name.setWordWrap(True)
 
-            # Установить значения из бд в соответствующие поля
-            self.name.setText(text)
-            self.name.setWordWrap(True)
+        self.long_description.setText(description)
+        self.long_description.setWordWrap(True)
+        self.long_description_2.setText(description2)
+        self.long_description_2.setWordWrap(True)
 
-            self.long_description.setText(description)
-            self.long_description.setWordWrap(True)
-            self.long_description_2.setText(description2)
-            self.long_description_2.setWordWrap(True)
+        self.price.setText(str(num))
 
-            self.price.setText(str(num))
+        self.photo_label = QLabel(self)
+        self.original_image = QPixmap(photo1)
+        self.photo_label.setPixmap(self.original_image)
+        self.photo_label.setScaledContents(True)
+        self.verticalLayout.addWidget(self.photo_label)
 
-            self.photo_label = QLabel(self)
-            self.original_image = QPixmap(photo1)
-            self.photo_label.setPixmap(self.original_image)
-            self.photo_label.setScaledContents(True)
-            self.verticalLayout.addWidget(self.photo_label)
-        else:
-            print(f"No data found for id {id}")
+        self.checkBox.setChecked(is_chosen == 1)
+        self.checkBox.stateChanged.connect(self.update_is_chosen)
+
+    def update_is_chosen(self):
+        is_chosen = 1 if self.checkBox.isChecked() else 0
+        self.cur.execute(f"UPDATE bag SET is_chosen = {is_chosen} WHERE korzina_item_id = {self.korzina_item_id}")
+        self.conn.commit()
+        print(is_chosen)
+
+        if is_chosen:
+            print(2)
+            chosen_count = self.cur.execute(f"SELECT COUNT(*) FROM bag WHERE user_id = {current_user_id} AND is_chosen = 1").fetchone()[0]
+            if chosen_count > 5:
+                message = QMessageBox1()
+                message.setWindowTitle("Не удалось добавить товар в заказ")
+                message.setText("Невозможно заказать более 5 товаров за один раз.")
+                message.exec()
+
+                self.cur.execute(f"UPDATE bag SET is_chosen = 0 WHERE korzina_item_id = {self.korzina_item_id}")
+                self.checkBox.setChecked(False)
+                self.conn.commit()
+                print(3)
+
 
 class items_scroll(QWidget):
     def __init__(self):
@@ -439,7 +468,7 @@ class items_scroll(QWidget):
         if data:
             for i in data:
                 print(f"Adding widget for item id {i[0]}")
-                widget = korsina_item(i[0])
+                widget = korzina_item(i[0])
                 formLayout.addWidget(widget)
 
         else:
@@ -466,14 +495,7 @@ class korzina_widget(QWidget1):
         # Загрузить пользовательский интерфейс из файла .ui
         uic.loadUi('korzina.ui', self)
 
-        self.like.setIcon(QIcon('images/like.png'))
-        self.like.setIconSize(QSize(20, 20))
-
-        self.korzina.setIcon(QIcon('images/bag.png'))
-        self.korzina.setIconSize(QSize(20, 20))
-
-        self.log_in.setIcon(QIcon('images/log_in.png'))
-        self.log_in.setIconSize(QSize(20, 20))
+        self.page = 0
 
         if current_user_id == 0:
             max_item = self.cur.execute("SELECT COUNT(*) FROM items").fetchone()[0]
@@ -482,23 +504,71 @@ class korzina_widget(QWidget1):
             for i in range(20):
                 widget = little_card(ids[i])
                 self.gridLayout.addWidget(widget, i // 10, i % 10)
+
+            self.next.clicked.connect(self.update_recommendation)
+            self.prev.clicked.connect(self.update_recommendation)
         else:
-            # self.scroll = items_scroll()
-            # self.gridLayout.addWidget(self.scroll, 0, 0, 1, 10)
-            self.cur.execute(f"SELECT item_id FROM bag WHERE user_id = {current_user_id} LIMIT 2")
-            data = self.cur.fetchall()
+            self.load_items()
 
-            for i in range(len(data)):
-                widget = korsina_item(data[i][0])
-                self.gridLayout.addWidget(widget, i, 0)
-
+            self.next.clicked.connect(self.update_page)
+            self.prev.clicked.connect(self.update_page)
 
         self.back.clicked.connect(self.close)
-        self.log_in.clicked.connect(self.enter_or_registration)
+        self.price = 0
 
-    def enter_or_registration(self):
-        self.w2 = enter_or_registration_dialog()
-        self.w2.exec()
+
+    def clear_layout(self, layout):
+        while layout.count():
+            child = layout.takeAt(0)
+            if child.widget():
+                child.widget().deleteLater()
+
+    def load_items(self):
+        self.update_price()
+        self.clear_layout(self.gridLayout)
+
+        self.cur.execute(f"SELECT korzina_item_id FROM bag WHERE user_id = {current_user_id} LIMIT 2 OFFSET {self.page * 2}")
+        data = self.cur.fetchall()
+
+        for i in range(len(data)):
+            self.widget = korzina_item(data[i][0])
+            self.gridLayout.addWidget(self.widget, i, 0)
+            self.widget.checkBox.stateChanged.connect(self.update_price)
+
+    def update_page(self):
+        sender = self.sender()
+        max_pages = self.cur.execute(f"SELECT COUNT(*) FROM bag WHERE user_id = {current_user_id}").fetchone()[0] // 2
+
+        if sender == self.next and self.page < max_pages:
+            self.page += 1
+        elif sender == self.prev and self.page > 0:
+            self.page -= 1
+
+        self.load_items()
+
+    def update_recommendation(self):
+        self.clear_layout(self.gridLayout)
+        max_item = self.cur.execute("SELECT COUNT(*) FROM items").fetchone()[0]
+        ids = [randint(1, max_item) for _ in range(20)]
+
+        for i in range(20):
+            widget = little_card(ids[i])
+            self.gridLayout.addWidget(widget, i // 10, i % 10)
+
+    def update_price(self):
+        chosen_count = self.cur.execute(
+            f"""SELECT COUNT(*) FROM bag
+            WHERE user_id = {current_user_id} AND is_chosen = 1""").fetchone()[0]
+        chosen_imems = self.cur.execute(
+                f"""SELECT bag.count, items.cost, bag.is_chosen FROM bag
+                    INNER JOIN items ON items.id = bag.item_id
+                    WHERE bag.user_id = {current_user_id}""").fetchall()
+        new_price = 0
+        for count, price, is_chosen in chosen_imems:
+            new_price += count * price * is_chosen
+
+        self.label_3.setText(f"В корзине всего {chosen_count} товаров на сумму {new_price}")
+        self.price = new_price
 
 
 class MainWindow(QMainWindow):
@@ -544,6 +614,7 @@ class MainWindow(QMainWindow):
         self.summer.clicked.connect(self.categoriesFilter)
         self.ofice.clicked.connect(self.categoriesFilter)
         self.evening.clicked.connect(self.categoriesFilter)
+
 
     # функция для вывода 5 товаров по страницам
     def update_data(self, message):

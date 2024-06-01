@@ -118,38 +118,6 @@ color: black;</string>
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QPushButton" name="korzina">
-   <property name="geometry">
-    <rect>
-     <x>1270</x>
-     <y>40</y>
-     <width>51</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">QPushButton:pressed {
-border: 0px solid #000;
-border-radius: 13px;
-border-style: outset;
-background: black;
-color: rgb(254,254,254);
-font-weight: bold;
-font: 20pt &quot;Futurespore Cyrillic&quot;;
-}
-QPushButton {
-border: 2px solid #000;
-border-radius: 13px;
-border-style: outset;
-color: black;
-font-weight: bold;
-font: 20pt &quot;Futurespore Cyrillic&quot;;
-}</string>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
@@ -184,70 +152,6 @@ font: 26pt &quot;Futurespore Cyrillic&quot;;</string>
    </property>
    <property name="indent">
     <number>0</number>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="like">
-   <property name="geometry">
-    <rect>
-     <x>1330</x>
-     <y>40</y>
-     <width>51</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">QPushButton:pressed {
-border: 0px solid #000;
-border-radius: 13px;
-border-style: outset;
-background: black;
-color: rgb(254,254,254);
-font-weight: bold;
-font: 20pt &quot;Futurespore Cyrillic&quot;;
-}
-QPushButton {
-border: 2px solid #000;
-border-radius: 13px;
-border-style: outset;
-color: black;
-font-weight: bold;
-font: 20pt &quot;Futurespore Cyrillic&quot;;
-}</string>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="log_in">
-   <property name="geometry">
-    <rect>
-     <x>1210</x>
-     <y>40</y>
-     <width>51</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">QPushButton:pressed {
-border: 0px solid #000;
-border-radius: 13px;
-border-style: outset;
-background: black;
-color: rgb(254,254,254);
-font-weight: bold;
-font: 20pt &quot;Futurespore Cyrillic&quot;;
-}
-QPushButton {
-border: 2px solid #000;
-border-radius: 13px;
-border-style: outset;
-color: black;
-font-weight: bold;
-font: 20pt &quot;Futurespore Cyrillic&quot;;
-}</string>
-   </property>
-   <property name="text">
-    <string/>
    </property>
   </widget>
   <widget class="QWidget" name="gridLayoutWidget">
