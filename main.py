@@ -514,6 +514,7 @@ class korzina_widget(QWidget1):
             self.prev.clicked.connect(self.update_page)
 
         self.back.clicked.connect(self.close)
+        self.price = 0
 
 
     def clear_layout(self, layout):
@@ -567,6 +568,7 @@ class korzina_widget(QWidget1):
             new_price += count * price * is_chosen
 
         self.label_3.setText(f"В корзине всего {chosen_count} товаров на сумму {new_price}")
+        self.price = new_price
 
 
 class MainWindow(QMainWindow):
