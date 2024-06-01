@@ -412,12 +412,10 @@ class enter_dialog(QDialog1):
             self.con.close()
             if data:
                 password = data[1]
-
                 if entered_password == password:
                     message = QMessageBox1()
                     message.setWindowTitle("Успешное выполнение")
                     message.setText("Вы вошли в аккаунт.")
-
                     message.exec()
 
                     current_user_id = data[0]
@@ -429,7 +427,7 @@ class enter_dialog(QDialog1):
                 self.create_massege()
         else:
             self.create_massege()
-        print(current_user_id)
+
     def change_user_id(self, user_id):
         self.con = sqlite3.connect("cards.db")
         self.cur = self.con.cursor()
@@ -438,6 +436,7 @@ class enter_dialog(QDialog1):
         self.con.commit()
         self.con.close()  # закрыть соединение
         self.close()
+
     def create_massege(self):
         message = QMessageBox1()
         message.setWindowTitle("Вход не выполнен")
@@ -527,10 +526,8 @@ class korzina_item(QWidget):
         is_chosen = 1 if self.checkBox.isChecked() else 0
         self.cur.execute(f"UPDATE bag SET is_chosen = {is_chosen} WHERE korzina_item_id = {self.korzina_item_id}")
         self.conn.commit()
-        print(is_chosen)
 
         if is_chosen:
-            print(2)
             chosen_count = self.cur.execute(f"SELECT COUNT(*) FROM bag WHERE user_id = {self.current_user_id} AND is_chosen = 1").fetchone()[0]
             if chosen_count > 5:
                 message = QMessageBox1()
@@ -541,7 +538,6 @@ class korzina_item(QWidget):
                 self.cur.execute(f"UPDATE bag SET is_chosen = 0 WHERE korzina_item_id = {self.korzina_item_id}")
                 self.checkBox.setChecked(False)
                 self.conn.commit()
-                print(3)
 
 
 class korzina_widget(QWidget1):
