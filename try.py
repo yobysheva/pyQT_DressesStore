@@ -206,7 +206,9 @@ class big_card(QWidget1):
             widget = little_card(i)
             self.horizontalLayout.addWidget(widget)
 
-        self.current_button = None
+        # выбор размера
+        self.current_size = None
+        self.current_size_num = None
         # Проходим по всем кнопкам и связываем их с обработчиками
         self.buttons = self.sizes.buttons()
 
@@ -214,14 +216,56 @@ class big_card(QWidget1):
         for button in self.buttons:
             button.clicked.connect(lambda checked, b=button: self.size_pushed(b))
 
+        # добавление в корзину
+        self.korzina_counter = 0
+
+
+        self.korzina_pushed_partial = partial(self.korzina_pushed, id)
+        self.buy.clicked.connect(self.korzina_pushed_partial)
+
     def size_pushed(self, button):
-        if self.current_button:
-            self.current_button.setStyleSheet("border: 1px solid #000; border-radius: 13px; border-style: outset; color: black; font-weight: bold; font: 18pt 'HelveticaNeueCyr'; ")
+        if self.current_size:
+            self.current_size.setStyleSheet("border: 1px solid #000; border-radius: 13px; border-style: outset; color: black; font-weight: bold; font: 18pt 'HelveticaNeueCyr'; ")
 
         button.setStyleSheet("border: 0px solid #000; border-radius: 13px; border-style: outset; background: black; color: rgb(254,254,254); font-weight: bold; font: 18pt 'HelveticaNeueCyr';")
-        self.current_button = button
+        self.current_size = button
+        self.current_size_num = button.text()
 
-    # листание фото (пока по нажатию, но должно быть по наведению)
+    def korzina_pushed(self, id):
+
+        if self.korzina_counter == 0:
+            self.korzina_counter = 1
+            self.value = self.spinBox.value()
+            print(current_user_id)
+            self.add_row(id, self.current_size_num, self.value, current_user_id)
+        else:
+            self.korzina_counter = 0
+
+
+    def add_row(self, item_id, size, count, current_user_id):
+        self.conn = sqlite3.connect("cards.db")
+
+        try:
+            cur = self.conn.cursor()
+            a = f"""INSERT INTO bag(user_id, item_id, size, count) VALUES("{current_user_id}", "{item_id}", "{size}", {count})"""
+            cur.execute(a)
+            self.conn.commit()
+            cur.close()
+
+            message = QMessageBox1()
+            message.setWindowTitle("Успешное добавление")
+            message.setText("добавлено")
+            message.exec()
+
+        except Exception as e:
+            message = QMessageBox1()
+            message.setWindowTitle("не добавлено")
+            message.setText("Не добавлено")
+
+            message.exec()
+            print(e)
+
+    # листание фото
     def update_photo(self):
         sender = self.sender()
         if sender == self.next1 and self.photo_counter == 0 or sender == self.prev1 and self.photo_counter == 0:
@@ -294,8 +338,8 @@ class registration_dialog(QDialog1):
             message.setText("Аккаунт зарегистрирован.")
             message.exec()
 
-            current_user_id = f"""SELECT user_id FROM users WHERE login = "{login}" """
-            self.close()
+            self.con = sqlite3.connect("cards.db")
+            self.conn = sqlite3.connect('cards.db')
 
         except Exception as e:
             message = QMessageBox1()
@@ -304,6 +348,12 @@ class registration_dialog(QDialog1):
 
             message.exec()
             print(e)
+        self.cur = self.conn.cursor()
+        self.cur.execute(f"""SELECT  user_id FROM users WHERE login = "{login}" """)
+        data = self.cur.fetchone()
+        self.close()
+        current_user_id = data[0]
+        print(current_user_id)
 
 class enter_dialog(QDialog1):
     def __init__(self):
@@ -324,19 +374,19 @@ class enter_dialog(QDialog1):
         self.cur = self.conn.cursor()
         data = []
         if self.login.text() != "" and self.password.text() != "":
-            self.cur.execute(f"""SELECT password FROM users WHERE login = "{login}" """)
+            self.cur.execute(f"""SELECT password, user_id FROM users WHERE login = "{login}" """)
             data = self.cur.fetchone()
             if data:
                 password = data[0]
 
                 if entered_password == password:
-                    message = QMessageBox()
+                    message = QMessageBox1()
                     message.setWindowTitle("Успешное выполнение")
                     message.setText("Вы вошли в аккаунт.")
 
                     message.exec()
 
-                    current_user_id = f"""SELECT user_id FROM users WHERE login = "{login}" """
+                    current_user_id = data[1]
                     self.close()
                 else:
                     self.create_massege()
@@ -344,6 +394,7 @@ class enter_dialog(QDialog1):
                 self.create_massege()
         else:
             self.create_massege()
+        print(current_user_id)
     def create_massege(self):
         message = QMessageBox1()
         message.setWindowTitle("Вход не выполнен")
