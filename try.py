@@ -7,7 +7,7 @@ from PyQt6.QtGui import QFont, QPixmap, QPainterPath, QPainter, QIcon
 from PyQt6.QtCore import QRectF, QSize, QEvent, QPropertyAnimation
 from functools import partial
 from random import randint
-current_user_id = 0
+
 
 # классы с анимацией для наследования другими классами
 class QWidget1(QWidget):
@@ -217,12 +217,9 @@ class big_card(QWidget1):
             button.clicked.connect(lambda checked, b=button: self.size_pushed(b))
 
         # добавление в корзину
-        self.korzina_counter = 0
-
-
-        self.korzina_pushed_partial = partial(self.korzina_pushed, id)
-        self.buy.clicked.connect(self.korzina_pushed_partial)
-
+        self.korzina_or_like_pushed_partial = partial(self.korzina_or_like_pushed, id)
+        self.buy.clicked.connect(self.korzina_or_like_pushed_partial)
+        self.like.clicked.connect(self.korzina_or_like_pushed_partial)
     def size_pushed(self, button):
         if self.current_size:
             self.current_size.setStyleSheet("border: 1px solid #000; border-radius: 13px; border-style: outset; color: black; font-weight: bold; font: 18pt 'HelveticaNeueCyr'; ")
@@ -231,36 +228,60 @@ class big_card(QWidget1):
         self.current_size = button
         self.current_size_num = button.text()
 
-    def korzina_pushed(self, id):
+    def korzina_or_like_pushed(self, id):
+        self.value = self.spinBox.value()
+        self.cur = self.conn.cursor()
+        self.cur.execute(f"""SELECT  user_id FROM current_user_id""")
+        data = self.cur.fetchone()
+        current_user_id = data[0]
 
-        if self.korzina_counter == 0:
-            self.korzina_counter = 1
-            self.value = self.spinBox.value()
-            print(current_user_id)
-            self.add_row(id, self.current_size_num, self.value, current_user_id)
+        if current_user_id == 0:
+            message = QMessageBox1()
+            message.setWindowTitle("Ошибка")
+            sender = self.sender()
+            if sender == self.buy:
+                message.setText("Войдите в аккаунт, чтобы добавлять товары в корзину.")
+            else:
+                message.setText("Войдите в аккаунт, чтобы добавлять товары в понравившиеся.")
+            message.exec()
+        elif self.current_size_num == None:
+            message = QMessageBox1()
+            message.setWindowTitle("Ошибка")
+            message.setText("Пожалуйста, выберете размер.")
+            message.exec()
         else:
-            self.korzina_counter = 0
+            self.add_row(id, self.current_size_num, self.value, current_user_id)
+
+
 
 
     def add_row(self, item_id, size, count, current_user_id):
         self.conn = sqlite3.connect("cards.db")
 
         try:
+            sender = self.sender()
             cur = self.conn.cursor()
-            a = f"""INSERT INTO bag(user_id, item_id, size, count) VALUES("{current_user_id}", "{item_id}", "{size}", {count})"""
+            if sender == self.buy:
+                a = f"""INSERT INTO bag(user_id, item_id, size, count) VALUES("{current_user_id}", "{item_id}", "{size}", {count})"""
+            else:
+                a = f"""INSERT INTO like(user_id, item_id, size, count) VALUES("{current_user_id}", "{item_id}", "{size}", {count})"""
+
             cur.execute(a)
             self.conn.commit()
             cur.close()
 
             message = QMessageBox1()
             message.setWindowTitle("Успешное добавление")
-            message.setText("добавлено")
+            if sender == self.buy:
+                message.setText("Товар добавлен в корзину.")
+            else:
+                message.setText("Товар добавлен в понравившиеся.")
             message.exec()
 
         except Exception as e:
             message = QMessageBox1()
             message.setWindowTitle("не добавлено")
-            message.setText("Не добавлено")
+            message.setText("Не добавлено. Проверьте, выбран ли размер.")
 
             message.exec()
             print(e)
@@ -353,7 +374,11 @@ class registration_dialog(QDialog1):
         data = self.cur.fetchone()
         self.close()
         current_user_id = data[0]
-        print(current_user_id)
+        self.conn = sqlite3.connect('cards.db')
+        self.cur = self.conn.cursor()
+        # задаю текущего пользователя
+       # a = f"""UPDATE current_user_id SET current_user_id = {current_user_id}"""
+        #print(current_user_id)
 
 class enter_dialog(QDialog1):
     def __init__(self):
@@ -368,16 +393,17 @@ class enter_dialog(QDialog1):
         except Exception as e:
             print(e)
         self.escape.clicked.connect(self.close)
+
     def check_enter(self, login, entered_password):
         self.con = sqlite3.connect("cards.db")
-        self.conn = sqlite3.connect('cards.db')
-        self.cur = self.conn.cursor()
+        self.cur = self.con.cursor()
         data = []
         if self.login.text() != "" and self.password.text() != "":
-            self.cur.execute(f"""SELECT password, user_id FROM users WHERE login = "{login}" """)
+            self.cur.execute(f"""SELECT user_id, password FROM users WHERE login = "{login}" """)
             data = self.cur.fetchone()
+            self.con.close()
             if data:
-                password = data[0]
+                password = data[1]
 
                 if entered_password == password:
                     message = QMessageBox1()
@@ -386,7 +412,8 @@ class enter_dialog(QDialog1):
 
                     message.exec()
 
-                    current_user_id = data[1]
+                    current_user_id = data[0]
+                    self.change_user_id(current_user_id)
                     self.close()
                 else:
                     self.create_massege()
@@ -395,6 +422,14 @@ class enter_dialog(QDialog1):
         else:
             self.create_massege()
         print(current_user_id)
+    def change_user_id(self, user_id):
+        self.con = sqlite3.connect("cards.db")
+        self.cur = self.con.cursor()
+        a = f"""UPDATE current_user_id SET user_id = {user_id}"""
+        self.cur.execute(a)
+        self.con.commit()
+        self.con.close()  # закрыть соединение
+        self.close()
     def create_massege(self):
         message = QMessageBox1()
         message.setWindowTitle("Вход не выполнен")
@@ -474,6 +509,7 @@ class korzina_widget(QWidget1):
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+
         # Загрузить пользовательский интерфейс главного окна из файла .ui
         uic.loadUi('MainWindow.ui', self)
         self.setWindowTitle("Karmen - магазин премиальной одежды")
@@ -494,6 +530,10 @@ class MainWindow(QMainWindow):
         # Connect to the database
         self.conn = sqlite3.connect('cards.db')
         self.cur = self.conn.cursor()
+        # задаю текущего пользователя
+        a = f"""UPDATE current_user_id SET user_id = 0"""
+        self.cur.execute(a)
+        self.conn.commit()
 
         # Берем первые 5 товаров из бд
         self.cur.execute("SELECT * FROM items LIMIT 5")
