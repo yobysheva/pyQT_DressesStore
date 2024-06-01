@@ -425,6 +425,8 @@ class items_scroll(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Корзина")
+        self.width = 900
+        self.height = 300
         self.conn = sqlite3.connect('cards.db')
         self.cur = self.conn.cursor()
         self.cur.execute(f"SELECT item_id FROM bag WHERE user_id = {current_user_id}")
