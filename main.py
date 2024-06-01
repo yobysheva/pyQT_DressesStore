@@ -7,7 +7,7 @@ from PyQt6.QtGui import QFont, QPixmap, QPainterPath, QPainter, QIcon
 from PyQt6.QtCore import QRectF, QSize, QEvent, QPropertyAnimation, QRect
 from functools import partial
 from random import randint
-self.current_user_id = 1
+current_user_id = 1
 
 # классы с анимацией для наследования другими классами
 class QWidget1(QWidget):
