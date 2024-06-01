@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1328</width>
-    <height>207</height>
+    <width>1361</width>
+    <height>199</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,15 +20,15 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>50</y>
-     <width>521</width>
+     <y>40</y>
+     <width>551</width>
      <height>101</height>
     </rect>
    </property>
    <property name="styleSheet">
     <string notr="true">color: black;
 font-weight: bold;
-font: 14pt &quot;HelveticaNeueCyr&quot;;</string>
+font: 12pt &quot;HelveticaNeueCyr&quot;;</string>
    </property>
    <property name="text">
     <string>Длинное описание</string>
@@ -47,7 +47,7 @@ font: 14pt &quot;HelveticaNeueCyr&quot;;</string>
    <property name="geometry">
     <rect>
      <x>50</x>
-     <y>10</y>
+     <y>0</y>
      <width>421</width>
      <height>31</height>
     </rect>
@@ -70,10 +70,10 @@ font: 28pt &quot;Futurespore Cyrillic&quot;;</string>
   <widget class="QWidget" name="verticalLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>1160</x>
-     <y>10</y>
-     <width>161</width>
-     <height>191</height>
+     <x>1210</x>
+     <y>-10</y>
+     <width>151</width>
+     <height>201</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout"/>
@@ -81,16 +81,16 @@ font: 28pt &quot;Futurespore Cyrillic&quot;;</string>
   <widget class="QLabel" name="long_description_2">
    <property name="geometry">
     <rect>
-     <x>600</x>
+     <x>630</x>
      <y>50</y>
-     <width>541</width>
+     <width>551</width>
      <height>101</height>
     </rect>
    </property>
    <property name="styleSheet">
     <string notr="true">color: black;
 font-weight: bold;
-font: 14pt &quot;HelveticaNeueCyr&quot;;</string>
+font: 12pt &quot;HelveticaNeueCyr&quot;;</string>
    </property>
    <property name="text">
     <string>Длинное описание</string>
@@ -109,8 +109,8 @@ font: 14pt &quot;HelveticaNeueCyr&quot;;</string>
    <property name="geometry">
     <rect>
      <x>190</x>
-     <y>160</y>
-     <width>961</width>
+     <y>150</y>
+     <width>991</width>
      <height>41</height>
     </rect>
    </property>
@@ -187,7 +187,7 @@ font: 20pt &quot;Futurespore Cyrillic&quot;;
    <property name="geometry">
     <rect>
      <x>50</x>
-     <y>160</y>
+     <y>150</y>
      <width>131</width>
      <height>41</height>
     </rect>

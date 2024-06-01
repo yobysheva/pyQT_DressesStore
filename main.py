@@ -2,7 +2,7 @@ import sqlite3
 
 from PyQt6 import uic
 from PyQt6.QtWidgets import QApplication, QWidget, QCheckBox, QSpinBox, QLabel, QVBoxLayout, QFrame, QPushButton, \
-    QMainWindow, QListWidget, QListWidgetItem, QDialog, QMessageBox, QScrollArea
+    QMainWindow, QListWidget, QListWidgetItem, QDialog, QMessageBox, QScrollArea, QFormLayout, QGroupBox
 from PyQt6.QtGui import QFont, QPixmap, QPainterPath, QPainter, QIcon
 from PyQt6.QtCore import QRectF, QSize, QEvent, QPropertyAnimation, QRect
 from functools import partial
@@ -376,12 +376,12 @@ class korsina_item(QWidget):
         self.cur = self.conn.cursor()
 
         self.cur.execute(f"SELECT * FROM items WHERE id = {id}")
-        data = self.cur.fetchall()
-        text, num, photo1, photo2, order_quantity = data[0][1:]
-        description = text
+        data = self.cur.fetchone()
+        if data:
+            text, num, photo1, photo2, order_quantity = data[1:]
+            description = text
 
-        # составление описания при помощи таблицы description
-        try:
+            # составление описания при помощи таблицы description
             self.cur.execute(f"""SELECT materials.name, models.name, colors.name, length.name, categories.name FROM description 
                             INNER JOIN items ON items.id = description.id
                             INNER JOIN materials ON materials."material id" = description.material
@@ -390,65 +390,71 @@ class korsina_item(QWidget):
                             INNER JOIN length ON length."length id" = description.length
                             INNER JOIN categories ON categories."categoy id" = description.category
                             WHERE items.id = {id}""")
-            data = self.cur.fetchall()
+            desc_data = self.cur.fetchone()
+            if desc_data:
+                material, model, color, length, category = desc_data
+                description = f"Модель: {model}\nМатериал: {material}\nЦвет: {color}\n" \
+                                f"Длина: {length}\nКатегория: {category}"
 
-            material, model, color, length, category = data[0]
-            description = f"Тип товара: платье\nМодель: {model}\nМатериал: {material}\nЦвет: {color}\n" \
-                          f"Длина: {length}\nКатегория: {category}"
-        except Exception as e:
-            print(e)
+            self.cur.execute(f"""SELECT size, count FROM bag WHERE user_id = {current_user_id} AND item_id = {id}""")
+            desc2_data = self.cur.fetchone()
+            if desc2_data:
+                size, count = desc2_data
+                description2 = f"Размер: {size}\nКоличество: {count}"
 
-        # Загрузить пользовательский интерфейс из файла .ui
-        uic.loadUi('korzina_item.ui', self)
 
-        # поставили значения из бд в соответствующие поля
-        self.name.setText(text)
-        self.name.setWordWrap(True)
+            # Загрузить пользовательский интерфейс из файла .ui
+            uic.loadUi('korzina_item.ui', self)
 
-        # Установить переданные значения
-        self.long_description.setText(description)
-        self.long_description.setWordWrap(True)
+            # Установить значения из бд в соответствующие поля
+            self.name.setText(text)
+            self.name.setWordWrap(True)
 
-        self.price.setText(str(num))
+            self.long_description.setText(description)
+            self.long_description.setWordWrap(True)
+            self.long_description_2.setText(description2)
+            self.long_description_2.setWordWrap(True)
 
-        self.photo_label = QLabel(self)
+            self.price.setText(str(num))
 
-        # подключение к фотографиям айтемов из db
-        self.original_image = QPixmap(photo1)
-        self.photo_label.setPixmap(self.original_image)
-
-        # уменьшение изображения
-        self.photo_label.setScaledContents(True)
-        self.verticalLayout.addWidget(self.photo_label)
+            self.photo_label = QLabel(self)
+            self.original_image = QPixmap(photo1)
+            self.photo_label.setPixmap(self.original_image)
+            self.photo_label.setScaledContents(True)
+            self.verticalLayout.addWidget(self.photo_label)
+        else:
+            print(f"No data found for id {id}")
 
 class items_scroll(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Корзина")
-        self.width = 900
-        self.height = 300
         self.conn = sqlite3.connect('cards.db')
         self.cur = self.conn.cursor()
         self.cur.execute(f"SELECT item_id FROM bag WHERE user_id = {current_user_id}")
         data = self.cur.fetchall()
 
-        self.mainLayout = QVBoxLayout()
+        formLayout = QFormLayout()
+        groupBox = QGroupBox("Items in Bag")
 
-        # Создание QVBoxLayout, в который будут добавляться виджеты
+        if data:
+            for i in data:
+                print(f"Adding widget for item id {i[0]}")
+                widget = korsina_item(i[0])
+                formLayout.addWidget(widget)
+
+        else:
+            print("No items found in the bag")
+
+        groupBox.setLayout(formLayout)
+
+        self.scrollArea = QScrollArea()
+        self.scrollArea.setWidget(groupBox)
+        self.scrollArea.setWidgetResizable(True)
+        self.scrollArea.setFixedHeight(300)
+
         layout = QVBoxLayout()
-
-        for i in data:
-            widget = korsina_item(i[0])
-            layout.addWidget(widget)
-
-        # Создание QWidget для установки QVBoxLayout
-        scrollAreaWidgetContents = QWidget()
-        scrollAreaWidgetContents.setLayout(layout)
-
-        # Создание QScrollArea и установка QWidget внутри него
-        self.scrollArea = QScrollArea()  # Устанавливаем родительский виджет
-        self.scrollArea.setWidget(scrollAreaWidgetContents)
-
+        layout.addWidget(self.scrollArea)
+        self.setLayout(layout)
 
 class korzina_widget(QWidget1):
     def __init__(self):
@@ -460,7 +466,6 @@ class korzina_widget(QWidget1):
         # Загрузить пользовательский интерфейс из файла .ui
         uic.loadUi('korzina.ui', self)
 
-        # иконки для кнопок корзина, вход и избранное
         self.like.setIcon(QIcon('images/like.png'))
         self.like.setIconSize(QSize(20, 20))
 
@@ -472,27 +477,22 @@ class korzina_widget(QWidget1):
 
         if current_user_id == 0:
             max_item = self.cur.execute("SELECT COUNT(*) FROM items").fetchone()[0]
-            ids = [randint(1, max_item) for i in range(10)]
+            ids = [randint(1, max_item) for _ in range(20)]
 
-            # добавление рекомендаций
-            for i in ids:
-                widget = little_card(i)
-                self.horizontalLayout_2.addWidget(widget)
-
-            ids = [randint(1, max_item) for i in range(10)]
-
-            # добавление рекомендаций
-            for i in ids:
-                widget = little_card(i)
-                self.horizontalLayout_4.addWidget(widget)
-
+            for i in range(20):
+                widget = little_card(ids[i])
+                self.gridLayout.addWidget(widget, i // 10, i % 10)
         else:
-            self.scroll = items_scroll()
-            self.lay = QVBoxLayout()
-            self.lay.setGeometry(QRect(100,100,1000,100))
-            self.lay.addWidget(self.scroll())
+            # self.scroll = items_scroll()
+            # self.gridLayout.addWidget(self.scroll, 0, 0, 1, 10)
+            self.cur.execute(f"SELECT item_id FROM bag WHERE user_id = {current_user_id} LIMIT 2")
+            data = self.cur.fetchall()
 
-        # кнопка назад закрывает окно
+            for i in range(len(data)):
+                widget = korsina_item(data[i][0])
+                self.gridLayout.addWidget(widget, i, 0)
+
+
         self.back.clicked.connect(self.close)
         self.log_in.clicked.connect(self.enter_or_registration)
 
@@ -586,7 +586,6 @@ class MainWindow(QMainWindow):
 
 if __name__ == '__main__':
     import sys
-
     app = QApplication(sys.argv)
     window = MainWindow()
     window.show()

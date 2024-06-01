@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1422</width>
-    <height>725</height>
+    <height>730</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,9 +20,9 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>140</y>
+     <y>130</y>
      <width>1371</width>
-     <height>71</height>
+     <height>81</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -48,11 +48,11 @@ color: black;</string>
    </property>
    <property name="styleSheet">
     <string notr="true">font-weight: bold;
-font: 20pt&quot;HelveticaNeueCyr&quot;;
+font: 16pt&quot;HelveticaNeueCyr&quot;;
 color: black;</string>
    </property>
    <property name="text">
-    <string>Авторизованные пользователи могут добавлять товары в корзину.</string>
+    <string>Авторизованные пользователи могут добавлять товары в корзину. Вот товары, которые могут Вас заинтересовать:</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -84,17 +84,6 @@ font: 26pt &quot;Futurespore Cyrillic&quot;;
    <property name="text">
     <string>Назад</string>
    </property>
-  </widget>
-  <widget class="QWidget" name="horizontalLayoutWidget">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>320</y>
-     <width>1381</width>
-     <height>171</height>
-    </rect>
-   </property>
-   <layout class="QHBoxLayout" name="horizontalLayout_2"/>
   </widget>
   <widget class="QLabel" name="label">
    <property name="geometry">
@@ -261,34 +250,80 @@ font: 20pt &quot;Futurespore Cyrillic&quot;;
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="label_5">
+  <widget class="QWidget" name="gridLayoutWidget">
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>270</y>
+     <y>260</y>
      <width>1381</width>
-     <height>41</height>
+     <height>411</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" name="gridLayout"/>
+  </widget>
+  <widget class="QPushButton" name="prev">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>680</y>
+     <width>141</width>
+     <height>31</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">font-weight: bold;
-font: 20pt&quot;HelveticaNeueCyr&quot;;
-color: black;</string>
+    <string notr="true">QPushButton:pressed {
+border: 0px solid #000;
+border-radius: 10px;
+border-style: outset;
+background: black;
+color: rgb(254,254,254);
+font-weight: bold;
+font: 22pt &quot;Futurespore Cyrillic&quot;;
+}
+QPushButton {
+border: 1px solid #000;
+border-radius: 10px;
+border-style: outset;
+color: black;
+font-weight: bold;
+font: 22pt &quot;Futurespore Cyrillic&quot;;
+}</string>
    </property>
    <property name="text">
-    <string>Вам может понравиться:</string>
+    <string>&lt;</string>
    </property>
   </widget>
-  <widget class="QWidget" name="horizontalLayoutWidget_2">
+  <widget class="QPushButton" name="next">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>490</y>
-     <width>1381</width>
-     <height>171</height>
+     <x>1240</x>
+     <y>680</y>
+     <width>141</width>
+     <height>31</height>
     </rect>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout_4"/>
+   <property name="styleSheet">
+    <string notr="true">QPushButton:pressed {
+border: 0px solid #000;
+border-radius: 10px;
+border-style: outset;
+background: black;
+color: rgb(254,254,254);
+font-weight: bold;
+font: 22pt &quot;Futurespore Cyrillic&quot;;
+}
+QPushButton {
+border: 1px solid #000;
+border-radius: 10px;
+border-style: outset;
+color: black;
+font-weight: bold;
+font: 22pt &quot;Futurespore Cyrillic&quot;;
+}</string>
+   </property>
+   <property name="text">
+    <string>&gt;</string>
+   </property>
   </widget>
  </widget>
  <resources/>
