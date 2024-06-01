@@ -79,6 +79,8 @@ class QMessageBox1(QMessageBox):
 class little_card(QWidget):
     def __init__(self, id):
         super().__init__()
+        # Загрузить пользовательский интерфейс из файла .ui
+        uic.loadUi('little_card.ui', self)
 
         # выгрузка данных для карточки товара из базы данных
         self.conn = sqlite3.connect('cards.db')
@@ -88,21 +90,8 @@ class little_card(QWidget):
         data = self.cur.fetchall()
         text, num, photo1, photo2, order_quantity = data[0][1:]
 
-        # Загрузить пользовательский интерфейс из файла .ui
-        uic.loadUi('little_card.ui', self)
-
         # поставили значения из бд в соответствующие поля
         self.price.setText(str(num))
-
-        # предыдущий метод вставки изображния в мини-карточку
-        # photo_label = QLabel(self)
-        # image = QPixmap(photo1)
-        # # уменьшение изображения
-        # photo_label.setScaledContents(True)
-        #
-        # photo_label.setPixmap(image)
-        #
-        # self.verticalLayout.addWidget(photo_label)
 
         width = self.photo.size().width()
         height = self.photo.size().height()
@@ -118,13 +107,17 @@ class little_card(QWidget):
 
     # открываем новое окно
     def show_description(self, id):
-        self.w2 = big_card(id)
-        self.w2.show()
+        w2 = big_card(id)
+        w2.show()
 
 
 class big_card(QWidget1):
     def __init__(self, id):
         super().__init__()
+        # Загрузить пользовательский интерфейс из файла .ui
+        uic.loadUi('description.ui', self)
+        self.setWindowTitle("Карточка товара")
+
         # выгрузка данных для карточки товара из базы данных
         self.conn = sqlite3.connect('cards.db')
         self.cur = self.conn.cursor()
@@ -134,7 +127,6 @@ class big_card(QWidget1):
         text, num, photo1, photo2, order_quantity = data[0][1:]
 
         description = text
-
         # составление описания при помощи таблицы description
         try:
             self.cur.execute(f"""SELECT materials.name, models.name, colors.name, length.name, categories.name FROM description 
@@ -145,19 +137,12 @@ class big_card(QWidget1):
                     INNER JOIN length ON length."length id" = description.length
                     INNER JOIN categories ON categories."categoy id" = description.category
                     WHERE items.id = {id}""")
-
             data = self.cur.fetchall()
-
             material, model, color, length, category = data[0]
-
             description = f"Тип товара: платье\nМодель: {model}\nМатериал: {material}\nЦвет: {color}\n" \
                           f"Длина: {length}\nКатегория: {category}"
         except Exception as e:
             print(e)
-
-        # Загрузить пользовательский интерфейс из файла .ui
-        uic.loadUi('description.ui', self)
-        self.setWindowTitle("Карточка товара")
 
         # поставили значения из бд в соответствующие поля
         self.name.setText(text)
@@ -189,9 +174,6 @@ class big_card(QWidget1):
         self.photo_label.setScaledContents(True)
         self.verticalLayout.addWidget(self.photo_label)
 
-        self.conn = sqlite3.connect('cards.db')
-        self.cur = self.conn.cursor()
-
         # пролистывание фотографий
         self.photo_counter = 0
 
@@ -220,21 +202,23 @@ class big_card(QWidget1):
         self.korzina_or_like_pushed_partial = partial(self.korzina_or_like_pushed, id)
         self.buy.clicked.connect(self.korzina_or_like_pushed_partial)
         self.like.clicked.connect(self.korzina_or_like_pushed_partial)
+
     def size_pushed(self, button):
         if self.current_size:
             self.current_size.setStyleSheet("""border: 1px solid #000; 
             border-radius: 13px; 
             border-style: outset; 
             color: black; 
-            font-weight: 
-            bold; font: 18pt 'HelveticaNeueCyr'; """)
+            font-weight: bold; 
+            font: 18pt 'HelveticaNeueCyr';""")
 
         button.setStyleSheet("""border: 0px solid #000; 
         border-radius: 13px; 
         border-style: outset; 
         background: black; 
         color: rgb(254,254,254); 
-        font-weight: bold; font: 18pt 'HelveticaNeueCyr';""")
+        font-weight: bold; 
+        font: 18pt 'HelveticaNeueCyr';""")
         self.current_size = button
         self.current_size_num = button.text()
 
@@ -265,15 +249,15 @@ class big_card(QWidget1):
 
     def add_row(self, item_id, size, count, current_user_id):
         self.conn = sqlite3.connect("cards.db")
-
         try:
             sender = self.sender()
             cur = self.conn.cursor()
             if sender == self.buy:
-                a = f"""INSERT INTO bag(user_id, item_id, size, count) VALUES("{current_user_id}", "{item_id}", "{size}", {count})"""
+                a = f"""INSERT INTO bag(user_id, item_id, size, count) 
+                VALUES("{current_user_id}", "{item_id}", "{size}", {count})"""
             else:
-                a = f"""INSERT INTO like(user_id, item_id, size, count) VALUES("{current_user_id}", "{item_id}", "{size}", {count})"""
-
+                a = f"""INSERT INTO like(user_id, item_id, size, count) 
+                VALUES("{current_user_id}", "{item_id}", "{size}", {count})"""
             cur.execute(a)
             self.conn.commit()
             cur.close()
@@ -290,7 +274,6 @@ class big_card(QWidget1):
             message = QMessageBox1()
             message.setWindowTitle("не добавлено")
             message.setText("Не добавлено. Проверьте, выбран ли размер.")
-
             message.exec()
             print(e)
 
@@ -308,6 +291,9 @@ class big_card(QWidget1):
 class card(QWidget):
     def __init__(self, id):
         super().__init__()
+        # Загрузить пользовательский интерфейс из файла .ui
+        uic.loadUi('card.ui', self)
+
         self.conn = sqlite3.connect('cards.db')
         self.cur = self.conn.cursor()
 
@@ -315,9 +301,6 @@ class card(QWidget):
         self.cur.execute(f"SELECT * FROM items WHERE id = {id}")
         data = self.cur.fetchall()
         text, num, photo1, photo2, order_quantity = data[0][1:]
-
-        # Загрузить пользовательский интерфейс из файла .ui
-        uic.loadUi('card.ui', self)
 
         # Установить переданные значения
         self.name.setText(text)
@@ -337,8 +320,8 @@ class card(QWidget):
 
     # открываем новое окно
     def show_description(self, id):
-        self.w2 = big_card(id)
-        self.w2.show()
+        w2 = big_card(id)
+        w2.show()
 
 
 class registration_dialog(QDialog1):
@@ -346,47 +329,61 @@ class registration_dialog(QDialog1):
         super().__init__()
         uic.loadUi('registration_dialog.ui', self)  # загружаем UI файл в текущий виджет
         self.setWindowTitle("Регистрация")
+
         try:
             self.registrate.clicked.connect(
-                lambda: self.add_row(self.login.text(), self.password.text(), self.fio.text(), self.card_number.text(), self.expiration_date.text(), self.cvv.text(), self.post_index.text()))
+                lambda: self.add_row(self.login.text(), self.password.text(), self.fio.text(),
+                                     self.card_number.text(), self.expiration_date.text(),
+                                     self.cvv.text(), self.post_index.text()))
         except Exception as e:
             print(e)
+
         self.escape.clicked.connect(self.close)
+
+
     def add_row(self, login, password, fio, card_number, expiration_date, cvv, post_index):
-        self.con = sqlite3.connect("cards.db")
-
-        try:
-            cur = self.con.cursor()
-            a = f"""INSERT INTO users(login, password, FIO, card_number, validity_period, CVV, postal_code) VALUES("{login}", "{password}", "{fio}", {card_number}, "{expiration_date}", {cvv}, {post_index}) """
-            cur.execute(a)
-            self.con.commit()
-            cur.close()
-
-            message = QMessageBox1()
-            message.setWindowTitle("Успешная регистрация")
-            message.setText("Аккаунт зарегистрирован.")
-            message.exec()
-
+        if login and password and fio and card_number and expiration_date and cvv and post_index:
             self.con = sqlite3.connect("cards.db")
-            self.conn = sqlite3.connect('cards.db')
+            try:
+                cur = self.con.cursor()
+                a = f"""INSERT INTO users(login, password, FIO, card_number, validity_period, CVV, postal_code) 
+                VALUES("{login}", "{password}", "{fio}", {card_number}, "{expiration_date}", {cvv}, {post_index})"""
+                cur.execute(a)
+                self.con.commit()
+                cur.close()
 
-        except Exception as e:
+                message = QMessageBox1()
+                message.setWindowTitle("Успешная регистрация")
+                message.setText("Аккаунт зарегистрирован. Теперь Вы можете осуществить вход.")
+                message.exec()
+
+            except Exception as e:
+                message = QMessageBox1()
+                message.setWindowTitle("Аккаунт не зарегистрирован")
+                message.setText("Не удалось зарегистрировать. "
+                                "Убедитесь, что данные внесены верно. Логин должен быть уникален.")
+                message.exec()
+                print(e)
+
+            self.cur = self.conn.cursor()
+            self.cur.execute(f"""SELECT user_id FROM users WHERE login = "{login}" """)
+            data = self.cur.fetchone()
+            self.close()
+
+            #current_user_id = data[0]
+            #self.conn = sqlite3.connect('cards.db')
+            #self.cur = self.conn.cursor()
+            # задаю текущего пользователя
+            #a = f"""UPDATE current_user_id SET current_user_id = {current_user_id}"""
+            #print(current_user_id)
+
+        else:
             message = QMessageBox1()
             message.setWindowTitle("Аккаунт не зарегистрирован")
-            message.setText("Не удалось зарегистрировать. Убедитесь, что данные внесены верно. Логин должен быть уникален.")
-
+            message.setText("Не удалось зарегистрировать. "
+                            "Убедитесь, что все данные внесены. "
+                            "Ни одно поле не должно содержать пустую строку.")
             message.exec()
-            print(e)
-        self.cur = self.conn.cursor()
-        self.cur.execute(f"""SELECT  user_id FROM users WHERE login = "{login}" """)
-        data = self.cur.fetchone()
-        self.close()
-        current_user_id = data[0]
-        self.conn = sqlite3.connect('cards.db')
-        self.cur = self.conn.cursor()
-        # задаю текущего пользователя
-       # a = f"""UPDATE current_user_id SET current_user_id = {current_user_id}"""
-        #print(current_user_id)
 
 class enter_dialog(QDialog1):
     def __init__(self):
@@ -405,8 +402,8 @@ class enter_dialog(QDialog1):
     def check_enter(self, login, entered_password):
         self.con = sqlite3.connect("cards.db")
         self.cur = self.con.cursor()
-        data = []
-        if self.login.text() != "" and self.password.text() != "":
+
+        if login and entered_password:
             self.cur.execute(f"""SELECT user_id, password FROM users WHERE login = "{login}" """)
             data = self.cur.fetchone()
             self.con.close()
@@ -440,7 +437,8 @@ class enter_dialog(QDialog1):
     def create_massege(self):
         message = QMessageBox1()
         message.setWindowTitle("Вход не выполнен")
-        message.setText("Не удалось войти в аккаунт. Убедитесь, что данные внесены верно или зарегистрируйтесь.")
+        message.setText("Не удалось войти в аккаунт. "
+                        "Убедитесь, что данные внесены верно или зарегистрируйтесь.")
         message.exec()
 
 
@@ -449,22 +447,26 @@ class enter_or_registration_dialog(QDialog1):
         super().__init__()
         uic.loadUi('enter_or_registration.ui', self)  # загружаем UI файл в текущий виджет
         self.setWindowTitle("Войдите или зарегистрируйтесь")
+
         self.registrate.clicked.connect(self.registration)
         self.enter.clicked.connect(self.do_enter)
 
     def registration(self):
-        self.w2 = registration_dialog()
+        w2 = registration_dialog()
         self.close()
-        self.w2.exec()
+        w2.exec()
 
     def do_enter(self):
-        self.w2 = enter_dialog()
+        w2 = enter_dialog()
         self.close()
-        self.w2.exec()
+        w2.exec()
 
 class korzina_item(QWidget):
     def __init__(self, korzina_item_id):
         super().__init__()
+        # Загрузить пользовательский интерфейс из файла .ui
+        uic.loadUi('korzina_item.ui', self)
+
         self.conn = sqlite3.connect('cards.db')
         self.cur = self.conn.cursor()
 
@@ -472,8 +474,8 @@ class korzina_item(QWidget):
         data = self.cur.fetchone()
         self.current_user_id = data[0]
 
-        self.cur.execute(
-            f"""SELECT korzina_item_id, item_id, size, count, is_chosen FROM bag WHERE korzina_item_id = {korzina_item_id}""")
+        self.cur.execute(f"""SELECT korzina_item_id, item_id, size, count, is_chosen FROM bag 
+        WHERE korzina_item_id = {korzina_item_id}""")
         desc2_data = self.cur.fetchone()
         self.korzina_item_id, user_id, size, count, is_chosen = desc2_data
         description2 = f"Размер: {size}\nКоличество: {count}"
@@ -498,9 +500,6 @@ class korzina_item(QWidget):
             description = f"Модель: {model}\nМатериал: {material}\nЦвет: {color}\n" \
                                 f"Длина: {length}\nКатегория: {category}"
 
-
-        # Загрузить пользовательский интерфейс из файла .ui
-        uic.loadUi('korzina_item.ui', self)
 
         # Установить значения из бд в соответствующие поля
         self.name.setText(text)
@@ -528,14 +527,18 @@ class korzina_item(QWidget):
         self.conn.commit()
 
         if is_chosen:
-            chosen_count = self.cur.execute(f"SELECT COUNT(*) FROM bag WHERE user_id = {self.current_user_id} AND is_chosen = 1").fetchone()[0]
+            chosen_count = self.cur.execute(f"""SELECT COUNT(*) FROM bag 
+            WHERE user_id = {self.current_user_id} AND is_chosen = 1""").fetchone()[0]
+
             if chosen_count > 5:
                 message = QMessageBox1()
                 message.setWindowTitle("Не удалось добавить товар в заказ")
                 message.setText("Невозможно заказать более 5 товаров за один раз.")
                 message.exec()
 
-                self.cur.execute(f"UPDATE bag SET is_chosen = 0 WHERE korzina_item_id = {self.korzina_item_id}")
+                self.cur.execute(f"""UPDATE bag SET is_chosen = 0 
+                                WHERE korzina_item_id = {self.korzina_item_id}""")
+
                 self.checkBox.setChecked(False)
                 self.conn.commit()
 
@@ -588,7 +591,8 @@ class korzina_widget(QWidget1):
         self.update_price()
         self.clear_layout(self.gridLayout)
 
-        self.cur.execute(f"SELECT korzina_item_id FROM bag WHERE user_id = {self.current_user_id} LIMIT 2 OFFSET {self.page * 2}")
+        self.cur.execute(f"""SELECT korzina_item_id FROM bag 
+        WHERE user_id = {self.current_user_id} LIMIT 2 OFFSET {self.page * 2}""")
         data = self.cur.fetchall()
 
         for i in range(len(data)):
@@ -646,7 +650,8 @@ class korzina_widget(QWidget1):
 
     def update_label(self):
         self.current_price += self.step_value
-        if (self.step_value > 0 and self.current_price >= self.target_price) or (self.step_value < 0 and self.current_price <= self.target_price):
+        if (self.step_value > 0 and self.current_price >= self.target_price) or \
+                (self.step_value < 0 and self.current_price <= self.target_price):
             self.current_price = self.target_price
             self.timer.stop()
 
