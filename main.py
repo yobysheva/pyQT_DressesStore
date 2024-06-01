@@ -32,7 +32,8 @@ class QWidget1(QWidget):
 
     def doClose(self):
         self.animation.stop()
-        self.animation.finished.connect(self.close)  # Закройте окно, когда анимация будет завершена
+        # Закройте окно, когда анимация будет завершена
+        self.animation.finished.connect(self.close)
         # Диапазон прозрачности постепенно уменьшается с 1 до 0.
         self.animation.setStartValue(1)
         self.animation.setEndValue(0)
@@ -354,14 +355,16 @@ class registration_dialog(QDialog1):
 
                 message = QMessageBox1()
                 message.setWindowTitle("Успешная регистрация")
-                message.setText("Аккаунт зарегистрирован. Теперь Вы можете осуществить вход.")
+                message.setText("Аккаунт зарегистрирован. "
+                                "Теперь Вы можете осуществить вход.")
                 message.exec()
 
             except Exception as e:
                 message = QMessageBox1()
                 message.setWindowTitle("Аккаунт не зарегистрирован")
                 message.setText("Не удалось зарегистрировать. "
-                                "Убедитесь, что данные внесены верно. Логин должен быть уникален.")
+                                "Убедитесь, что данные внесены верно. "
+                                "Логин должен быть уникален.")
                 message.exec()
                 print(e)
 
@@ -523,12 +526,13 @@ class korzina_item(QWidget):
 
     def update_is_chosen(self):
         is_chosen = 1 if self.checkBox.isChecked() else 0
-        self.cur.execute(f"UPDATE bag SET is_chosen = {is_chosen} WHERE korzina_item_id = {self.korzina_item_id}")
+        self.cur.execute(f"""UPDATE bag SET is_chosen = {is_chosen} 
+                    WHERE korzina_item_id = {self.korzina_item_id}""")
         self.conn.commit()
 
         if is_chosen:
             chosen_count = self.cur.execute(f"""SELECT COUNT(*) FROM bag 
-            WHERE user_id = {self.current_user_id} AND is_chosen = 1""").fetchone()[0]
+                    WHERE user_id = {self.current_user_id} AND is_chosen = 1""").fetchone()[0]
 
             if chosen_count > 5:
                 message = QMessageBox1()
@@ -592,7 +596,8 @@ class korzina_widget(QWidget1):
         self.clear_layout(self.gridLayout)
 
         self.cur.execute(f"""SELECT korzina_item_id FROM bag 
-        WHERE user_id = {self.current_user_id} LIMIT 2 OFFSET {self.page * 2}""")
+                        WHERE user_id = {self.current_user_id} 
+                        LIMIT 2 OFFSET {self.page * 2}""")
         data = self.cur.fetchall()
 
         for i in range(len(data)):
@@ -602,7 +607,8 @@ class korzina_widget(QWidget1):
 
     def update_page(self):
         sender = self.sender()
-        max_pages = self.cur.execute(f"SELECT COUNT(*) FROM bag WHERE user_id = {self.current_user_id}").fetchone()[0]
+        max_pages = self.cur.execute(f"""SELECT COUNT(*) FROM bag 
+                                     WHERE user_id = {self.current_user_id}""").fetchone()[0]
         max_pages = max_pages//2 if max_pages % 2 == 1 else max_pages//2 - 1
 
         if sender == self.next and self.page < max_pages:
