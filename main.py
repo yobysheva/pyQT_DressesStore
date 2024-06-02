@@ -368,10 +368,10 @@ class registration_dialog(QDialog1):
                 message.exec()
                 print(e)
 
-            self.cur = self.conn.cursor()
-            self.cur.execute(f"""SELECT user_id FROM users WHERE login = "{login}" """)
-            data = self.cur.fetchone()
-            self.close()
+            # self.cur = self.conn.cursor()
+            # self.cur.execute(f"""SELECT user_id FROM users WHERE login = "{login}" """)
+            # data = self.cur.fetchone()
+            # self.close()
 
             #current_user_id = data[0]
             #self.conn = sqlite3.connect('cards.db')
@@ -566,20 +566,23 @@ class korzina_widget(QWidget1):
         self.timer = QTimer(self)
 
         if self.current_user_id == 0:
-            max_item = self.cur.execute("SELECT COUNT(*) FROM items").fetchone()[0]
-            ids = [randint(1, max_item) for _ in range(20)]
-
-            for i in range(20):
-                widget = little_card(ids[i])
-                self.gridLayout.addWidget(widget, i // 10, i % 10)
+            self.update_recommendation()
 
             self.next.clicked.connect(self.update_recommendation)
             self.prev.clicked.connect(self.update_recommendation)
         else:
-            self.load_items()
+            korzina_items_count = self.cur.execute(f"""SELECT COUNT(*) FROM bag 
+                                                 WHERE user_id = {self.current_user_id}""").fetchone()[0]
+            if korzina_items_count == 0:
+                self.update_recommendation()
 
-            self.next.clicked.connect(self.update_page)
-            self.prev.clicked.connect(self.update_page)
+                self.next.clicked.connect(self.update_recommendation)
+                self.prev.clicked.connect(self.update_recommendation)
+            else:
+                self.load_items()
+
+                self.next.clicked.connect(self.update_page)
+                self.prev.clicked.connect(self.update_page)
 
         self.back.clicked.connect(self.close)
         self.price = 0
@@ -661,7 +664,7 @@ class korzina_widget(QWidget1):
             self.current_price = self.target_price
             self.timer.stop()
 
-        self.label_3.setText(f"В корзине всего {self.chosen_count} товаров на сумму {int(self.current_price)}")
+        self.label_3.setText(f"Выбрано {self.chosen_count} товаров на сумму {int(self.current_price)}")
 
 
 class MainWindow(QMainWindow):
