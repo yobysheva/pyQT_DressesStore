@@ -715,7 +715,7 @@ class MainWindow(QMainWindow):
         self.evening.clicked.connect(self.categoriesFilter)
         self.all.clicked.connect(self.categoriesFilter)
         self.new_collection.clicked.connect(self.categoriesFilter)
-        self.red.clicked.connect(self.categoriesFilter)
+        self.color.clicked.connect(self.categoriesFilter)
 
         # выбор фильтра
         self.current_filter = None
