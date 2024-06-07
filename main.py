@@ -582,6 +582,7 @@ class korzina_widget(QWidget1):
                                                  WHERE user_id = {self.current_user_id}""").fetchone()[0]
             if korzina_items_count == 0:
                 self.update_recommendation()
+                self.gridLayout.setContentsMargins(0, 20, 0, 0)
 
                 self.next.clicked.connect(self.update_recommendation)
                 self.prev.clicked.connect(self.update_recommendation)
@@ -698,14 +699,14 @@ class like_widget(QWidget1):
         else:
             like_items_count = self.cur.execute(f"""SELECT COUNT(*) FROM like 
                                                  WHERE user_id = {self.current_user_id}""").fetchone()[0]
-            self.label_3.setText(f"Понравившихся товаров: {like_items_count}")
-
             if like_items_count == 0:
                 self.update_recommendation()
+                self.gridLayout.setContentsMargins(0, 40, 0, 0)
 
                 self.next.clicked.connect(self.update_recommendation)
                 self.prev.clicked.connect(self.update_recommendation)
             else:
+                self.label_3.setText(f"Понравившихся товаров: {like_items_count}")
                 self.load_items()
                 self.next.clicked.connect(self.update_page)
                 self.prev.clicked.connect(self.update_page)
