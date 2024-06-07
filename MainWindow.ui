@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1421</width>
+    <width>1422</width>
     <height>728</height>
    </rect>
   </property>
@@ -115,55 +115,17 @@ font: 22pt &quot;Futurespore Cyrillic&quot;;
      <rect>
       <x>20</x>
       <y>140</y>
-      <width>1379</width>
+      <width>1381</width>
       <height>51</height>
      </rect>
     </property>
-    <layout class="QHBoxLayout" name="horizontalLayout" stretch="2,2,1,1,1,1">
+    <layout class="QHBoxLayout" name="horizontalLayout" stretch="5,4,3,3,3,2">
      <property name="spacing">
       <number>7</number>
      </property>
      <property name="topMargin">
       <number>7</number>
      </property>
-     <item>
-      <widget class="QPushButton" name="hits">
-       <property name="font">
-        <font>
-         <family>Futurespore Cyrillic</family>
-         <pointsize>26</pointsize>
-         <weight>50</weight>
-         <italic>false</italic>
-         <bold>false</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QPushButton:pressed {
-border: 0px solid #000;
-border-radius: 10px;
-border-style: outset;
-background: black;
-color: rgb(254,254,254);
-font-weight: bold;
-font: 26pt &quot;Futurespore Cyrillic&quot;;
-}
-QPushButton {
-border: 2px solid #000;
-border-radius: 10px;
-border-style: outset;
-color: black;
-font-weight: bold;
-font: 26pt &quot;Futurespore Cyrillic&quot;;
-}</string>
-       </property>
-       <property name="text">
-        <string>Хиты продаж</string>
-       </property>
-       <property name="autoDefault">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
      <item>
       <widget class="QPushButton" name="new_collection">
        <property name="font">
@@ -200,6 +162,50 @@ font: 26pt &quot;Futurespore Cyrillic&quot;;
        <property name="autoDefault">
         <bool>true</bool>
        </property>
+       <attribute name="buttonGroup">
+        <string notr="true">filter</string>
+       </attribute>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="hits">
+       <property name="font">
+        <font>
+         <family>Futurespore Cyrillic</family>
+         <pointsize>26</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton:pressed {
+border: 0px solid #000;
+border-radius: 10px;
+border-style: outset;
+background: black;
+color: rgb(254,254,254);
+font-weight: bold;
+font: 26pt &quot;Futurespore Cyrillic&quot;;
+}
+QPushButton {
+border: 2px solid #000;
+border-radius: 10px;
+border-style: outset;
+color: black;
+font-weight: bold;
+font: 26pt &quot;Futurespore Cyrillic&quot;;
+}</string>
+       </property>
+       <property name="text">
+        <string>Хиты продаж</string>
+       </property>
+       <property name="autoDefault">
+        <bool>true</bool>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">filter</string>
+       </attribute>
       </widget>
      </item>
      <item>
@@ -238,6 +244,9 @@ font: 26pt &quot;Futurespore Cyrillic&quot;;
        <property name="autoDefault">
         <bool>true</bool>
        </property>
+       <attribute name="buttonGroup">
+        <string notr="true">filter</string>
+       </attribute>
       </widget>
      </item>
      <item>
@@ -276,6 +285,9 @@ font: 26pt &quot;Futurespore Cyrillic&quot;;
        <property name="autoDefault">
         <bool>true</bool>
        </property>
+       <attribute name="buttonGroup">
+        <string notr="true">filter</string>
+       </attribute>
       </widget>
      </item>
      <item>
@@ -314,10 +326,13 @@ font: 26pt &quot;Futurespore Cyrillic&quot;;
        <property name="autoDefault">
         <bool>true</bool>
        </property>
+       <attribute name="buttonGroup">
+        <string notr="true">filter</string>
+       </attribute>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="filter">
+      <widget class="QPushButton" name="all">
        <property name="font">
         <font>
          <family>Futurespore Cyrillic</family>
@@ -347,7 +362,7 @@ font: 26pt &quot;Futurespore Cyrillic&quot;;
 }</string>
        </property>
        <property name="text">
-        <string>фильтр</string>
+        <string>все</string>
        </property>
        <property name="autoDefault">
         <bool>true</bool>
@@ -527,8 +542,8 @@ font: 20pt &quot;Futurespore Cyrillic&quot;;
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1421</width>
-     <height>36</height>
+     <width>1422</width>
+     <height>26</height>
     </rect>
    </property>
   </widget>
@@ -536,4 +551,7 @@ font: 20pt &quot;Futurespore Cyrillic&quot;;
  </widget>
  <resources/>
  <connections/>
+ <buttongroups>
+  <buttongroup name="filter"/>
+ </buttongroups>
 </ui>
