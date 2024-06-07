@@ -8,6 +8,7 @@ from PyQt6.QtCore import Qt, QRectF, QSize, QEvent, QPropertyAnimation, QRect, Q
 from functools import partial
 from random import randint
 
+
 # классы с анимацией для наследования другими классами
 class QWidget1(QWidget):
     def __init__(self):
@@ -69,6 +70,7 @@ class QDialog1(QDialog):
         self.animation.setEndValue(0)
         self.animation.start()
 
+
 class QMessageBox1(QMessageBox):
     def __init__(self):
         super().__init__()
@@ -76,6 +78,7 @@ class QMessageBox1(QMessageBox):
         font-weight: bold;
         color: black;
         font: 24pt "HelveticaNeueCyr";""")
+
 
 class little_card(QWidget):
     def __init__(self, id):
@@ -330,63 +333,50 @@ class registration_dialog(QDialog1):
         super().__init__()
         uic.loadUi('registration_dialog.ui', self)  # загружаем UI файл в текущий виджет
         self.setWindowTitle("Регистрация")
-
         try:
             self.registrate.clicked.connect(
-                lambda: self.add_row(self.login.text(), self.password.text(), self.fio.text(),
-                                     self.card_number.text(), self.expiration_date.text(),
-                                     self.cvv.text(), self.post_index.text()))
+                lambda: self.add_row(self.login.text(), self.password.text(),
+                                     self.fio.text(), self.card_number.text(),
+                                     self.expiration_date.text(), self.cvv.text(), self.post_index.text()))
         except Exception as e:
             print(e)
-
         self.escape.clicked.connect(self.close)
-
-
     def add_row(self, login, password, fio, card_number, expiration_date, cvv, post_index):
-        if login and password and fio and card_number and expiration_date and cvv and post_index:
+        self.con = sqlite3.connect("cards.db")
+        try:
+            cur = self.con.cursor()
+            a = f"""INSERT INTO users(login, password, FIO, card_number, validity_period, CVV, postal_code) 
+            VALUES("{login}", "{password}", "{fio}", {card_number}, "{expiration_date}", {cvv}, {post_index}) """
+            cur.execute(a)
+            self.con.commit()
+            cur.close()
+
+            message = QMessageBox1()
+            message.setWindowTitle("Успешная регистрация")
+            message.setText("Аккаунт зарегистрирован.")
+            message.exec()
+
             self.con = sqlite3.connect("cards.db")
-            try:
-                cur = self.con.cursor()
-                a = f"""INSERT INTO users(login, password, FIO, card_number, validity_period, CVV, postal_code) 
-                VALUES("{login}", "{password}", "{fio}", {card_number}, "{expiration_date}", {cvv}, {post_index})"""
-                cur.execute(a)
-                self.con.commit()
-                cur.close()
+            self.conn = sqlite3.connect('cards.db')
 
-                message = QMessageBox1()
-                message.setWindowTitle("Успешная регистрация")
-                message.setText("Аккаунт зарегистрирован. "
-                                "Теперь Вы можете осуществить вход.")
-                message.exec()
-
-            except Exception as e:
-                message = QMessageBox1()
-                message.setWindowTitle("Аккаунт не зарегистрирован")
-                message.setText("Не удалось зарегистрировать. "
-                                "Убедитесь, что данные внесены верно. "
-                                "Логин должен быть уникален.")
-                message.exec()
-                print(e)
-
-            # self.cur = self.conn.cursor()
-            # self.cur.execute(f"""SELECT user_id FROM users WHERE login = "{login}" """)
-            # data = self.cur.fetchone()
-            # self.close()
-
-            #current_user_id = data[0]
-            #self.conn = sqlite3.connect('cards.db')
-            #self.cur = self.conn.cursor()
-            # задаю текущего пользователя
-            #a = f"""UPDATE current_user_id SET current_user_id = {current_user_id}"""
-            #print(current_user_id)
-
-        else:
+        except Exception as e:
             message = QMessageBox1()
             message.setWindowTitle("Аккаунт не зарегистрирован")
-            message.setText("Не удалось зарегистрировать. "
-                            "Убедитесь, что все данные внесены. "
-                            "Ни одно поле не должно содержать пустую строку.")
+            message.setText("Не удалось зарегистрировать. Убедитесь, что данные внесены верно. Логин должен быть уникален.")
+
             message.exec()
+            print(e)
+        self.cur = self.conn.cursor()
+        self.cur.execute(f"""SELECT  user_id FROM users WHERE login = "{login}" """)
+        data = self.cur.fetchone()
+        self.close()
+        current_user_id = data[0]
+        self.conn = sqlite3.connect('cards.db')
+        self.cur = self.conn.cursor()
+        # задаю текущего пользователя
+       # a = f"""UPDATE current_user_id SET current_user_id = {current_user_id}"""
+        #print(current_user_id)
+
 
 class enter_dialog(QDialog1):
     def __init__(self):
@@ -405,17 +395,19 @@ class enter_dialog(QDialog1):
     def check_enter(self, login, entered_password):
         self.con = sqlite3.connect("cards.db")
         self.cur = self.con.cursor()
-
-        if login and entered_password:
+        data = []
+        if self.login.text() != "" and self.password.text() != "":
             self.cur.execute(f"""SELECT user_id, password FROM users WHERE login = "{login}" """)
             data = self.cur.fetchone()
             self.con.close()
             if data:
                 password = data[1]
+
                 if entered_password == password:
                     message = QMessageBox1()
                     message.setWindowTitle("Успешное выполнение")
                     message.setText("Вы вошли в аккаунт.")
+
                     message.exec()
 
                     current_user_id = data[0]
@@ -427,7 +419,7 @@ class enter_dialog(QDialog1):
                 self.create_massege()
         else:
             self.create_massege()
-
+        print(current_user_id)
     def change_user_id(self, user_id):
         self.con = sqlite3.connect("cards.db")
         self.cur = self.con.cursor()
@@ -436,7 +428,6 @@ class enter_dialog(QDialog1):
         self.con.commit()
         self.con.close()  # закрыть соединение
         self.close()
-
     def create_massege(self):
         message = QMessageBox1()
         message.setWindowTitle("Вход не выполнен")
@@ -463,6 +454,7 @@ class enter_or_registration_dialog(QDialog1):
         w2 = enter_dialog()
         self.close()
         w2.exec()
+
 
 class korzina_item(QWidget):
     def __init__(self, korzina_item_id):
@@ -571,6 +563,8 @@ class korzina_widget(QWidget1):
             self.next.clicked.connect(self.update_recommendation)
             self.prev.clicked.connect(self.update_recommendation)
         else:
+            self.label_4.setText("Выберите товары, чтобы сформировать заказ. "
+                                 "В одном заказе может содержаться не более 5 наименований.")
             korzina_items_count = self.cur.execute(f"""SELECT COUNT(*) FROM bag 
                                                  WHERE user_id = {self.current_user_id}""").fetchone()[0]
             if korzina_items_count == 0:
@@ -583,7 +577,6 @@ class korzina_widget(QWidget1):
 
                 self.next.clicked.connect(self.update_page)
                 self.prev.clicked.connect(self.update_page)
-
         self.back.clicked.connect(self.close)
         self.price = 0
 
@@ -664,7 +657,128 @@ class korzina_widget(QWidget1):
             self.current_price = self.target_price
             self.timer.stop()
 
-        self.label_3.setText(f"Выбрано {self.chosen_count} товаров на сумму {int(self.current_price)}")
+        self.label_3.setText(f"Выбрано товаров: {self.chosen_count} на сумму {int(self.current_price)}")
+
+
+class like_widget(QWidget1):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Понравившееся")
+        self.conn = sqlite3.connect('cards.db')
+        self.cur = self.conn.cursor()
+
+        self.cur.execute(f"""SELECT user_id FROM current_user_id""")
+        data = self.cur.fetchone()
+        self.current_user_id = data[0]
+
+        # Загрузить пользовательский интерфейс из файла .ui
+        uic.loadUi('korzina.ui', self)
+
+        self.page = 0
+        self.current_price = 0
+        self.timer = QTimer(self)
+
+        if self.current_user_id == 0:
+            self.update_recommendation()
+
+            self.next.clicked.connect(self.update_recommendation)
+            self.prev.clicked.connect(self.update_recommendation)
+        else:
+            self.label_4.setText("Выберите товары, чтобы сформировать заказ. "
+                                 "В одном заказе может содержаться не более 5 наименований.")
+            korzina_items_count = self.cur.execute(f"""SELECT COUNT(*) FROM bag 
+                                                 WHERE user_id = {self.current_user_id}""").fetchone()[0]
+            if korzina_items_count == 0:
+                self.update_recommendation()
+
+                self.next.clicked.connect(self.update_recommendation)
+                self.prev.clicked.connect(self.update_recommendation)
+            else:
+                self.load_items()
+
+                self.next.clicked.connect(self.update_page)
+                self.prev.clicked.connect(self.update_page)
+        self.back.clicked.connect(self.close)
+        self.price = 0
+
+
+    def clear_layout(self, layout):
+        while layout.count():
+            child = layout.takeAt(0)
+            if child.widget():
+                child.widget().deleteLater()
+
+    def load_items(self):
+        self.update_price()
+        self.clear_layout(self.gridLayout)
+
+        self.cur.execute(f"""SELECT korzina_item_id FROM bag 
+                        WHERE user_id = {self.current_user_id} 
+                        LIMIT 2 OFFSET {self.page * 2}""")
+        data = self.cur.fetchall()
+
+        for i in range(len(data)):
+            self.widget = korzina_item(data[i][0])
+            self.gridLayout.addWidget(self.widget, i, 0)
+            self.widget.checkBox.stateChanged.connect(self.update_price)
+
+    def update_page(self):
+        sender = self.sender()
+        max_pages = self.cur.execute(f"""SELECT COUNT(*) FROM bag 
+                                     WHERE user_id = {self.current_user_id}""").fetchone()[0]
+        max_pages = max_pages//2 if max_pages % 2 == 1 else max_pages//2 - 1
+
+        if sender == self.next and self.page < max_pages:
+            self.page += 1
+        elif sender == self.prev and self.page > 0:
+            self.page -= 1
+
+        self.load_items()
+
+    def update_recommendation(self):
+        self.clear_layout(self.gridLayout)
+        max_item = self.cur.execute("SELECT COUNT(*) FROM items").fetchone()[0]
+        ids = [randint(1, max_item) for _ in range(20)]
+
+        for i in range(20):
+            widget = little_card(ids[i])
+            self.gridLayout.addWidget(widget, i // 10, i % 10)
+
+    def update_price(self):
+        chosen_count = self.cur.execute(
+            f"""SELECT COUNT(*) FROM bag
+            WHERE user_id = {self.current_user_id} AND is_chosen = 1""").fetchone()[0]
+
+        chosen_items = self.cur.execute(
+            f"""SELECT bag.count, items.cost, bag.is_chosen FROM bag
+                INNER JOIN items ON items.id = bag.item_id
+                WHERE bag.user_id = {self.current_user_id}""").fetchall()
+
+        new_price = sum(count * price * is_chosen for count, price, is_chosen in chosen_items)
+
+        self.animate_price_change(new_price, chosen_count)
+
+    def animate_price_change(self, new_price, chosen_count):
+        self.animation_steps = 100  # number of steps for the animation
+        self.animation_duration = 1000  # duration of the animation in milliseconds
+
+        self.step_value = (new_price - self.current_price) / self.animation_steps
+        self.step_duration = int(self.animation_duration / self.animation_steps)  # Ensure integer value
+
+        self.target_price = new_price
+        self.chosen_count = chosen_count
+
+        self.timer.timeout.connect(self.update_label)
+        self.timer.start(self.step_duration)
+
+    def update_label(self):
+        self.current_price += self.step_value
+        if (self.step_value > 0 and self.current_price >= self.target_price) or \
+                (self.step_value < 0 and self.current_price <= self.target_price):
+            self.current_price = self.target_price
+            self.timer.stop()
+
+        self.label_3.setText(f"Выбрано товаров: {self.chosen_count} на сумму {int(self.current_price)}")
 
 
 class MainWindow(QMainWindow):
@@ -716,6 +830,8 @@ class MainWindow(QMainWindow):
         self.ofice.clicked.connect(self.categoriesFilter)
         self.evening.clicked.connect(self.categoriesFilter)
 
+        self.like.clicked.connect(self.open_like)
+
     # функция для вывода 5 товаров по страницам
     def update_data(self, message):
         sender = self.sender()
@@ -745,6 +861,13 @@ class MainWindow(QMainWindow):
 
     # открывается корзина, нужно сделать так, чтобы закрывалось изначальное окно
     def open_korzina(self):
+        try:
+            self.korzina_window = korzina_widget()
+            self.korzina_window.show()
+        except Exception as e:
+            print(e)
+
+    def open_like(self):
         try:
             self.korzina_window = korzina_widget()
             self.korzina_window.show()
