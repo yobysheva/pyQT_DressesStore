@@ -159,7 +159,7 @@ font: 26pt &quot;Futurespore Cyrillic&quot;;
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="hits">
+      <widget class="QPushButton" name="red">
        <property name="font">
         <font>
          <family>Futurespore Cyrillic</family>
