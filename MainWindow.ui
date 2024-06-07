@@ -138,16 +138,7 @@ font: 22pt &quot;Futurespore Cyrillic&quot;;
         </font>
        </property>
        <property name="styleSheet">
-        <string notr="true">QPushButton:pressed {
-border: 0px solid #000;
-border-radius: 10px;
-border-style: outset;
-background: black;
-color: rgb(254,254,254);
-font-weight: bold;
-font: 26pt &quot;Futurespore Cyrillic&quot;;
-}
-QPushButton {
+        <string notr="true">QPushButton {
 border: 2px solid #000;
 border-radius: 10px;
 border-style: outset;
@@ -179,16 +170,7 @@ font: 26pt &quot;Futurespore Cyrillic&quot;;
         </font>
        </property>
        <property name="styleSheet">
-        <string notr="true">QPushButton:pressed {
-border: 0px solid #000;
-border-radius: 10px;
-border-style: outset;
-background: black;
-color: rgb(254,254,254);
-font-weight: bold;
-font: 26pt &quot;Futurespore Cyrillic&quot;;
-}
-QPushButton {
+        <string notr="true">QPushButton {
 border: 2px solid #000;
 border-radius: 10px;
 border-style: outset;
@@ -220,16 +202,7 @@ font: 26pt &quot;Futurespore Cyrillic&quot;;
         </font>
        </property>
        <property name="styleSheet">
-        <string notr="true">QPushButton:pressed {
-border: 0px solid #000;
-border-radius: 10px;
-border-style: outset;
-background: black;
-color: rgb(254,254,254);
-font-weight: bold;
-font: 26pt &quot;Futurespore Cyrillic&quot;;
-}
-QPushButton {
+        <string notr="true">QPushButton {
 border: 2px solid #000;
 border-radius: 10px;
 border-style: outset;
@@ -261,16 +234,7 @@ font: 26pt &quot;Futurespore Cyrillic&quot;;
         </font>
        </property>
        <property name="styleSheet">
-        <string notr="true">QPushButton:pressed {
-border: 0px solid #000;
-border-radius: 10px;
-border-style: outset;
-background: black;
-color: rgb(254,254,254);
-font-weight: bold;
-font: 26pt &quot;Futurespore Cyrillic&quot;;
-}
-QPushButton {
+        <string notr="true">QPushButton {
 border: 2px solid #000;
 border-radius: 10px;
 border-style: outset;
@@ -302,16 +266,7 @@ font: 26pt &quot;Futurespore Cyrillic&quot;;
         </font>
        </property>
        <property name="styleSheet">
-        <string notr="true">QPushButton:pressed {
-border: 0px solid #000;
-border-radius: 10px;
-border-style: outset;
-background: black;
-color: rgb(254,254,254);
-font-weight: bold;
-font: 26pt &quot;Futurespore Cyrillic&quot;;
-}
-QPushButton {
+        <string notr="true">QPushButton {
 border: 2px solid #000;
 border-radius: 10px;
 border-style: outset;
@@ -344,7 +299,7 @@ font: 26pt &quot;Futurespore Cyrillic&quot;;
        </property>
        <property name="styleSheet">
         <string notr="true">QPushButton:pressed {
-border: 0px solid #000;
+border: 2px solid #000;
 border-radius: 10px;
 border-style: outset;
 background: black;
