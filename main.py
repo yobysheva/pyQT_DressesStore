@@ -403,7 +403,6 @@ class enter_dialog(QDialog1):
             self.con.close()
             if data:
                 password = data[1]
-
                 if entered_password == password:
                     message = QMessageBox1()
                     message.setWindowTitle("Успешное выполнение")
@@ -420,7 +419,6 @@ class enter_dialog(QDialog1):
                 self.create_massege()
         else:
             self.create_massege()
-        print(current_user_id)
     def change_user_id(self, user_id):
         self.con = sqlite3.connect("cards.db")
         self.cur = self.con.cursor()
@@ -517,6 +515,8 @@ class korzina_item(QWidget):
         self.checkBox.setChecked(is_chosen == 1)
         self.checkBox.stateChanged.connect(self.update_is_chosen)
 
+        self.delete_item.clicked.connect(self.del_item)
+
     def update_is_chosen(self):
         is_chosen = 1 if self.checkBox.isChecked() else 0
         self.cur.execute(f"""UPDATE bag SET is_chosen = {is_chosen} 
@@ -539,6 +539,18 @@ class korzina_item(QWidget):
                 self.checkBox.setChecked(False)
                 self.conn.commit()
 
+    def del_item(self):
+        self.conn = sqlite3.connect("cards.db")
+        try:
+            cur = self.conn.cursor()
+            a = f"""DELETE FROM bag WHERE korzina_item_id = "{self.korzina_item_id}" """
+            cur.execute(a)
+            self.conn.commit()
+            cur.close()
+
+        except Exception as e:
+            print(e)
+
 
 class korzina_widget(QWidget1):
     def __init__(self):
@@ -560,7 +572,7 @@ class korzina_widget(QWidget1):
 
         if self.current_user_id == 0:
             self.update_recommendation()
-
+            self.gridLayout.setContentsMargins(0, 20, 0, 0)
             self.next.clicked.connect(self.update_recommendation)
             self.prev.clicked.connect(self.update_recommendation)
         else:
@@ -570,6 +582,7 @@ class korzina_widget(QWidget1):
                                                  WHERE user_id = {self.current_user_id}""").fetchone()[0]
             if korzina_items_count == 0:
                 self.update_recommendation()
+                self.gridLayout.setContentsMargins(0, 20, 0, 0)
 
                 self.next.clicked.connect(self.update_recommendation)
                 self.prev.clicked.connect(self.update_recommendation)
@@ -601,6 +614,7 @@ class korzina_widget(QWidget1):
             self.widget = korzina_item(data[i][0])
             self.gridLayout.addWidget(self.widget, i, 0)
             self.widget.checkBox.stateChanged.connect(self.update_price)
+            self.widget.delete_item.clicked.connect(self.update_page)
 
     def update_page(self):
         sender = self.sender()
@@ -685,14 +699,14 @@ class like_widget(QWidget1):
         else:
             like_items_count = self.cur.execute(f"""SELECT COUNT(*) FROM like 
                                                  WHERE user_id = {self.current_user_id}""").fetchone()[0]
-            self.label_3.setText(f"Понравившихся товаров: {like_items_count}")
-
             if like_items_count == 0:
                 self.update_recommendation()
+                self.gridLayout.setContentsMargins(0, 40, 0, 0)
 
                 self.next.clicked.connect(self.update_recommendation)
                 self.prev.clicked.connect(self.update_recommendation)
             else:
+                self.label_3.setText(f"Понравившихся товаров: {like_items_count}")
                 self.load_items()
                 self.next.clicked.connect(self.update_page)
                 self.prev.clicked.connect(self.update_page)
@@ -757,6 +771,7 @@ class MainWindow(QMainWindow):
 
         self.korzina.clicked.connect(self.open_korzina)
         self.log_in.clicked.connect(self.enter_or_registration)
+        self.like.clicked.connect(self.open_like)
 
         # Connect to the database
         self.conn = sqlite3.connect('cards.db')
@@ -782,11 +797,51 @@ class MainWindow(QMainWindow):
         self.next.clicked.connect(self.update_data_partial)
         self.prev.clicked.connect(self.update_data_partial)
 
-        self.summer.clicked.connect(self.categoriesFilter)
-        self.ofice.clicked.connect(self.categoriesFilter)
-        self.evening.clicked.connect(self.categoriesFilter)
+        self.all.clicked.connect(self.categoriesFilter)
+        self.red.clicked.connect(self.categoriesFilter)
 
-        self.like.clicked.connect(self.open_like)
+        for button in self.filter.buttons():
+            button.clicked.connect(self.categoriesFilter)
+
+        # выбор фильтра
+        self.current_filter = None
+        # Проходим по всем кнопкам и связываем их с обработчиками
+        self.buttons = self.filter.buttons()
+
+        # Проходим по всем кнопкам и связываем их с обработчиками
+        for button in self.buttons:
+            button.clicked.connect(lambda checked, b=button: self.filter_pushed(b))
+        self.all.clicked.connect(self.all_pushed)
+
+    def all_pushed(self):
+        self.buttons = self.filter.buttons()
+        for button in self.buttons:
+            button.setStyleSheet("""border: 2px solid #000;
+                        border-radius: 10px;
+                        border-style: outset;
+                        color: black;
+                        font-weight: bold;
+                        font: 26pt 'Futurespore Cyrillic';
+                        """)
+
+    # функция для смены цвета кнопок фильтрации
+    def filter_pushed(self, button):
+        if self.current_filter:
+            self.current_filter.setStyleSheet("""border: 2px solid #000;
+                        border-radius: 10px;
+                        border-style: outset;
+                        color: black;
+                        font-weight: bold;
+                        font: 26pt 'Futurespore Cyrillic';
+                        """)
+        button.setStyleSheet("""border: 2px solid #000;
+                    border-radius: 10px;
+                    border-style: outset;
+                    background: black;
+                    color: rgb(254,254,254);
+                    font-weight: bold;
+                    font: 26pt 'Futurespore Cyrillic';""")
+        self.current_filter = button
 
     # функция для вывода 5 товаров по страницам
     def update_data(self, message):
@@ -809,30 +864,40 @@ class MainWindow(QMainWindow):
     def categoriesFilter(self):
         self.page = 0
         category = self.sender().text()
-        self.message = f""" 
-    INNER JOIN description ON description.id = items.id
-    INNER JOIN categories ON categories."categoy id" = description.category
-    WHERE categories.name = '{category}'"""
+        if category == 'все':
+            self.message = ''
+        elif category == 'Новая коллекция':
+            self.message = 'ORDER BY id DESC'
+        elif category == 'красный':
+            self.message = f""" 
+                            INNER JOIN description ON description.id = items.id
+                            INNER JOIN colors ON colors."colors id" = description.color
+                            WHERE colors.name = '{category}'"""
+        else:
+            self.message = f""" 
+                INNER JOIN description ON description.id = items.id
+                INNER JOIN categories ON categories."categoy id" = description.category
+                WHERE categories.name = '{category}'"""
         self.update_data(self.message)
 
     # открывается корзина, нужно сделать так, чтобы закрывалось изначальное окно
     def open_korzina(self):
         try:
-            korzina_window = korzina_widget()
-            korzina_window.show()
+            self.korzina_window = korzina_widget()
+            self.korzina_window.show()
         except Exception as e:
             print(e)
 
     def open_like(self):
         try:
-            like_window = like_widget()
-            like_window.show()
+            self.like_window = like_widget()
+            self.like_window.show()
         except Exception as e:
             print(e)
 
     def enter_or_registration(self):
-        w2 = enter_or_registration_dialog()
-        w2.exec()
+        self.w2 = enter_or_registration_dialog()
+        self.w2.exec()
 
 
 if __name__ == '__main__':
