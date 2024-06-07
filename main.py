@@ -232,24 +232,25 @@ class big_card(QWidget1):
         self.cur.execute(f"""SELECT user_id FROM current_user_id""")
         data = self.cur.fetchone()
         current_user_id = data[0]
+        sender = self.sender()
 
         if current_user_id == 0:
             message = QMessageBox1()
             message.setWindowTitle("Ошибка")
-            sender = self.sender()
             if sender == self.buy:
                 message.setText("Войдите в аккаунт, чтобы добавлять товары в корзину.")
             else:
                 message.setText("Войдите в аккаунт, чтобы добавлять товары в понравившиеся.")
             message.exec()
-        elif self.current_size_num == None:
+        elif self.current_size_num == None and sender == self.buy:
             message = QMessageBox1()
             message.setWindowTitle("Ошибка")
             message.setText("Пожалуйста, выберете размер.")
             message.exec()
+        elif sender == self.like:
+            self.add_row(id, self.current_size_num, self.value, current_user_id)
         else:
             self.add_row(id, self.current_size_num, self.value, current_user_id)
-
 
     def add_row(self, item_id, size, count, current_user_id):
         self.conn = sqlite3.connect("cards.db")
@@ -260,8 +261,8 @@ class big_card(QWidget1):
                 a = f"""INSERT INTO bag(user_id, item_id, size, count) 
                 VALUES("{current_user_id}", "{item_id}", "{size}", {count})"""
             else:
-                a = f"""INSERT INTO like(user_id, item_id, size, count) 
-                VALUES("{current_user_id}", "{item_id}", "{size}", {count})"""
+                a = f"""INSERT INTO like(user_id, item_id) 
+                VALUES("{current_user_id}", "{item_id}")"""
             cur.execute(a)
             self.conn.commit()
             cur.close()
@@ -672,35 +673,30 @@ class like_widget(QWidget1):
         self.current_user_id = data[0]
 
         # Загрузить пользовательский интерфейс из файла .ui
-        uic.loadUi('korzina.ui', self)
-
+        uic.loadUi('like.ui', self)
         self.page = 0
-        self.current_price = 0
-        self.timer = QTimer(self)
 
         if self.current_user_id == 0:
             self.update_recommendation()
+            self.gridLayout.setContentsMargins(0, 40, 0, 0)
 
             self.next.clicked.connect(self.update_recommendation)
             self.prev.clicked.connect(self.update_recommendation)
         else:
-            self.label_4.setText("Выберите товары, чтобы сформировать заказ. "
-                                 "В одном заказе может содержаться не более 5 наименований.")
-            korzina_items_count = self.cur.execute(f"""SELECT COUNT(*) FROM bag 
+            like_items_count = self.cur.execute(f"""SELECT COUNT(*) FROM like 
                                                  WHERE user_id = {self.current_user_id}""").fetchone()[0]
-            if korzina_items_count == 0:
+            self.label_3.setText(f"Понравившихся товаров: {like_items_count}")
+
+            if like_items_count == 0:
                 self.update_recommendation()
 
                 self.next.clicked.connect(self.update_recommendation)
                 self.prev.clicked.connect(self.update_recommendation)
             else:
                 self.load_items()
-
                 self.next.clicked.connect(self.update_page)
                 self.prev.clicked.connect(self.update_page)
         self.back.clicked.connect(self.close)
-        self.price = 0
-
 
     def clear_layout(self, layout):
         while layout.count():
@@ -709,24 +705,20 @@ class like_widget(QWidget1):
                 child.widget().deleteLater()
 
     def load_items(self):
-        self.update_price()
-        self.clear_layout(self.gridLayout)
-
-        self.cur.execute(f"""SELECT korzina_item_id FROM bag 
+        self.cur.execute(f"""SELECT item_id FROM like 
                         WHERE user_id = {self.current_user_id} 
-                        LIMIT 2 OFFSET {self.page * 2}""")
+                        LIMIT 5 OFFSET {self.page * 5}""")
         data = self.cur.fetchall()
 
         for i in range(len(data)):
-            self.widget = korzina_item(data[i][0])
-            self.gridLayout.addWidget(self.widget, i, 0)
-            self.widget.checkBox.stateChanged.connect(self.update_price)
+            widget = card(data[i][0])
+            self.gridLayout.addWidget(widget, 0, 4-i)
 
     def update_page(self):
         sender = self.sender()
-        max_pages = self.cur.execute(f"""SELECT COUNT(*) FROM bag 
+        max_pages = self.cur.execute(f"""SELECT COUNT(*) FROM like 
                                      WHERE user_id = {self.current_user_id}""").fetchone()[0]
-        max_pages = max_pages//2 if max_pages % 2 == 1 else max_pages//2 - 1
+        max_pages = max_pages // 5 if max_pages % 5 != 0 else max_pages // 5 - 1
 
         if sender == self.next and self.page < max_pages:
             self.page += 1
@@ -743,42 +735,6 @@ class like_widget(QWidget1):
         for i in range(20):
             widget = little_card(ids[i])
             self.gridLayout.addWidget(widget, i // 10, i % 10)
-
-    def update_price(self):
-        chosen_count = self.cur.execute(
-            f"""SELECT COUNT(*) FROM bag
-            WHERE user_id = {self.current_user_id} AND is_chosen = 1""").fetchone()[0]
-
-        chosen_items = self.cur.execute(
-            f"""SELECT bag.count, items.cost, bag.is_chosen FROM bag
-                INNER JOIN items ON items.id = bag.item_id
-                WHERE bag.user_id = {self.current_user_id}""").fetchall()
-
-        new_price = sum(count * price * is_chosen for count, price, is_chosen in chosen_items)
-
-        self.animate_price_change(new_price, chosen_count)
-
-    def animate_price_change(self, new_price, chosen_count):
-        self.animation_steps = 100  # number of steps for the animation
-        self.animation_duration = 1000  # duration of the animation in milliseconds
-
-        self.step_value = (new_price - self.current_price) / self.animation_steps
-        self.step_duration = int(self.animation_duration / self.animation_steps)  # Ensure integer value
-
-        self.target_price = new_price
-        self.chosen_count = chosen_count
-
-        self.timer.timeout.connect(self.update_label)
-        self.timer.start(self.step_duration)
-
-    def update_label(self):
-        self.current_price += self.step_value
-        if (self.step_value > 0 and self.current_price >= self.target_price) or \
-                (self.step_value < 0 and self.current_price <= self.target_price):
-            self.current_price = self.target_price
-            self.timer.stop()
-
-        self.label_3.setText(f"Выбрано товаров: {self.chosen_count} на сумму {int(self.current_price)}")
 
 
 class MainWindow(QMainWindow):
@@ -837,7 +793,7 @@ class MainWindow(QMainWindow):
         sender = self.sender()
         # количество товаров в таблице
         max_pages = self.cur.execute(f"SELECT COUNT(*) FROM items {self.message}").fetchone()[0]
-        max_pages = max_pages // 5 if max_pages % 2 != 0 else max_pages // 5 - 1
+        max_pages = max_pages // 5 if max_pages % 5 != 0 else max_pages // 5 - 1
         if sender == self.next and self.page < max_pages:
             self.page += 1
         elif sender == self.prev and self.page > 0:
@@ -862,15 +818,15 @@ class MainWindow(QMainWindow):
     # открывается корзина, нужно сделать так, чтобы закрывалось изначальное окно
     def open_korzina(self):
         try:
-            self.korzina_window = korzina_widget()
-            self.korzina_window.show()
+            korzina_window = korzina_widget()
+            korzina_window.show()
         except Exception as e:
             print(e)
 
     def open_like(self):
         try:
-            self.korzina_window = korzina_widget()
-            self.korzina_window.show()
+            like_window = like_widget()
+            like_window.show()
         except Exception as e:
             print(e)
 
