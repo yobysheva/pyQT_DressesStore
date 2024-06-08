@@ -7,10 +7,11 @@ from PyQt6.QtGui import QFont, QPixmap, QPainterPath, QPainter, QIcon
 from PyQt6.QtCore import Qt, QRectF, QSize, QEvent, QPropertyAnimation, QRect, QTimer
 from functools import partial
 from random import randint
+from datetime import datetime
 
 
 # классы с анимацией для наследования другими классами
-class QWidget1(QWidget):
+class animated_widget(QWidget):
     def __init__(self):
         super().__init__()
         # Класс анимации прозрачности окна
@@ -18,9 +19,9 @@ class QWidget1(QWidget):
         self.animation.setDuration(200)  # Продолжительность: 1 секунда
 
         # Выполните постепенное увеличение
-        self.doShow()
+        self.do_show()
 
-    def doShow(self):
+    def do_show(self):
         try:
             self.animation.finished.disconnect(self.close)
         except:
@@ -31,7 +32,7 @@ class QWidget1(QWidget):
         self.animation.setEndValue(1)
         self.animation.start()
 
-    def doClose(self):
+    def do_close(self):
         self.animation.stop()
         # Закройте окно, когда анимация будет завершена
         self.animation.finished.connect(self.close)
@@ -41,7 +42,7 @@ class QWidget1(QWidget):
         self.animation.start()
 
 
-class QDialog1(QDialog):
+class styled_dialog(QDialog):
     def __init__(self):
         super().__init__()
         # Класс анимации прозрачности окна
@@ -49,9 +50,9 @@ class QDialog1(QDialog):
         self.animation.setDuration(200)  # Продолжительность: 1 секунда
 
         # Выполните постепенное увеличение
-        self.doShow()
+        self.do_show()
 
-    def doShow(self):
+    def do_show(self):
         try:
             self.animation.finished.disconnect(self.close)
         except:
@@ -62,7 +63,7 @@ class QDialog1(QDialog):
         self.animation.setEndValue(1)
         self.animation.start()
 
-    def doClose(self):
+    def do_close(self):
         self.animation.stop()
         self.animation.finished.connect(self.close)  # Закройте окно, когда анимация будет завершена
         # Диапазон прозрачности постепенно уменьшается с 1 до 0.
@@ -71,7 +72,7 @@ class QDialog1(QDialog):
         self.animation.start()
 
 
-class QMessageBox1(QMessageBox):
+class styled_message_box(QMessageBox):
     def __init__(self):
         super().__init__()
         self.setStyleSheet("""background: rgb(254,254,254);
@@ -115,7 +116,7 @@ class little_card(QWidget):
         w2.show()
 
 
-class big_card(QWidget1):
+class big_card(animated_widget):
     def __init__(self, id):
         super().__init__()
         # Загрузить пользовательский интерфейс из файла .ui
@@ -235,7 +236,7 @@ class big_card(QWidget1):
         sender = self.sender()
 
         if current_user_id == 0:
-            message = QMessageBox1()
+            message = styled_message_box()
             message.setWindowTitle("Ошибка")
             if sender == self.buy:
                 message.setText("Войдите в аккаунт, чтобы добавлять товары в корзину.")
@@ -243,7 +244,7 @@ class big_card(QWidget1):
                 message.setText("Войдите в аккаунт, чтобы добавлять товары в понравившиеся.")
             message.exec()
         elif self.current_size_num == None and sender == self.buy:
-            message = QMessageBox1()
+            message = styled_message_box()
             message.setWindowTitle("Ошибка")
             message.setText("Пожалуйста, выберете размер.")
             message.exec()
@@ -267,7 +268,7 @@ class big_card(QWidget1):
             self.conn.commit()
             cur.close()
 
-            message = QMessageBox1()
+            message = styled_message_box()
             message.setWindowTitle("Успешное добавление")
             if sender == self.buy:
                 message.setText("Товар добавлен в корзину.")
@@ -276,7 +277,7 @@ class big_card(QWidget1):
             message.exec()
 
         except Exception as e:
-            message = QMessageBox1()
+            message = styled_message_box()
             message.setWindowTitle("не добавлено")
             message.setText("Не добавлено. Проверьте, выбран ли размер.")
             message.exec()
@@ -329,7 +330,7 @@ class card(QWidget):
         w2.show()
 
 
-class registration_dialog(QDialog1):
+class registration_dialog(styled_dialog):
     def __init__(self):
         super().__init__()
         uic.loadUi('registration_dialog.ui', self)  # загружаем UI файл в текущий виджет
@@ -352,7 +353,7 @@ class registration_dialog(QDialog1):
             self.con.commit()
             cur.close()
 
-            message = QMessageBox1()
+            message = styled_message_box()
             message.setWindowTitle("Успешная регистрация")
             message.setText("Аккаунт зарегистрирован.")
             message.exec()
@@ -361,7 +362,7 @@ class registration_dialog(QDialog1):
             self.conn = sqlite3.connect('cards.db')
 
         except Exception as e:
-            message = QMessageBox1()
+            message = styled_message_box()
             message.setWindowTitle("Аккаунт не зарегистрирован")
             message.setText("Не удалось зарегистрировать. Убедитесь, что данные внесены верно. Логин должен быть уникален.")
 
@@ -379,7 +380,7 @@ class registration_dialog(QDialog1):
         #print(current_user_id)
 
 
-class enter_dialog(QDialog1):
+class enter_dialog(styled_dialog):
     def __init__(self):
         super().__init__()
         uic.loadUi('enter_dialog.ui', self)  # загружаем UI файл в текущий виджет
@@ -404,10 +405,9 @@ class enter_dialog(QDialog1):
             if data:
                 password = data[1]
                 if entered_password == password:
-                    message = QMessageBox1()
+                    message = styled_message_box()
                     message.setWindowTitle("Успешное выполнение")
                     message.setText("Вы вошли в аккаунт.")
-
                     message.exec()
 
                     current_user_id = data[0]
@@ -428,14 +428,14 @@ class enter_dialog(QDialog1):
         self.con.close()  # закрыть соединение
         self.close()
     def create_massege(self):
-        message = QMessageBox1()
+        message = styled_message_box()
         message.setWindowTitle("Вход не выполнен")
         message.setText("Не удалось войти в аккаунт. "
                         "Убедитесь, что данные внесены верно или зарегистрируйтесь.")
         message.exec()
 
 
-class enter_or_registration_dialog(QDialog1):
+class enter_or_registration_dialog(styled_dialog):
     def __init__(self):
         super().__init__()
         uic.loadUi('enter_or_registration.ui', self)  # загружаем UI файл в текущий виджет
@@ -528,7 +528,7 @@ class korzina_item(QWidget):
                     WHERE user_id = {self.current_user_id} AND is_chosen = 1""").fetchone()[0]
 
             if chosen_count > 5:
-                message = QMessageBox1()
+                message = styled_message_box()
                 message.setWindowTitle("Не удалось добавить товар в заказ")
                 message.setText("Невозможно заказать более 5 товаров за один раз.")
                 message.exec()
@@ -552,7 +552,7 @@ class korzina_item(QWidget):
             print(e)
 
 
-class korzina_widget(QWidget1):
+class korzina_widget(animated_widget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Корзина")
@@ -575,6 +575,7 @@ class korzina_widget(QWidget1):
             self.gridLayout.setContentsMargins(0, 20, 0, 0)
             self.next.clicked.connect(self.update_recommendation)
             self.prev.clicked.connect(self.update_recommendation)
+            self.back.clicked.connect(self.on_back_clicked)
         else:
             self.label_4.setText("Выберите товары, чтобы сформировать заказ. "
                                  "В одном заказе может содержаться не более 5 наименований.")
@@ -583,17 +584,16 @@ class korzina_widget(QWidget1):
             if korzina_items_count == 0:
                 self.update_recommendation()
                 self.gridLayout.setContentsMargins(0, 20, 0, 0)
-
                 self.next.clicked.connect(self.update_recommendation)
                 self.prev.clicked.connect(self.update_recommendation)
+                self.back.clicked.connect(self.on_back_clicked)
             else:
                 self.load_items()
-
                 self.next.clicked.connect(self.update_page)
                 self.prev.clicked.connect(self.update_page)
-        self.back.clicked.connect(self.close)
+                self.back.clicked.connect(self.on_back_clicked)
+        self.update_back()
         self.price = 0
-
 
     def clear_layout(self, layout):
         while layout.count():
@@ -620,7 +620,7 @@ class korzina_widget(QWidget1):
         sender = self.sender()
         max_pages = self.cur.execute(f"""SELECT COUNT(*) FROM bag 
                                      WHERE user_id = {self.current_user_id}""").fetchone()[0]
-        max_pages = max_pages//2 if max_pages % 2 == 1 else max_pages//2 - 1
+        max_pages = max_pages // 2 if max_pages % 2 == 1 else max_pages // 2 - 1
 
         if sender == self.next and self.page < max_pages:
             self.page += 1
@@ -652,12 +652,22 @@ class korzina_widget(QWidget1):
 
         self.animate_price_change(new_price, chosen_count)
 
+        # обновляем кнопку в зависимости от количества выбранных товаров
+        if chosen_count > 0:
+            self.back.setText("Оформить заказ")
+        else:
+            self.back.setText("Назад")
+            self.back.clicked.connect(self.on_back_clicked)
+
+        # поправляем размер кнопки
+        self.update_back()
+
     def animate_price_change(self, new_price, chosen_count):
-        self.animation_steps = 100  # number of steps for the animation
-        self.animation_duration = 1000  # duration of the animation in milliseconds
+        self.animation_steps = 100  # количество шагов для анимации
+        self.animation_duration = 1000  # длительность в миллисекундах
 
         self.step_value = (new_price - self.current_price) / self.animation_steps
-        self.step_duration = int(self.animation_duration / self.animation_steps)  # Ensure integer value
+        self.step_duration = int(self.animation_duration / self.animation_steps)
 
         self.target_price = new_price
         self.chosen_count = chosen_count
@@ -674,8 +684,59 @@ class korzina_widget(QWidget1):
 
         self.label_3.setText(f"Выбрано товаров: {self.chosen_count} на сумму {int(self.current_price)}")
 
+    def update_back(self):
+        self.back.adjustSize()
+        self.back.setFixedWidth(self.back.sizeHint().width() + 20)
+        size = self.back.size()
+        self.back.setGeometry(self.width() // 2 - size.width() // 2 - 10,
+                              self.back.geometry().y(), size.width() + 20, size.height())
 
-class like_widget(QWidget1):
+    def form_order(self):
+        today_date = datetime.now().strftime("%d.%m.%y")
+        a = f"""INSERT INTO orders(user_id, date) 
+                VALUES("{self.current_user_id}", "{today_date}")"""
+        self.cur.execute(a)
+        self.conn.commit()
+
+        order_id = self.cur.execute(f"""SELECT order_id FROM orders 
+                 ORDER BY order_id DESC""").fetchone()[0]
+
+        ordered_items = self.cur.execute(
+            f"""SELECT korzina_item_id, item_id, size, count FROM bag
+            WHERE user_id = {self.current_user_id} AND is_chosen = 1""").fetchall()
+        try:
+            for item in ordered_items:
+                korzina_item_id, item_id, size, count = item
+                a = f"""INSERT INTO ordered_items(order_id, item_id, size, count) 
+                                                    VALUES({order_id}, {item_id}, {size}, {count})"""
+                self.cur.execute(a)
+                self.conn.commit()
+
+                a = f"""DELETE FROM bag WHERE korzina_item_id = "{korzina_item_id}" """
+                self.cur.execute(a)
+                self.conn.commit()
+                print(korzina_item_id, item_id, size, count)
+
+            message = styled_message_box()
+            message.setWindowTitle("Товар в пути")
+            message.setText("Вы успешно заказали выбранные товары.")
+            message.exec()
+
+        except Exception as e:
+            message = styled_message_box()
+            message.setWindowTitle("Ошибка")
+            message.setText("Не удалось заказать выбранные товары.")
+            message.exec()
+            print(e)
+
+    def on_back_clicked(self):
+        if self.back.text() == "Оформить заказ":
+            self.form_order()
+        else:
+            self.close()
+
+
+class like_widget(animated_widget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Понравившееся")
@@ -751,7 +812,7 @@ class like_widget(QWidget1):
             self.gridLayout.addWidget(widget, i // 10, i % 10)
 
 
-class MainWindow(QMainWindow):
+class main_window(QMainWindow):
     def __init__(self):
         super().__init__()
 
@@ -903,6 +964,6 @@ class MainWindow(QMainWindow):
 if __name__ == '__main__':
     import sys
     app = QApplication(sys.argv)
-    window = MainWindow()
+    window = main_window()
     window.show()
     sys.exit(app.exec())

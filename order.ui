@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1361</width>
+    <height>216</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background: rgb(254,254,254)</string>
+  </property>
+  <widget class="QWidget" name="horizontalLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>931</width>
+     <height>201</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout"/>
+  </widget>
+  <widget class="QScrollArea" name="scrollArea">
+   <property name="geometry">
+    <rect>
+     <x>950</x>
+     <y>10</y>
+     <width>401</width>
+     <height>201</height>
+    </rect>
+   </property>
+   <property name="widgetResizable">
+    <bool>true</bool>
+   </property>
+   <widget class="QWidget" name="scrollAreaWidgetContents">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>378</width>
+      <height>484</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="styleSheet">
+        <string notr="true">color: black;
+font-weight: bold;
+font: 12pt &quot;HelveticaNeueCyr&quot;;</string>
+       </property>
+       <property name="text">
+        <string>Номер заказа: 120038
+.................................
+Дата отпрапвки: 07.06.2024
+Дата прибытия: 21.06.2024
+.................................
+Пункт выдачи № 789. к10, посёлок 
+Аякс, кампус Дальневосточного 
+федерального университета, посёлок 
+Русский.
+..................................
+Состав заказа: 
+..................................
+Платье 1. Размер: 42. Количество: 2
+..................................
+Платье 2. Размер: 40. Количество 1
+..................................
+Платье 3. Размер: 44. Количество: 2
+..................................
+Платье 4. Размер: 40. Количество 1
+..................................
+Платье 5. Размер: 40. Количество 1</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

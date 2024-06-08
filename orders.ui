@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1422</width>
+    <height>730</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background: rgb(254,254,254)</string>
+  </property>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>130</y>
+     <width>1371</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-weight: bold;
+font: 48pt &quot;HelveticaNeueCyr&quot;;
+color: black;</string>
+   </property>
+   <property name="text">
+    <string>Мои заказы:</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="back">
+   <property name="geometry">
+    <rect>
+     <x>630</x>
+     <y>680</y>
+     <width>161</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton:pressed {
+    background-color: rgb(108,8,8);
+}
+QPushButton {
+border: 2px solid #521;
+border-radius: 10px;
+border-style: outset;
+background: rgb(128,24,24);
+color:rgb(254,254,254);
+font-weight: bold;
+font: 26pt &quot;Futurespore Cyrillic&quot;;
+}</string>
+   </property>
+   <property name="text">
+    <string>Назад</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>0</y>
+     <width>1379</width>
+     <height>111</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Futurespore Cyrillic</family>
+     <pointsize>110</pointsize>
+    </font>
+   </property>
+   <property name="cursor">
+    <cursorShape>ArrowCursor</cursorShape>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-weight: bold;
+font: 110pt &quot;Futurespore Cyrillic&quot;;
+color: black;</string>
+   </property>
+   <property name="text">
+    <string>Karmen</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>110</y>
+     <width>1379</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Futurespore Cyrillic</family>
+     <pointsize>26</pointsize>
+     <weight>50</weight>
+     <italic>false</italic>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-weight: bold;
+color: black;
+font: 26pt &quot;Futurespore Cyrillic&quot;;</string>
+   </property>
+   <property name="text">
+    <string>Стиль, который говорит о тебе</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="margin">
+    <number>3</number>
+   </property>
+   <property name="indent">
+    <number>0</number>
+   </property>
+  </widget>
+  <widget class="QWidget" name="gridLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>210</y>
+     <width>1381</width>
+     <height>461</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" name="gridLayout"/>
+  </widget>
+  <widget class="QPushButton" name="prev">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>680</y>
+     <width>141</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton:pressed {
+border: 0px solid #000;
+border-radius: 10px;
+border-style: outset;
+background: black;
+color: rgb(254,254,254);
+font-weight: bold;
+font: 22pt &quot;Futurespore Cyrillic&quot;;
+}
+QPushButton {
+border: 1px solid #000;
+border-radius: 10px;
+border-style: outset;
+color: black;
+font-weight: bold;
+font: 22pt &quot;Futurespore Cyrillic&quot;;
+}</string>
+   </property>
+   <property name="text">
+    <string>&lt;</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="next">
+   <property name="geometry">
+    <rect>
+     <x>1240</x>
+     <y>680</y>
+     <width>141</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton:pressed {
+border: 0px solid #000;
+border-radius: 10px;
+border-style: outset;
+background: black;
+color: rgb(254,254,254);
+font-weight: bold;
+font: 22pt &quot;Futurespore Cyrillic&quot;;
+}
+QPushButton {
+border: 1px solid #000;
+border-radius: 10px;
+border-style: outset;
+color: black;
+font-weight: bold;
+font: 22pt &quot;Futurespore Cyrillic&quot;;
+}</string>
+   </property>
+   <property name="text">
+    <string>&gt;</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
