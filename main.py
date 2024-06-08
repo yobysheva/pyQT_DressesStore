@@ -717,6 +717,10 @@ class korzina_widget(animated_widget):
                 self.conn.commit()
                 print(korzina_item_id, item_id, size, count)
 
+            # Обновляем страницу после оформления заказа
+            self.update_page()
+
+            # Показать сообщение об успешном заказе
             message = styled_message_box()
             message.setWindowTitle("Товар в пути")
             message.setText("Вы успешно заказали выбранные товары.")
@@ -810,6 +814,73 @@ class like_widget(animated_widget):
         for i in range(20):
             widget = little_card(ids[i])
             self.gridLayout.addWidget(widget, i // 10, i % 10)
+
+
+class my_orders(animated_widget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Корзина")
+        self.conn = sqlite3.connect('cards.db')
+        self.cur = self.conn.cursor()
+
+        self.cur.execute(f"""SELECT user_id FROM current_user_id""")
+        data = self.cur.fetchone()
+        self.current_user_id = data[0]
+
+        # Загрузить пользовательский интерфейс из файла .ui
+        uic.loadUi('orders.ui', self)
+
+        self.page = 0
+        self.current_price = 0
+        self.timer = QTimer(self)
+
+        if self.current_user_id != 0:
+            self.label_4.setText("Выберите товары, чтобы сформировать заказ. "
+                                 "В одном заказе может содержаться не более 5 наименований.")
+            korzina_items_count = self.cur.execute(f"""SELECT COUNT(*) FROM bag 
+                                                 WHERE user_id = {self.current_user_id}""").fetchone()[0]
+            if korzina_items_count == 0:
+                pass
+            else:
+                self.load_items()
+                self.next.clicked.connect(self.update_page)
+                self.prev.clicked.connect(self.update_page)
+                self.back.clicked.connect(self.close)
+        self.price = 0
+
+    def clear_layout(self, layout):
+        while layout.count():
+            child = layout.takeAt(0)
+            if child.widget():
+                child.widget().deleteLater()
+
+    def load_items(self):
+        self.update_price()
+        self.clear_layout(self.gridLayout)
+
+        self.cur.execute(f"""SELECT korzina_item_id FROM bag 
+                        WHERE user_id = {self.current_user_id} 
+                        LIMIT 2 OFFSET {self.page * 2}""")
+        data = self.cur.fetchall()
+
+        for i in range(len(data)):
+            self.widget = korzina_item(data[i][0])
+            self.gridLayout.addWidget(self.widget, i, 0)
+            self.widget.checkBox.stateChanged.connect(self.update_price)
+            self.widget.delete_item.clicked.connect(self.update_page)
+
+    def update_page(self):
+        sender = self.sender()
+        max_pages = self.cur.execute(f"""SELECT COUNT(*) FROM bag 
+                                     WHERE user_id = {self.current_user_id}""").fetchone()[0]
+        max_pages = max_pages // 2 if max_pages % 2 == 1 else max_pages // 2 - 1
+
+        if sender == self.next and self.page < max_pages:
+            self.page += 1
+        elif sender == self.prev and self.page > 0:
+            self.page -= 1
+
+        self.load_items()
 
 
 class main_window(QMainWindow):

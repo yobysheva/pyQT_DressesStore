@@ -20,9 +20,9 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>130</y>
+     <y>140</y>
      <width>1371</width>
-     <height>81</height>
+     <height>71</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -31,7 +31,7 @@ font: 48pt &quot;HelveticaNeueCyr&quot;;
 color: black;</string>
    </property>
    <property name="text">
-    <string>Мои заказы:</string>
+    <string>Нет заказов.</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
