@@ -407,7 +407,6 @@ class enter_dialog(QDialog1):
                     message = QMessageBox1()
                     message.setWindowTitle("Успешное выполнение")
                     message.setText("Вы вошли в аккаунт.")
-
                     message.exec()
 
                     current_user_id = data[0]
@@ -575,6 +574,7 @@ class korzina_widget(QWidget1):
             self.gridLayout.setContentsMargins(0, 20, 0, 0)
             self.next.clicked.connect(self.update_recommendation)
             self.prev.clicked.connect(self.update_recommendation)
+            self.back.clicked.connect(self.close)
         else:
             self.label_4.setText("Выберите товары, чтобы сформировать заказ. "
                                  "В одном заказе может содержаться не более 5 наименований.")
@@ -583,17 +583,15 @@ class korzina_widget(QWidget1):
             if korzina_items_count == 0:
                 self.update_recommendation()
                 self.gridLayout.setContentsMargins(0, 20, 0, 0)
-
                 self.next.clicked.connect(self.update_recommendation)
                 self.prev.clicked.connect(self.update_recommendation)
+                self.back.clicked.connect(self.close)
             else:
                 self.load_items()
-
                 self.next.clicked.connect(self.update_page)
                 self.prev.clicked.connect(self.update_page)
-        self.back.clicked.connect(self.close)
+        self.update_back()
         self.price = 0
-
 
     def clear_layout(self, layout):
         while layout.count():
@@ -620,7 +618,7 @@ class korzina_widget(QWidget1):
         sender = self.sender()
         max_pages = self.cur.execute(f"""SELECT COUNT(*) FROM bag 
                                      WHERE user_id = {self.current_user_id}""").fetchone()[0]
-        max_pages = max_pages//2 if max_pages % 2 == 1 else max_pages//2 - 1
+        max_pages = max_pages // 2 if max_pages % 2 == 1 else max_pages // 2 - 1
 
         if sender == self.next and self.page < max_pages:
             self.page += 1
@@ -652,12 +650,22 @@ class korzina_widget(QWidget1):
 
         self.animate_price_change(new_price, chosen_count)
 
+        # обновляем копку в зависимости от количества выбранных товаров
+        if chosen_count > 0:
+            self.back.setText("Оформить заказ")
+        else:
+            self.back.setText("Назад")
+            self.back.clicked.connect(self.close)
+
+        # поправляем размер кнопки
+        self.update_back()
+
     def animate_price_change(self, new_price, chosen_count):
-        self.animation_steps = 100  # number of steps for the animation
-        self.animation_duration = 1000  # duration of the animation in milliseconds
+        self.animation_steps = 100  # количество шагов для анимации
+        self.animation_duration = 1000  # длительность в миллисекундах
 
         self.step_value = (new_price - self.current_price) / self.animation_steps
-        self.step_duration = int(self.animation_duration / self.animation_steps)  # Ensure integer value
+        self.step_duration = int(self.animation_duration / self.animation_steps)
 
         self.target_price = new_price
         self.chosen_count = chosen_count
@@ -673,6 +681,17 @@ class korzina_widget(QWidget1):
             self.timer.stop()
 
         self.label_3.setText(f"Выбрано товаров: {self.chosen_count} на сумму {int(self.current_price)}")
+
+    def update_back(self):
+        self.back.adjustSize()
+        self.back.setFixedWidth(self.back.sizeHint().width() + 20)
+        size = self.back.size()
+        self.back.setGeometry(self.width() // 2 - size.width() // 2 - 10,
+                              self.back.geometry().y(), size.width() + 20, size.height())
+
+    def form_order(self):
+        pass
+
 
 
 class like_widget(QWidget1):
