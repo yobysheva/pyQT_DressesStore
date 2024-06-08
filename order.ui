@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1361</width>
+    <width>1380</width>
     <height>216</height>
    </rect>
   </property>
@@ -19,18 +19,25 @@
   <widget class="QWidget" name="horizontalLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>60</x>
      <y>10</y>
-     <width>931</width>
+     <width>891</width>
      <height>201</height>
     </rect>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout"/>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <property name="sizeConstraint">
+     <enum>QLayout::SetMinimumSize</enum>
+    </property>
+    <property name="bottomMargin">
+     <number>1</number>
+    </property>
+   </layout>
   </widget>
   <widget class="QScrollArea" name="scrollArea">
    <property name="geometry">
     <rect>
-     <x>950</x>
+     <x>960</x>
      <y>10</y>
      <width>401</width>
      <height>201</height>
@@ -50,7 +57,7 @@
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <widget class="QLabel" name="label">
+      <widget class="QLabel" name="ordered_items">
        <property name="styleSheet">
         <string notr="true">color: black;
 font-weight: bold;
@@ -83,6 +90,38 @@ font: 12pt &quot;HelveticaNeueCyr&quot;;</string>
      </item>
     </layout>
    </widget>
+  </widget>
+  <widget class="QPushButton" name="number">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>90</y>
+     <width>41</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton:pressed {
+border: 0px solid #000;
+border-radius: 10px;
+border-style: outset;
+background: black;
+color: rgb(254,254,254);
+font-weight: bold;
+font: 22pt &quot;Futurespore Cyrillic&quot;;
+}
+QPushButton {
+border: 1px solid #000;
+border-radius: 10px;
+border-style: outset;
+color: black;
+font-weight: bold;
+font: 22pt &quot;Futurespore Cyrillic&quot;;
+}</string>
+   </property>
+   <property name="text">
+    <string>1</string>
+   </property>
   </widget>
  </widget>
  <resources/>

@@ -491,6 +491,38 @@ font: 20pt &quot;Futurespore Cyrillic&quot;;
      <string/>
     </property>
    </widget>
+   <widget class="QPushButton" name="orders">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>20</y>
+      <width>51</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton:pressed {
+border: 0px solid #000;
+border-radius: 13px;
+border-style: outset;
+background: black;
+color: rgb(254,254,254);
+font-weight: bold;
+font: 20pt &quot;Futurespore Cyrillic&quot;;
+}
+QPushButton {
+border: 2px solid #000;
+border-radius: 13px;
+border-style: outset;
+color: black;
+font-weight: bold;
+font: 20pt &quot;Futurespore Cyrillic&quot;;
+}</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
