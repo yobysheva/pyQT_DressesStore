@@ -854,7 +854,7 @@ class ordered_item(QWidget):
         data = self.cur.fetchone()
         self.current_user_id = data[0]
 
-        data = self.cur.execute(f"""SELECT id, name, photo1, size, count FROM ordered_items 
+        data = self.cur.execute(f"""SELECT id, name, cost, photo1, size, count FROM ordered_items 
                 INNER JOIN items on items.id = ordered_items.item_id
                 WHERE order_id = {order_id}""").fetchall()
 
@@ -871,11 +871,15 @@ class ordered_item(QWidget):
                "\nРусский." + s + \
                "Состав заказа:"
 
+        total_cost = 0
         for i in range(len(data)):
-            id, name, photo, size, count = data[i]
+            id, name, cost, photo, size, count = data[i]
             image = image_button(id)
             self.horizontalLayout.addWidget(image)
-            text += s + f"{name}. Размер: {size}. Количество: {count}"
+            text += s + f"{name}. Размер: {size}. Цена: {cost} x {count}"
+            total_cost += cost * count
+
+        text += s + f"Заказ на сумму: {total_cost} рублей"
 
         self.ordered_items.setText(text)
         self.ordered_items.setWordWrap(True)

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1380</width>
+    <width>1391</width>
     <height>216</height>
    </rect>
   </property>
@@ -39,7 +39,7 @@
     <rect>
      <x>960</x>
      <y>10</y>
-     <width>401</width>
+     <width>421</width>
      <height>201</height>
     </rect>
    </property>
@@ -51,8 +51,8 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>378</width>
-      <height>484</height>
+      <width>398</width>
+      <height>568</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -61,7 +61,7 @@
        <property name="styleSheet">
         <string notr="true">color: black;
 font-weight: bold;
-font: 12pt &quot;HelveticaNeueCyr&quot;;</string>
+font: 14pt &quot;HelveticaNeueCyr&quot;;</string>
        </property>
        <property name="text">
         <string>Номер заказа: 120038
