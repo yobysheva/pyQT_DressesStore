@@ -9,7 +9,6 @@ from functools import partial
 from random import randint
 from datetime import datetime
 
-
 # классы с анимацией для наследования другими классами
 class animated_widget(QWidget):
     def __init__(self):
@@ -582,6 +581,7 @@ class korzina_widget(animated_widget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Корзина")
+        self.setWindowIcon(QIcon('images/bag.png'))
         self.conn = sqlite3.connect('cards.db')
         self.cur = self.conn.cursor()
 
@@ -769,6 +769,7 @@ class like_widget(animated_widget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Понравившееся")
+        self.setWindowIcon(QIcon('images/like.png'))
         self.conn = sqlite3.connect('cards.db')
         self.cur = self.conn.cursor()
 
@@ -889,6 +890,7 @@ class orders_widget(animated_widget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Мои заказы")
+        self.setWindowIcon(QIcon('images/box.png'))
         self.conn = sqlite3.connect('cards.db')
         self.cur = self.conn.cursor()
 
@@ -955,6 +957,7 @@ class main_window(QMainWindow):
         # Загрузить пользовательский интерфейс главного окна из файла .ui
         uic.loadUi('MainWindow.ui', self)
         self.setWindowTitle("Karmen - магазин премиальной одежды")
+        self.setWindowIcon(QIcon('images/shop.png'))
 
         # иконки для кнопок корзина, вход и избранное
         self.like.setIcon(QIcon('images/like.png'))
@@ -1001,6 +1004,9 @@ class main_window(QMainWindow):
         self.all.clicked.connect(self.categories_filter)
         self.red.clicked.connect(self.categories_filter)
 
+        self.all.clicked.connect(self.all_pushed)
+        self.red.clicked.connect(self.color_pushed)
+
         for button in self.filter.buttons():
             button.clicked.connect(self.categories_filter)
 
@@ -1009,10 +1015,27 @@ class main_window(QMainWindow):
         # Проходим по всем кнопкам и связываем их с обработчиками
         self.buttons = self.filter.buttons()
 
+        # смена цветов
+        self.colors = ['красный', 'черный', 'серый', 'пастельные']
+        self.current_color = 0  # Индекс текущего цвета
+
         # Проходим по всем кнопкам и связываем их с обработчиками
         for button in self.buttons:
             button.clicked.connect(lambda checked, b=button: self.filter_pushed(b))
-        self.all.clicked.connect(self.all_pushed)
+
+    def color_pushed(self):
+        self.buttons = self.filter.buttons()
+        for button in self.buttons:
+            button.setStyleSheet("""border: 2px solid #000;
+                                border-radius: 10px;
+                                border-style: outset;
+                                color: black;
+                                font-weight: bold;
+                                font: 26pt 'Futurespore Cyrillic';
+                                """)
+        self.current_color = (self.current_color + 1) % len(self.colors)  # Переходим к следующему тексту циклически
+        self.red.setText(self.colors[self.current_color])
+
 
     def all_pushed(self):
         self.buttons = self.filter.buttons()
@@ -1069,7 +1092,13 @@ class main_window(QMainWindow):
             self.message = ''
         elif category == 'Новая коллекция':
             self.message = 'ORDER BY id DESC'
-        elif category == 'красный':
+        elif category == 'пастельные':
+            self.message = f""" 
+                            INNER JOIN description ON description.id = items.id
+                            INNER JOIN colors ON colors."colors id" = description.color
+                            WHERE colors.name = 'белый' or colors.name = 'желтый' or 
+                            colors.name = 'голубой' or colors.name = 'бежевый' or colors.name = 'розовый'"""
+        elif category in self.colors:
             self.message = f""" 
                             INNER JOIN description ON description.id = items.id
                             INNER JOIN colors ON colors."colors id" = description.color
