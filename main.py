@@ -81,6 +81,32 @@ class styled_message_box(QMessageBox):
         font: 24pt "HelveticaNeueCyr";""")
 
 
+class image_button(QWidget):
+    def __init__(self, id):
+        super().__init__()
+        uic.loadUi('order_photo.ui', self)
+        # выгрузка данных для карточки товара из базы данных
+        self.conn = sqlite3.connect('cards.db')
+        self.cur = self.conn.cursor()
+
+        self.cur.execute(f"SELECT photo1 FROM items WHERE id = {id}")
+        data = self.cur.fetchone()
+        photo1 = data[0]
+
+        width = self.photo.size().width()
+        height = self.photo.size().height()
+
+        # ставим кликбельное изображение в мини-карточку
+        self.photo.setIcon(QIcon(photo1))
+        self.photo.setIconSize(QSize(width, height))
+        self.show_description_partial = partial(self.show_description, id)
+        self.photo.clicked.connect(self.show_description_partial)
+
+    def show_description(self, id):
+        w2 = big_card(id)
+        w2.show()
+
+
 class little_card(QWidget):
     def __init__(self, id):
         super().__init__()
@@ -715,7 +741,6 @@ class korzina_widget(animated_widget):
                 a = f"""DELETE FROM bag WHERE korzina_item_id = "{korzina_item_id}" """
                 self.cur.execute(a)
                 self.conn.commit()
-                print(korzina_item_id, item_id, size, count)
 
             # Обновляем страницу после оформления заказа
             self.update_page()
@@ -816,10 +841,50 @@ class like_widget(animated_widget):
             self.gridLayout.addWidget(widget, i // 10, i % 10)
 
 
-class my_orders(animated_widget):
+class ordered_item(QWidget):
+    def __init__(self, order_id):
+        super().__init__()
+        # Загрузить пользовательский интерфейс из файла .ui
+        uic.loadUi('order.ui', self)
+
+        self.conn = sqlite3.connect('cards.db')
+        self.cur = self.conn.cursor()
+
+        self.cur.execute(f"""SELECT user_id FROM current_user_id""")
+        data = self.cur.fetchone()
+        self.current_user_id = data[0]
+
+        data = self.cur.execute(f"""SELECT id, name, photo1, size, count FROM ordered_items 
+                INNER JOIN items on items.id = ordered_items.item_id
+                WHERE order_id = {order_id}""").fetchall()
+
+        date = self.cur.execute(f"""SELECT date FROM orders
+                WHERE order_id = {order_id}""").fetchone()[0]
+
+        s = "\n" +"."*50 + "\n"
+        text = f"Номер заказа: {order_id}" + s + \
+               f"Дата отпрапвки: {date}\n" \
+               "Ожидаемое время в пути: 14 дней" + s +\
+               "Пункт выдачи № 789. к10, посёлок " \
+               "\nАякс, кампус Дальневосточного " \
+               "\nфедерального университета, посёлок " \
+               "\nРусский." + s + \
+               "Состав заказа:"
+
+        for i in range(len(data)):
+            id, name, photo, size, count = data[i]
+            image = image_button(id)
+            self.horizontalLayout.addWidget(image)
+            text += s + f"{name}. Размер: {size}. Количество: {count}"
+
+        self.ordered_items.setText(text)
+        self.ordered_items.setWordWrap(True)
+
+
+class orders_widget(animated_widget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Корзина")
+        self.setWindowTitle("Мои заказы")
         self.conn = sqlite3.connect('cards.db')
         self.cur = self.conn.cursor()
 
@@ -831,13 +896,11 @@ class my_orders(animated_widget):
         uic.loadUi('orders.ui', self)
 
         self.page = 0
-        self.current_price = 0
-        self.timer = QTimer(self)
+        self.offset = 0
 
         if self.current_user_id != 0:
-            self.label_4.setText("Выберите товары, чтобы сформировать заказ. "
-                                 "В одном заказе может содержаться не более 5 наименований.")
-            korzina_items_count = self.cur.execute(f"""SELECT COUNT(*) FROM bag 
+            self.label_3.setText("Мои заказы:")
+            korzina_items_count = self.cur.execute(f"""SELECT COUNT(*) FROM orders 
                                                  WHERE user_id = {self.current_user_id}""").fetchone()[0]
             if korzina_items_count == 0:
                 pass
@@ -845,8 +908,7 @@ class my_orders(animated_widget):
                 self.load_items()
                 self.next.clicked.connect(self.update_page)
                 self.prev.clicked.connect(self.update_page)
-                self.back.clicked.connect(self.close)
-        self.price = 0
+        self.back.clicked.connect(self.close)
 
     def clear_layout(self, layout):
         while layout.count():
@@ -855,30 +917,30 @@ class my_orders(animated_widget):
                 child.widget().deleteLater()
 
     def load_items(self):
-        self.update_price()
         self.clear_layout(self.gridLayout)
 
-        self.cur.execute(f"""SELECT korzina_item_id FROM bag 
+        self.cur.execute(f"""SELECT order_id FROM orders 
                         WHERE user_id = {self.current_user_id} 
                         LIMIT 2 OFFSET {self.page * 2}""")
         data = self.cur.fetchall()
 
         for i in range(len(data)):
-            self.widget = korzina_item(data[i][0])
+            self.widget = ordered_item(data[i][0])
+            self.widget.number.setText(str(i + 1 + self.offset))
             self.gridLayout.addWidget(self.widget, i, 0)
-            self.widget.checkBox.stateChanged.connect(self.update_price)
-            self.widget.delete_item.clicked.connect(self.update_page)
 
     def update_page(self):
         sender = self.sender()
-        max_pages = self.cur.execute(f"""SELECT COUNT(*) FROM bag 
+        max_pages = self.cur.execute(f"""SELECT COUNT(*) FROM orders 
                                      WHERE user_id = {self.current_user_id}""").fetchone()[0]
         max_pages = max_pages // 2 if max_pages % 2 == 1 else max_pages // 2 - 1
 
         if sender == self.next and self.page < max_pages:
             self.page += 1
+            self.offset += 2
         elif sender == self.prev and self.page > 0:
             self.page -= 1
+            self.offset -= 2
 
         self.load_items()
 
@@ -886,7 +948,6 @@ class my_orders(animated_widget):
 class main_window(QMainWindow):
     def __init__(self):
         super().__init__()
-
         # Загрузить пользовательский интерфейс главного окна из файла .ui
         uic.loadUi('MainWindow.ui', self)
         self.setWindowTitle("Karmen - магазин премиальной одежды")
@@ -901,9 +962,13 @@ class main_window(QMainWindow):
         self.log_in.setIcon(QIcon('images/log_in.png'))
         self.log_in.setIconSize(QSize(20, 20))
 
+        self.orders.setIcon(QIcon('images/box.png'))
+        self.orders.setIconSize(QSize(23, 23))
+
         self.korzina.clicked.connect(self.open_korzina)
         self.log_in.clicked.connect(self.enter_or_registration)
         self.like.clicked.connect(self.open_like)
+        self.orders.clicked.connect(self.open_orders)
 
         # Connect to the database
         self.conn = sqlite3.connect('cards.db')
@@ -929,11 +994,11 @@ class main_window(QMainWindow):
         self.next.clicked.connect(self.update_data_partial)
         self.prev.clicked.connect(self.update_data_partial)
 
-        self.all.clicked.connect(self.categoriesFilter)
-        self.red.clicked.connect(self.categoriesFilter)
+        self.all.clicked.connect(self.categories_filter)
+        self.red.clicked.connect(self.categories_filter)
 
         for button in self.filter.buttons():
-            button.clicked.connect(self.categoriesFilter)
+            button.clicked.connect(self.categories_filter)
 
         # выбор фильтра
         self.current_filter = None
@@ -993,7 +1058,7 @@ class main_window(QMainWindow):
             widget = card(row[0])
             self.gridLayout.addWidget(widget, 0, 4 - i)
 
-    def categoriesFilter(self):
+    def categories_filter(self):
         self.page = 0
         category = self.sender().text()
         if category == 'все':
@@ -1030,6 +1095,13 @@ class main_window(QMainWindow):
     def enter_or_registration(self):
         self.w2 = enter_or_registration_dialog()
         self.w2.exec()
+
+    def open_orders(self):
+        try:
+            self.orders_window = orders_widget()
+            self.orders_window.show()
+        except Exception as e:
+            print(e)
 
 
 if __name__ == '__main__':

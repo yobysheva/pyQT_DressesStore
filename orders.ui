@@ -137,9 +137,9 @@ font: 26pt &quot;Futurespore Cyrillic&quot;;</string>
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>210</y>
+     <y>220</y>
      <width>1381</width>
-     <height>461</height>
+     <height>451</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout"/>
