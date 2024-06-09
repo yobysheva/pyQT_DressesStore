@@ -9,7 +9,6 @@ from functools import partial
 from random import randint
 from datetime import datetime
 
-
 # классы с анимацией для наследования другими классами
 class animated_widget(QWidget):
     def __init__(self):
@@ -582,6 +581,7 @@ class korzina_widget(animated_widget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Корзина")
+        self.setWindowIcon(QIcon('images/bag.png'))
         self.conn = sqlite3.connect('cards.db')
         self.cur = self.conn.cursor()
 
@@ -769,6 +769,7 @@ class like_widget(animated_widget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Понравившееся")
+        self.setWindowIcon(QIcon('images/like.png'))
         self.conn = sqlite3.connect('cards.db')
         self.cur = self.conn.cursor()
 
@@ -889,6 +890,7 @@ class orders_widget(animated_widget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Мои заказы")
+        self.setWindowIcon(QIcon('images/box.png'))
         self.conn = sqlite3.connect('cards.db')
         self.cur = self.conn.cursor()
 
@@ -955,6 +957,7 @@ class main_window(QMainWindow):
         # Загрузить пользовательский интерфейс главного окна из файла .ui
         uic.loadUi('MainWindow.ui', self)
         self.setWindowTitle("Karmen - магазин премиальной одежды")
+        self.setWindowIcon(QIcon('images/shop.png'))
 
         # иконки для кнопок корзина, вход и избранное
         self.like.setIcon(QIcon('images/like.png'))
