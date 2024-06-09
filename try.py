@@ -318,6 +318,11 @@ class big_card(animated_widget):
             self.photo_counter -= 1
             self.photo_label.setPixmap(self.original_image)
 
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Escape:
+            self.close()
+
+
 
 class card(QWidget):
     def __init__(self, id):
@@ -1135,7 +1140,6 @@ class main_window(QMainWindow):
             self.orders_window.show()
         except Exception as e:
             print(e)
-
 
 if __name__ == '__main__':
     import sys
