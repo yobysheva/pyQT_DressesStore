@@ -1,25 +1,17 @@
 import sqlite3
 
 from PyQt6 import uic
-from PyQt6.QtWidgets import QApplication, QWidget, QLabel,\
-    QMainWindow,  QDialog, QMessageBox
-from PyQt6.QtGui import QPixmap,  QIcon
-from PyQt6.QtCore import QSize, QPropertyAnimation, QTimer
-from functools import partial
-from random import randint
-from datetime import datetime
+from PyQt6.QtWidgets import QWidget
+from PyQt6.QtGui import QIcon
 
-from styled_widgets import animated_widget, styled_dialog, styled_message_box
-from enter_or_registration import registration_dialog, enter_dialog, enter_or_registration_dialog
-from item_cards import image_button, little_card, big_card, card
-from korzina import korzina_item, korzina_widget
-from like_window import like_widget
+from styled_widgets import animated_widget
+from item_cards import image_button
 
 class ordered_item(QWidget):
     def __init__(self, order_id):
         super().__init__()
         # Загрузить пользовательский интерфейс из файла .ui
-        uic.loadUi('order.ui', self)
+        uic.loadUi('ui/order.ui', self)
 
         self.conn = sqlite3.connect('cards.db')
         self.cur = self.conn.cursor()
@@ -35,6 +27,7 @@ class ordered_item(QWidget):
         date = self.cur.execute(f"""SELECT date FROM orders
                 WHERE order_id = {order_id}""").fetchone()[0]
 
+        # формируем чек
         s = "\n" +"."*50 + "\n"
         text = f"Номер заказа: {order_id}" + s + \
                f"Дата отпрапвки: {date}\n" \
@@ -72,18 +65,20 @@ class orders_widget(animated_widget):
         self.current_user_id = data[0]
 
         # Загрузить пользовательский интерфейс из файла .ui
-        uic.loadUi('orders.ui', self)
+        uic.loadUi('ui/orders.ui', self)
 
+        # задаем страницу и счетчик
         self.page = 0
         self.offset = 0
 
+        # загружаем заказы для текущего пользователя
         if self.current_user_id != 0:
-            self.label_3.setText("Мои заказы:")
             korzina_items_count = self.cur.execute(f"""SELECT COUNT(*) FROM orders 
                                                  WHERE user_id = {self.current_user_id}""").fetchone()[0]
             if korzina_items_count == 0:
-                pass
+                self.label_3.setText("Нет ни одного заказа.")
             else:
+                self.label_3.setText("Мои заказы:")
                 self.load_items()
                 self.next.clicked.connect(self.update_page)
                 self.prev.clicked.connect(self.update_page)
@@ -108,6 +103,7 @@ class orders_widget(animated_widget):
             self.widget.number.setText(str(i + 1 + self.offset))
             self.gridLayout.addWidget(self.widget, i, 0)
 
+    # листаем
     def update_page(self):
         sender = self.sender()
         max_pages = self.cur.execute(f"""SELECT COUNT(*) FROM orders 

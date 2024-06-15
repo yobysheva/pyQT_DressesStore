@@ -1,23 +1,20 @@
 import sqlite3
 
 from PyQt6 import uic
-from PyQt6.QtWidgets import QApplication, QWidget, QLabel,\
-    QMainWindow,  QDialog, QMessageBox
+from PyQt6.QtWidgets import QWidget, QLabel
 from PyQt6.QtGui import QPixmap,  QIcon
-from PyQt6.QtCore import QSize, QPropertyAnimation, QTimer
-from functools import partial
+from PyQt6.QtCore import QTimer
 from random import randint
 from datetime import datetime
 
-from styled_widgets import animated_widget, styled_dialog, styled_message_box
-from enter_or_registration import registration_dialog, enter_dialog, enter_or_registration_dialog
+from styled_widgets import animated_widget, styled_message_box
 from item_cards import little_card
 
 class korzina_item(QWidget):
     def __init__(self, korzina_item_id):
         super().__init__()
         # Загрузить пользовательский интерфейс из файла .ui
-        uic.loadUi('korzina_item.ui', self)
+        uic.loadUi('ui/korzina_item.ui', self)
 
         self.conn = sqlite3.connect('cards.db')
         self.cur = self.conn.cursor()
@@ -26,6 +23,7 @@ class korzina_item(QWidget):
         data = self.cur.fetchone()
         self.current_user_id = data[0]
 
+        # информация о размере, количестве
         self.cur.execute(f"""SELECT korzina_item_id, item_id, size, count, is_chosen FROM bag 
         WHERE korzina_item_id = {korzina_item_id}""")
         desc2_data = self.cur.fetchone()
@@ -75,6 +73,7 @@ class korzina_item(QWidget):
 
         self.delete_item.clicked.connect(self.del_item)
 
+    # смотрим сколько товаров выбрано
     def update_is_chosen(self):
         is_chosen = 1 if self.checkBox.isChecked() else 0
         self.cur.execute(f"""UPDATE bag SET is_chosen = {is_chosen} 
@@ -97,6 +96,7 @@ class korzina_item(QWidget):
                 self.checkBox.setChecked(False)
                 self.conn.commit()
 
+    # удаление из корзины
     def del_item(self):
         self.conn = sqlite3.connect("cards.db")
         try:
@@ -123,12 +123,13 @@ class korzina_widget(animated_widget):
         self.current_user_id = data[0]
 
         # Загрузить пользовательский интерфейс из файла .ui
-        uic.loadUi('korzina.ui', self)
+        uic.loadUi('ui/korzina.ui', self)
 
         self.page = 0
         self.current_price = 0
         self.timer = QTimer(self)
 
+        # загружаем корзину для текущего пользователя или загружаем рекоммендации
         if self.current_user_id == 0:
             self.update_recommendation()
             self.gridLayout.setContentsMargins(0, 20, 0, 0)
@@ -154,12 +155,14 @@ class korzina_widget(animated_widget):
         self.update_back()
         self.price = 0
 
+    # очистить layout перед заполнением
     def clear_layout(self, layout):
         while layout.count():
             child = layout.takeAt(0)
             if child.widget():
                 child.widget().deleteLater()
 
+    # загружаем 2 товароа в layout
     def load_items(self):
         self.update_price()
         self.clear_layout(self.gridLayout)
@@ -175,6 +178,7 @@ class korzina_widget(animated_widget):
             self.widget.checkBox.stateChanged.connect(self.update_price)
             self.widget.delete_item.clicked.connect(self.update_page)
 
+    # пролистывание товаров
     def update_page(self):
         sender = self.sender()
         max_pages = self.cur.execute(f"""SELECT COUNT(*) FROM bag 
@@ -188,6 +192,7 @@ class korzina_widget(animated_widget):
 
         self.load_items()
 
+    # пролистывание рекоммендаций
     def update_recommendation(self):
         self.clear_layout(self.gridLayout)
         max_item = self.cur.execute("SELECT COUNT(*) FROM items").fetchone()[0]
@@ -197,6 +202,7 @@ class korzina_widget(animated_widget):
             widget = little_card(ids[i])
             self.gridLayout.addWidget(widget, i // 10, i % 10)
 
+    # обновляем цену и кнопку назад
     def update_price(self):
         chosen_count = self.cur.execute(
             f"""SELECT COUNT(*) FROM bag
@@ -217,10 +223,10 @@ class korzina_widget(animated_widget):
         else:
             self.back.setText("Назад")
             self.back.clicked.connect(self.on_back_clicked)
-
         # поправляем размер кнопки
         self.update_back()
 
+    # анимация смены цены
     def animate_price_change(self, new_price, chosen_count):
         self.animation_steps = 100  # количество шагов для анимации
         self.animation_duration = 1000  # длительность в миллисекундах
@@ -231,9 +237,11 @@ class korzina_widget(animated_widget):
         self.target_price = new_price
         self.chosen_count = chosen_count
 
+        # запусскаем смену кадров по тикам
         self.timer.timeout.connect(self.update_label)
         self.timer.start(self.step_duration)
 
+    # цена красиво сменается
     def update_label(self):
         self.current_price += self.step_value
         if (self.step_value > 0 and self.current_price >= self.target_price) or \
@@ -243,6 +251,7 @@ class korzina_widget(animated_widget):
 
         self.label_3.setText(f"Выбрано товаров: {self.chosen_count} на сумму {int(self.current_price)}")
 
+    # меняем кнопку назад на обновить заказ и обратно (подстраиваем размер)
     def update_back(self):
         self.back.adjustSize()
         self.back.setFixedWidth(self.back.sizeHint().width() + 20)
@@ -250,6 +259,7 @@ class korzina_widget(animated_widget):
         self.back.setGeometry(self.width() // 2 - size.width() // 2 - 10,
                               self.back.geometry().y(), size.width() + 20, size.height())
 
+    # записываем заказ в базу данных
     def form_order(self):
         today_date = datetime.now().strftime("%d.%m.%y")
         a = f"""INSERT INTO orders(user_id, date) 
@@ -291,6 +301,7 @@ class korzina_widget(animated_widget):
             message.exec()
             print(e)
 
+    # обрабока нажатий кнопки назад или сформировать заказ
     def on_back_clicked(self):
         if self.back.text() == "Оформить заказ":
             self.form_order()

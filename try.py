@@ -1,10 +1,12 @@
+# Черновик со всем кодом, с недописанными комментариями и не разбитый на файлы
+
+
 import sqlite3
 
 from PyQt6 import uic
-from PyQt6.QtWidgets import QApplication, QWidget, QCheckBox, QSpinBox, QLabel, QVBoxLayout, QFrame, QPushButton, \
-    QMainWindow, QListWidget, QListWidgetItem, QDialog, QMessageBox, QScrollArea, QFormLayout, QGroupBox
-from PyQt6.QtGui import QFont, QPixmap, QPainterPath, QPainter, QIcon
-from PyQt6.QtCore import Qt, QRectF, QSize, QEvent, QPropertyAnimation, QRect, QTimer
+from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QMainWindow, QDialog, QMessageBox
+from PyQt6.QtGui import QPixmap, QIcon
+from PyQt6.QtCore import QSize, QPropertyAnimation, QTimer
 from functools import partial
 from random import randint
 from datetime import datetime

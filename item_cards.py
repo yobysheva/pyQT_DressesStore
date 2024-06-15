@@ -12,7 +12,7 @@ from styled_widgets import animated_widget, styled_message_box
 class image_button(QWidget):
     def __init__(self, id):
         super().__init__()
-        uic.loadUi('order_photo.ui', self)
+        uic.loadUi('ui/order_photo.ui', self)
         # выгрузка данных для карточки товара из базы данных
         self.conn = sqlite3.connect('cards.db')
         self.cur = self.conn.cursor()
@@ -30,6 +30,7 @@ class image_button(QWidget):
         self.show_description_partial = partial(self.show_description, id)
         self.photo.clicked.connect(self.show_description_partial)
 
+    # открываем большую карточку товара
     def show_description(self, id):
         w2 = big_card(id)
         w2.show()
@@ -39,7 +40,7 @@ class little_card(QWidget):
     def __init__(self, id):
         super().__init__()
         # Загрузить пользовательский интерфейс из файла .ui
-        uic.loadUi('little_card.ui', self)
+        uic.loadUi('ui/little_card.ui', self)
 
         # выгрузка данных для карточки товара из базы данных
         self.conn = sqlite3.connect('cards.db')
@@ -74,7 +75,7 @@ class big_card(animated_widget):
     def __init__(self, id):
         super().__init__()
         # Загрузить пользовательский интерфейс из файла .ui
-        uic.loadUi('description.ui', self)
+        uic.loadUi('ui/description.ui', self)
         self.setWindowTitle("Карточка товара")
         self.setWindowIcon(QIcon('images/icon.png'))
 
@@ -89,7 +90,8 @@ class big_card(animated_widget):
         description = text
         # составление описания при помощи таблицы description
         try:
-            self.cur.execute(f"""SELECT materials.name, models.name, colors.name, length.name, categories.name FROM description 
+            self.cur.execute(f"""SELECT materials.name, models.name, colors.name, 
+                    length.name, categories.name FROM description 
                     INNER JOIN items ON items.id = description.id
                     INNER JOIN materials ON materials."material id" = description.material
                     INNER JOIN models ON models."models id" = description.model
@@ -163,6 +165,7 @@ class big_card(animated_widget):
         self.buy.clicked.connect(self.korzina_or_like_pushed_partial)
         self.like.clicked.connect(self.korzina_or_like_pushed_partial)
 
+    # смена цвета кнопок
     def size_pushed(self, button):
         if self.current_size:
             self.current_size.setStyleSheet("""border: 1px solid #000; 
@@ -180,6 +183,7 @@ class big_card(animated_widget):
         font-weight: bold; 
         font: 18pt 'HelveticaNeueCyr';""")
         self.current_size = button
+        # запомнили размер
         self.current_size_num = button.text()
 
     def korzina_or_like_pushed(self, id):
@@ -190,6 +194,7 @@ class big_card(animated_widget):
         current_user_id = data[0]
         sender = self.sender()
 
+        # нельзя никуда добавить без входа в аккаунт
         if current_user_id == 0:
             message = styled_message_box()
             message.setWindowTitle("Ошибка")
@@ -198,16 +203,19 @@ class big_card(animated_widget):
             else:
                 message.setText("Войдите в аккаунт, чтобы добавлять товары в понравившиеся.")
             message.exec()
+        # нульзя не выбрать размер для корзины
         elif self.current_size_num == None and sender == self.buy:
             message = styled_message_box()
             message.setWindowTitle("Ошибка")
             message.setText("Пожалуйста, выберете размер.")
             message.exec()
+        # добавляем в одну из таблиц, если все хорошо
         elif sender == self.like:
             self.add_row(id, self.current_size_num, self.value, current_user_id)
         else:
             self.add_row(id, self.current_size_num, self.value, current_user_id)
 
+    # добавляем айтем в таблицы заказов или лайков
     def add_row(self, item_id, size, count, current_user_id):
         self.conn = sqlite3.connect("cards.db")
         try:
@@ -253,7 +261,7 @@ class card(QWidget):
     def __init__(self, id):
         super().__init__()
         # Загрузить пользовательский интерфейс из файла .ui
-        uic.loadUi('card.ui', self)
+        uic.loadUi('ui/card.ui', self)
 
         self.conn = sqlite3.connect('cards.db')
         self.cur = self.conn.cursor()

@@ -21,9 +21,10 @@ class like_widget(animated_widget):
         self.current_user_id = data[0]
 
         # Загрузить пользовательский интерфейс из файла .ui
-        uic.loadUi('like.ui', self)
+        uic.loadUi('ui/like.ui', self)
         self.page = 0
 
+        # лайки текущего пользователя или рекоммендации
         if self.current_user_id == 0:
             self.update_recommendation()
             self.gridLayout.setContentsMargins(0, 40, 0, 0)
@@ -46,12 +47,14 @@ class like_widget(animated_widget):
                 self.prev.clicked.connect(self.update_page)
         self.back.clicked.connect(self.close)
 
+    # очистить layout перед заполнением
     def clear_layout(self, layout):
         while layout.count():
             child = layout.takeAt(0)
             if child.widget():
                 child.widget().deleteLater()
 
+    # загружаем 5 товаров в layout
     def load_items(self):
         self.cur.execute(f"""SELECT item_id FROM like 
                         WHERE user_id = {self.current_user_id} 
@@ -62,6 +65,7 @@ class like_widget(animated_widget):
             widget = card(data[i][0])
             self.gridLayout.addWidget(widget, 0, 4-i)
 
+    # пролистывание понравившихся
     def update_page(self):
         sender = self.sender()
         max_pages = self.cur.execute(f"""SELECT COUNT(*) FROM like 
@@ -75,6 +79,7 @@ class like_widget(animated_widget):
 
         self.load_items()
 
+    # пролистывание рекоммендаций
     def update_recommendation(self):
         self.clear_layout(self.gridLayout)
         max_item = self.cur.execute("SELECT COUNT(*) FROM items").fetchone()[0]

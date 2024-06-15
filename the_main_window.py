@@ -13,12 +13,27 @@ from korzina import korzina_widget
 from like_window import like_widget
 from order_window import orders_widget
 
+white_button_style = """border: 2px solid #000;
+                        border-radius: 10px;
+                        border-style: outset;
+                        color: black;
+                        font-weight: bold;
+                        font: 26pt 'Futurespore Cyrillic';
+                        """
+
+black_button_style = """border: 2px solid #000;
+                    border-radius: 10px;
+                    border-style: outset;
+                    background: black;
+                    color: rgb(254,254,254);
+                    font-weight: bold;
+                    font: 26pt 'Futurespore Cyrillic';"""
 
 class main_window(QMainWindow):
     def __init__(self):
         super().__init__()
         # Загрузить пользовательский интерфейс главного окна из файла .ui
-        uic.loadUi('MainWindow.ui', self)
+        uic.loadUi('ui/MainWindow.ui', self)
         self.setWindowTitle("Karmen - магазин премиальной одежды")
         self.setWindowIcon(QIcon('images/icon.png'))
 
@@ -40,7 +55,6 @@ class main_window(QMainWindow):
         self.like.clicked.connect(self.open_like)
         self.orders.clicked.connect(self.open_orders)
 
-        # Connect to the database
         self.conn = sqlite3.connect('cards.db')
         self.cur = self.conn.cursor()
         # задаю текущего пользователя
@@ -56,6 +70,7 @@ class main_window(QMainWindow):
             widget = card(row[0])
             self.gridLayout.addWidget(widget, 0, 4 - i)
 
+        # задаем текущую страницу и текущее собщение для фильтрации
         self.page = 0
         self.message = ' '
 
@@ -86,49 +101,26 @@ class main_window(QMainWindow):
         for button in self.buttons:
             button.clicked.connect(lambda checked, b=button: self.filter_pushed(b))
 
+    # меняем текст на кнопке цвет
     def color_pushed(self):
         self.buttons = self.filter.buttons()
         for button in self.buttons:
-            button.setStyleSheet("""border: 2px solid #000;
-                                border-radius: 10px;
-                                border-style: outset;
-                                color: black;
-                                font-weight: bold;
-                                font: 26pt 'Futurespore Cyrillic';
-                                """)
+            button.setStyleSheet(white_button_style)
         self.current_color = (self.current_color + 1) % len(self.colors)
         # Переходим к следующему тексту циклически
         self.red.setText(self.colors[self.current_color])
 
-
+    # меняем цвет всех кнопок обратно на белый
     def all_pushed(self):
         self.buttons = self.filter.buttons()
         for button in self.buttons:
-            button.setStyleSheet("""border: 2px solid #000;
-                        border-radius: 10px;
-                        border-style: outset;
-                        color: black;
-                        font-weight: bold;
-                        font: 26pt 'Futurespore Cyrillic';
-                        """)
+            button.setStyleSheet(white_button_style)
 
     # функция для смены цвета кнопок фильтрации
     def filter_pushed(self, button):
         if self.current_filter:
-            self.current_filter.setStyleSheet("""border: 2px solid #000;
-                        border-radius: 10px;
-                        border-style: outset;
-                        color: black;
-                        font-weight: bold;
-                        font: 26pt 'Futurespore Cyrillic';
-                        """)
-        button.setStyleSheet("""border: 2px solid #000;
-                    border-radius: 10px;
-                    border-style: outset;
-                    background: black;
-                    color: rgb(254,254,254);
-                    font-weight: bold;
-                    font: 26pt 'Futurespore Cyrillic';""")
+            self.current_filter.setStyleSheet(white_button_style)
+        button.setStyleSheet(black_button_style)
         self.current_filter = button
 
     # функция для вывода 5 товаров по страницам
@@ -149,6 +141,7 @@ class main_window(QMainWindow):
             widget = card(row[0])
             self.gridLayout.addWidget(widget, 0, 4 - i)
 
+    # фильтрация по категориям
     def categories_filter(self):
         self.page = 0
         category = self.sender().text()
@@ -174,19 +167,22 @@ class main_window(QMainWindow):
                 WHERE categories.name = '{category}'"""
         self.update_data(self.message)
 
-    # открывается корзина, нужно сделать так, чтобы закрывалось изначальное окно
+    # открывается корзина
     def open_korzina(self):
         self.korzina_window = korzina_widget()
         self.korzina_window.show()
 
+    # открываются понравившиеся
     def open_like(self):
         self.like_window = like_widget()
         self.like_window.show()
 
+    # окно входа и регистрации
     def enter_or_registration(self):
         self.w2 = enter_or_registration_dialog()
         self.w2.exec()
 
+    # окно заказов текущего пользователя
     def open_orders(self):
         self.orders_window = orders_widget()
         self.orders_window.show()
