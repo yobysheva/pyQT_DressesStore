@@ -320,9 +320,7 @@ class big_card(animated_widget):
             self.photo_counter -= 1
             self.photo_label.setPixmap(self.original_image)
 
-    def keyPressEvent(self, event):
-        if event.key() == Qt.Key_Escape:
-            self.close()
+
 
 
 
@@ -376,40 +374,49 @@ class registration_dialog(styled_dialog):
             print(e)
         self.escape.clicked.connect(self.close)
     def add_row(self, login, password, fio, card_number, expiration_date, cvv, post_index):
-        self.con = sqlite3.connect("cards.db")
-        try:
-            cur = self.con.cursor()
-            a = f"""INSERT INTO users(login, password, FIO, card_number, validity_period, CVV, postal_code) 
-            VALUES("{login}", "{password}", "{fio}", {card_number}, "{expiration_date}", {cvv}, {post_index}) """
-            cur.execute(a)
-            self.con.commit()
-            cur.close()
-
-            message = styled_message_box()
-            message.setWindowTitle("Успешная регистрация")
-            message.setText("Аккаунт зарегистрирован.")
-            message.exec()
-
+        if (self.login.text() != "" and self.password.text() != "" and self.fio.text() != "" and
+                self.card_number.text() != "" and self.expiration_date.text() != "" and self.cvv.text() != ""
+                and self.post_index.text() != ""):
             self.con = sqlite3.connect("cards.db")
-            self.conn = sqlite3.connect('cards.db')
+            try:
+                cur = self.con.cursor()
+                a = f"""INSERT INTO users(login, password, FIO, card_number, validity_period, CVV, postal_code) 
+                VALUES("{login}", "{password}", "{fio}", {card_number}, "{expiration_date}", {cvv}, {post_index}) """
+                cur.execute(a)
+                self.con.commit()
+                cur.close()
 
-        except Exception as e:
+                message = styled_message_box()
+                message.setWindowTitle("Успешная регистрация")
+                message.setText("Аккаунт зарегистрирован.")
+                message.exec()
+
+                self.con = sqlite3.connect("cards.db")
+                self.con = sqlite3.connect('cards.db')
+
+            except Exception as e:
+                message = styled_message_box()
+                message.setWindowTitle("Аккаунт не зарегистрирован")
+                message.setText("Не удалось зарегистрировать. Убедитесь, что данные внесены верно. Логин должен быть уникален.")
+
+                message.exec()
+                print(e)
+            self.cur = self.con.cursor()
+            self.cur.execute(f"""SELECT  user_id FROM users WHERE login = "{login}" """)
+            data = self.cur.fetchone()
+            self.close()
+            current_user_id = data[0]
+            self.con = sqlite3.connect('cards.db')
+            self.cur = self.con.cursor()
+            # задаю текущего пользователя
+            # a = f"""UPDATE current_user_id SET current_user_id = {current_user_id}"""
+            #print(current_user_id)
+        else:
             message = styled_message_box()
-            message.setWindowTitle("Аккаунт не зарегистрирован")
-            message.setText("Не удалось зарегистрировать. Убедитесь, что данные внесены верно. Логин должен быть уникален.")
-
+            message.setWindowTitle("Регистрация не выполнена")
+            message.setText("Не удалось зарегистрироваться. "
+                            "Убедитесь, что данные внесены верно.")
             message.exec()
-            print(e)
-        self.cur = self.conn.cursor()
-        self.cur.execute(f"""SELECT  user_id FROM users WHERE login = "{login}" """)
-        data = self.cur.fetchone()
-        self.close()
-        current_user_id = data[0]
-        self.conn = sqlite3.connect('cards.db')
-        self.cur = self.conn.cursor()
-        # задаю текущего пользователя
-       # a = f"""UPDATE current_user_id SET current_user_id = {current_user_id}"""
-        #print(current_user_id)
 
 
 class enter_dialog(styled_dialog):
