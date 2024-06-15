@@ -44,6 +44,7 @@ class animated_widget(QWidget):
 class styled_dialog(QDialog):
     def __init__(self):
         super().__init__()
+        self.setWindowIcon(QIcon('images/icon.png'))
         # Класс анимации прозрачности окна
         self.animation = QPropertyAnimation(self, b'windowOpacity')
         self.animation.setDuration(200)  # Продолжительность: 1 секунда
@@ -147,6 +148,7 @@ class big_card(animated_widget):
         # Загрузить пользовательский интерфейс из файла .ui
         uic.loadUi('description.ui', self)
         self.setWindowTitle("Карточка товара")
+        self.setWindowIcon(QIcon('images/icon.png'))
 
         # выгрузка данных для карточки товара из базы данных
         self.conn = sqlite3.connect('cards.db')
@@ -317,6 +319,10 @@ class big_card(animated_widget):
         elif sender == self.prev1 and self.photo_counter == 1 or sender == self.next1 and self.photo_counter == 1:
             self.photo_counter -= 1
             self.photo_label.setPixmap(self.original_image)
+
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Escape:
+            self.close()
 
 
 class card(QWidget):
@@ -581,7 +587,7 @@ class korzina_widget(animated_widget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Корзина")
-        self.setWindowIcon(QIcon('images/bag.png'))
+        self.setWindowIcon(QIcon('images/icon.png'))
         self.conn = sqlite3.connect('cards.db')
         self.cur = self.conn.cursor()
 
@@ -769,7 +775,7 @@ class like_widget(animated_widget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Понравившееся")
-        self.setWindowIcon(QIcon('images/like.png'))
+        self.setWindowIcon(QIcon('images/icon.png'))
         self.conn = sqlite3.connect('cards.db')
         self.cur = self.conn.cursor()
 
@@ -890,7 +896,7 @@ class orders_widget(animated_widget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Мои заказы")
-        self.setWindowIcon(QIcon('images/box.png'))
+        self.setWindowIcon(QIcon('images/icon.png'))
         self.conn = sqlite3.connect('cards.db')
         self.cur = self.conn.cursor()
 
@@ -957,7 +963,7 @@ class main_window(QMainWindow):
         # Загрузить пользовательский интерфейс главного окна из файла .ui
         uic.loadUi('MainWindow.ui', self)
         self.setWindowTitle("Karmen - магазин премиальной одежды")
-        self.setWindowIcon(QIcon('images/shop.png'))
+        self.setWindowIcon(QIcon('images/icon.png'))
 
         # иконки для кнопок корзина, вход и избранное
         self.like.setIcon(QIcon('images/like.png'))
